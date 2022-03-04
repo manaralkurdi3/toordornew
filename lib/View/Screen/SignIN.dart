@@ -11,7 +11,8 @@ class SignIN extends StatelessWidget {
   SignIN({Key? key}) : super(key: key);
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
-  Controller c=Controller();
+  Controller c = Controller();
+
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -46,60 +47,70 @@ class SignIN extends StatelessWidget {
                 color: Colors.pink.withOpacity(0),
                 child: Container(
                   width: w / 1.2,
-                  height: h / 2,
-                  child:  Column(
-                      children: [
-                        SizedBox(height: h * 0.03),
-                        TextForm(hint: 'email', controller: email,keyBoardType: TextInputType.emailAddress,),
-                        TextForm(hint: 'password', controller: password,visibility: true),
-                        TextButton(onPressed: ()=>c.navigatorGo(context, const ForgetPassword()),
-                            child: const Text('Forget Password?')),
-                        SizedBox(height: h * 0.01),
-                        ElevatedButton(
-                            child: SizedBox(
-                                width: w / 1.8,
-                                height: h / 20,
-                                child: const Center(child: Text('Login'))),
-                            onPressed: () =>c.navigatorOff(context,const Home())),
-                        SizedBox(height: h * 0.01),
-                        ElevatedButton(
-                            child: SizedBox(
-                                width: w / 1.8,
-                                height: h / 20,
-                                child: const Center(child: Text('Sign UP'))),
-                            onPressed: () =>c.navigatorGo(context, SignUP())),
-                        SizedBox(height: h * 0.02),
-                        Stack(
-                          alignment: Alignment.center,
+                  height: h / 1.92,
+                  child: Column(
+                    children: [
+                      SizedBox(height: h * 0.03),
+                      TextForm(
+                        hint: 'email',
+                        controller: email,
+                        keyBoardType: TextInputType.emailAddress,
+                      ),
+                      TextForm(
+                          hint: 'password',
+                          controller: password,
+                          visibility: true),
+                      TextButton(
+                          onPressed: () =>
+                              c.navigatorGo(context,  ForgetPassword()),
+                          child: const Text('Forget Password?')),
+                      SizedBox(height: h * 0.01),
+                      ElevatedButton(
+                          child: SizedBox(
+                              width: w / 1.8,
+                              height: h / 20,
+                              child: const Center(child: Text('Login'))),
+                          onPressed: () =>
+                              c.navigatorOff(context,  Home())),
+                      SizedBox(height: h * 0.01),
+                      ElevatedButton(
+                          child: SizedBox(
+                              width: w / 1.8,
+                              height: h / 20,
+                              child: const Center(child: Text('Sign UP'))),
+                          onPressed: () => c.navigatorGo(context, SignUP())),
+                      SizedBox(height: h * 0.02),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          const Divider(thickness: 3),
+                          Container(
+                            padding: const EdgeInsets.all(7),
+                            color: Colors.white,
+                            child: const Text(
+                              'Login With',
+                              style: TextStyle(fontSize: 17),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: h * 0.01),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            const Divider(thickness: 3),
-                            Container(
-                              padding: const EdgeInsets.all(7),
-                              color: Colors.white,
-                              child: const Text(
-                                'Login With',
-                                style: TextStyle(fontSize: 17),
-                              ),
-                            )
+                            HomeButton(image: 'assets/google.png'),
+                            HomeButton(image: 'assets/facebook.png'),
+                            HomeButton(image: 'assets/instagram.png')
                           ],
                         ),
-                        SizedBox(height: h * 0.01),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              HomeButton(image: 'assets/google.png'),
-                              HomeButton(image: 'assets/facebook.png'),
-                              HomeButton(image: 'assets/instagram.png')
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-
+                      )
+                    ],
+                  ),
                   decoration: BoxDecoration(
-                      color: Colors.white, borderRadius: BorderRadius.circular(18)),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(18)),
                 ),
               ),
             ],
@@ -109,3 +120,5 @@ class SignIN extends StatelessWidget {
     );
   }
 }
+
+

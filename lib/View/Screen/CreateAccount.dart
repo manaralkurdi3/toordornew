@@ -9,8 +9,9 @@ class SignUP extends StatelessWidget {
   Controller c = Controller();
   TextEditingController name = TextEditingController();
   TextEditingController userName = TextEditingController();
-  TextEditingController phoneNumber=TextEditingController();
-  TextEditingController password=TextEditingController();
+  TextEditingController phoneNumber = TextEditingController();
+  TextEditingController password = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -76,7 +77,7 @@ class SignUP extends StatelessWidget {
                               width: w / 1.8,
                               height: h / 20,
                               child: const Center(child: Text('Sign UP'))),
-                          onPressed: () {}),
+                          onPressed: () => c.navigatorGo(context, OTPScreen())),
                       SizedBox(height: h * 0.02),
                       SizedBox(height: h * 0.01),
                       Padding(
@@ -99,6 +100,26 @@ class SignUP extends StatelessWidget {
               ),
             ],
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class OTPScreen extends StatelessWidget {
+  OTPScreen({Key? key}) : super(key: key);
+  TextEditingController otp = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextForm(hint: 'OPT Code', controller: otp),
+          const SizedBox(height: 20),
+          ElevatedButton(onPressed: () {}, child: const Text('Submit'))
         ],
       ),
     );
