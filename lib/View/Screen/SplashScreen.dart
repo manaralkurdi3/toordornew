@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:toordor/Controller/Controller.dart';
-import 'package:toordor/View/Screen/HomeScreen.dart';
+import 'package:toordor/View/Screen/SignIN.dart';
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({Key? key}) : super(key: key);
@@ -15,8 +15,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-     Future.delayed(const Duration(seconds: 5))
-         .whenComplete(() => c.navigatorOff(context, HomeScreen()));
+     Future.delayed(const Duration(seconds: 3))
+         .whenComplete(() => c.navigatorOff(context, SignIN()));
   }
 
   @override
