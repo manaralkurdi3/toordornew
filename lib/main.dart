@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toordor/Controller/Controller.dart';
 
 import 'View/Screen/SplashScreen.dart';
 
@@ -16,7 +17,8 @@ class MyApp extends StatelessWidget {
       title: 'ToorDor',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.pink
+        primarySwatch: Controller.myColor,
+        fontFamily: 'Cairo',
       ),
       home:  SplashScreen(),
     );

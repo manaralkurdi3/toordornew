@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:toordor/Controller/Controller.dart';
-import 'package:toordor/View/Screen/SignIN.dart';
+import 'package:toordor/const/color.dart';
+
+import '../../Controller/Controller.dart';
+import 'SignIN.dart';
+
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({Key? key}) : super(key: key);
@@ -23,11 +26,10 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.pink,
+        color: whiteColor,
         child: Image.asset('assets/4104e2aa-4c5b-417a-9507-ca86bc3a639b-removebg-preview.png',
         height: 70,
           width: 70,
-
         ),
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,

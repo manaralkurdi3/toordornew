@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:toordor/Controller/Controller.dart';
+import 'package:toordor/const/color.dart';
 
+import '../../Controller/Controller.dart';
 import '../Widget/ImageButton.dart';
 import '../Widget/TextForm.dart';
 
@@ -21,20 +22,20 @@ class SignUP extends StatelessWidget {
       body: Wrap(
         children: [
           Stack(
-            alignment: const Alignment(0, 1.1),
+            alignment: const Alignment(0, 1.3),
             children: [
               Column(
                 children: [
                   Container(
                     child: Image.asset(
                       'assets/1f3b82a8-489f-4051-9605-90fc99c2010a-removebg-preview.png',
-                      height: 100,
-                      width: 100,
+                      height: 20,
+                      width: 20,
                     ),
                     width: w,
-                    height: h / 3,
+                    height: h / 4,
                     decoration: const BoxDecoration(
-                        color: Colors.pink,
+                        color: primaryColor,
                         borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(18),
                             bottomRight: Radius.circular(18))),
