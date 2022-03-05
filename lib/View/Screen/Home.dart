@@ -22,7 +22,7 @@ class Home extends StatelessWidget {
           ),
         ),
         title: TextForm(hint: 'Search', controller: search,widget: IconButton(
-          icon: Icon(Icons.search),
+          icon: const Icon(Icons.search),
           onPressed: (){},
         ),keyBoardType: TextInputType.text,),
 
