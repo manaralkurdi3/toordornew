@@ -10,13 +10,15 @@ class HomeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color:color ,
-        child: TextButton(onPressed: press??(){}, child: Image.asset(image??'',
-        fit: BoxFit.fill,
-        height: 30,
-          width: 30,
-
-        )));
+    return TextButton(
+    //  backgroundColor: Colors.white,
+      child: Card(
+          child: Image.asset(image??'',
+          fit: BoxFit.fill,
+          height: 40,
+            width: 40,
+          )),
+      onPressed: press??(){},
+    );
   }
 }

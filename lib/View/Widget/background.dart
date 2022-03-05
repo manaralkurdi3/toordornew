@@ -4,6 +4,7 @@ import 'package:toordor/View/Screen/CreateAccount.dart';
 import 'package:toordor/View/Screen/Home.dart';
 import 'package:toordor/View/Widget/ImageButton.dart';
 import 'package:toordor/View/Widget/TextForm.dart';
+import 'package:toordor/View/Widget/socialmedia.dart';
 import 'package:toordor/const/color.dart';
 
 
@@ -11,6 +12,7 @@ import 'package:toordor/const/color.dart';
 class Background extends StatelessWidget {
   Background({Key? key, required this.items}) : super(key: key);
   List <Widget> items =[];
+
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   Controller c = Controller();
@@ -23,12 +25,12 @@ class Background extends StatelessWidget {
       body: Wrap(
         children: [
           Stack(
-            alignment: const Alignment(0, 0.8),
+            alignment: const Alignment(0, .3),
             children: [
               Column(
                 children: [
                   Container(
-                    alignment: Alignment(0,-0.4),
+                    alignment: const Alignment(0,-0.4),
                     child: Image.asset(
                         'assets/1f3b82a8-489f-4051-9605-90fc99c2010a-removebg-preview.png',
                         height: 150,
@@ -60,14 +62,21 @@ class Background extends StatelessWidget {
                 color: Colors.pink.withOpacity(0),
                 child: Container(
                   width: w / 1.2,
-                  height: h / 2,
-                  child: Column(children: items,),
+                  height: h / 2.8,
+                  child: Column(children: items),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(18)),
                 ),
               ),
+              Column(
+                children: [
+                  SizedBox(height: h/1.6),
+                  SocialMedia(),
+                ],
+              )
             ],
+
           ),
         ],
       ),

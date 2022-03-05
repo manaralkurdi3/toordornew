@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Controller {
+
   static MaterialColor myColor = const MaterialColor(0xff19a8e3, <int, Color>{
     50: Color(0xff19a8e2),
     100: Color(0xff19a8e3),

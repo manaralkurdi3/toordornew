@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:toordor/const/color.dart';
 
 import '../../Controller/Controller.dart';
-import 'SignIN.dart';
+import 'WelcomeScreen.dart';
 
 
 class SplashScreen extends StatefulWidget {
@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
      Future.delayed(const Duration(seconds: 3))
-         .whenComplete(() => c.navigatorOff(context, SignIN()));
+         .whenComplete(() => c.navigatorOff(context, Welcome()));
   }
 
   @override
