@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:toordor/Controller/Controller.dart';
 
 import 'View/Screen/SplashScreen.dart';
@@ -13,6 +14,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'ToorDor',
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('ar', 'EG')],
       theme: ThemeData(
         primarySwatch: Controller.myColor,
         fontFamily: 'Cairo',

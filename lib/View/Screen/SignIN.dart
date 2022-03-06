@@ -19,24 +19,20 @@ class SignIN extends StatelessWidget {
         onPressed: ()=>Navigator.pop(context),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      body: Column(
-        children: [
-          Background(
-            items: [
-              const SizedBox(height: 30),
-              TextForm(hint: 'البريد الالكتروني', controller: email),
-              TextForm(hint: 'كلمه المرور', controller: password),
-              const SizedBox(height: 15),
-              ElevatedButton(
-                  onPressed: () =>controller.navigatorOff(context, Home()),
-                  child: const Text(
-                    'تسجيل الدخول',
-                    style: TextStyle(color: Colors.white),
-                  )),
+      body: Background(
+       center: true,
+        items: [
+          const SizedBox(height: 30),
+          TextForm(hint: 'البريد الالكتروني', controller: email),
+          TextForm(hint: 'كلمه المرور', controller: password),
+          const SizedBox(height: 15),
+          ElevatedButton(
+              onPressed: () =>controller.navigatorOff(context, Home()),
+              child: const Text(
+                'تسجيل الدخول',
+                style: TextStyle(color: Colors.white),
+              )),
 
-            ],
-          ),
-          const SocialMedia()
         ],
       ),
     );

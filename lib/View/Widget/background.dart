@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toordor/Controller/Controller.dart';
 import 'package:toordor/View/Screen/CreateAccount.dart';
@@ -7,11 +8,12 @@ import 'package:toordor/View/Widget/TextForm.dart';
 import 'package:toordor/View/Widget/socialmedia.dart';
 import 'package:toordor/const/color.dart';
 
-
-
 class Background extends StatelessWidget {
-  Background({Key? key, required this.items}) : super(key: key);
-  List <Widget> items =[];
+  Background({Key? key, required this.items, this.center = false})
+      : super(key: key);
+  List<Widget> items = [];
+  bool center;
+  int? height;
 
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -30,13 +32,12 @@ class Background extends StatelessWidget {
               Column(
                 children: [
                   Container(
-                    alignment: const Alignment(0,-0.4),
+                    alignment: const Alignment(0, -0.4),
                     child: Image.asset(
                         'assets/1f3b82a8-489f-4051-9605-90fc99c2010a-removebg-preview.png',
                         height: 150,
                         fit: BoxFit.fill,
-                        width: 300
-                    ),
+                        width: 300),
                     width: w,
                     height: h / 2,
                     decoration: const BoxDecoration(
@@ -50,11 +51,9 @@ class Background extends StatelessWidget {
                         color: whiteColor,
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(15),
-                            topRight: Radius.circular(15)
-                        )
-
-                    ),
-                    height: h / 2,)
+                            topRight: Radius.circular(15))),
+                    height: h / 2,
+                  )
                 ],
               ),
               Card(
@@ -71,17 +70,14 @@ class Background extends StatelessWidget {
               ),
               Column(
                 children: [
-                  SizedBox(height: h/1.6),
+                  SizedBox(height: h / 1.6),
                   SocialMedia(),
                 ],
               )
             ],
-
           ),
         ],
       ),
     );
   }
 }
-
-
