@@ -101,7 +101,7 @@ class SignUP extends StatelessWidget {
               Column(
                 children: [
                   SizedBox(height: h / 1.4),
-                  const SocialMedia(),
+                 // const SocialMedia(),
                 ],
               )
             ],

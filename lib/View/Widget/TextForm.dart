@@ -17,18 +17,20 @@ class TextForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
+    height: 40,
         decoration: BoxDecoration(
             border: Border.all(width: 0),
             borderRadius: BorderRadius.circular(12),
-            color: Colors.grey.shade300),
-        margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+            color: Colors.grey.shade100),
+        margin: const EdgeInsets.symmetric(vertical:12,horizontal: 20),
+        padding: const EdgeInsets.symmetric( vertical:3,),
         child: TextField(
           keyboardType:keyBoardType ,
           obscureText: visibility ?? false,
           controller: controller,
           decoration: InputDecoration(
               hintText: hint,
+              hintStyle: const TextStyle(fontSize: 12),
               border: InputBorder.none,
               icon: widget ?? const SizedBox()),
         ),
