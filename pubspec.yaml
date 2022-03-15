@@ -36,6 +36,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^0.13.3
   shared_preferences: ^2.0.13
+  xml:
+  xml2json: ^5.3.2
   flutter_localizations:
     # Add this line
     sdk: flutter

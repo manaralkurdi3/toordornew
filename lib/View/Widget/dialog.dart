@@ -20,12 +20,13 @@ class MyDialog extends StatelessWidget {
       return AnimatedContainer(
         margin: const EdgeInsets.all(8),
         padding: const EdgeInsets.all(8),
-        height: size ? h / 1.6 : h / 4,
+        height: size ? h / 1.8 : h / 4,
         width: size ? w / 1.3 : w / 2.3,
         duration: const Duration(milliseconds: 150),
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(25)),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(
               title ?? '',
@@ -58,7 +59,7 @@ class MyDialog extends StatelessWidget {
 
               ],
             ),
-            SizedBox(height: h*.05),
+
             ElevatedButton(
                 onPressed: () => Navigator.pop(context),
                 child: const SizedBox(

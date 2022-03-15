@@ -5,6 +5,7 @@ import 'package:toordor/View/Widget/dialog.dart';
 import 'package:toordor/View/Widget/socialmedia.dart';
 import 'package:toordor/const/color.dart';
 import '../Widget/background.dart';
+import 'Home.dart';
 import 'SignIN.dart';
 
 class Welcome extends StatelessWidget {
@@ -18,9 +19,12 @@ class Welcome extends StatelessWidget {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: ()=> c.navigatorGo(context, Home()),
+      ),
       body: Background(
         items: [
-          SizedBox(height: h * .04),
+          SizedBox(height: h * .09),
           ElevatedButton(
               child: SizedBox(
                   width: w / 1.8,

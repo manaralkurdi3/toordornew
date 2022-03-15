@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:toordor/View/Screen/AddProject.dart';
+
 
 import '../../Controller/Controller.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   TextEditingController search = TextEditingController();
+
   final GlobalKey<ScaffoldState> _key = GlobalKey();
+
   Controller c=Controller();
+
+  int indexPage=0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,15 +76,15 @@ class Home extends StatelessWidget {
               .toList(),
         ),
       ),
-      body: AddProject(),
+      body:c. listPage[indexPage].page,
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.black,
         type: BottomNavigationBarType.shifting, // Shifting
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.grey,
         //fixedColor: Colors.red,
-        onTap: (i){},
-        currentIndex: 3,
+        onTap: (i)=>setState(() =>indexPage=i),
+        currentIndex: indexPage,
 
         items:c. listPage
             .map((e) =>
