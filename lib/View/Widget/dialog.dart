@@ -15,14 +15,14 @@ class MyDialog extends StatelessWidget {
     return Dialog(
         // title:
         child: StatefulBuilder(builder: (context, update) {
-      Future.delayed(const Duration(milliseconds: 300))
+      Future.delayed(const Duration(seconds: 300))
           .whenComplete(() => update(() => size = true));
       return AnimatedContainer(
         margin: const EdgeInsets.all(8),
         padding: const EdgeInsets.all(8),
         height: size ? h / 1.8 : h / 4,
         width: size ? w / 1.3 : w / 2.3,
-        duration: const Duration(milliseconds: 150),
+        duration: const Duration(seconds: 150),
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(25)),
         child: Column(

@@ -1,4 +1,3 @@
-import 'package:xml/xml.dart';
 
 class Users {
   int? uID;
@@ -16,14 +15,6 @@ class Users {
     this.phone1,
   });
 
-  Users.fromXml(XmlDocument xml) {
-    uID = int.parse(xml.findAllElements('UID').toString());
-    fullName = xml.findAllElements('FullName').toString();
-    uName = xml.findAllElements('UName').toString();
-    uPass = xml.findAllElements('UPass').toString();
-
-    phone1 = xml.findAllElements('Phone1').toString();
-  }
   Users.fromJson(json) {
     uID = json['UID'];
     fullName = json['FullName'];

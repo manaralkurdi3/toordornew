@@ -24,7 +24,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       key: _key,
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.blue,
         leading: Container(
           child: const SizedBox(width: 300),
           height: 100,
@@ -46,19 +46,19 @@ class _HomeState extends State<Home> {
             ),
             onPressed: () {},
           ),
-          IconButton(
-              onPressed: () => showModalBottomSheet(
-                  context: context,
-                  builder: (context) => Column(
-                        children: c.listPage
-                            .map((e) => ListTile(
-                                  title: Text(e.title),
-                                  trailing: Icon(e.icon),
-                                  onTap: () {},
-                                ))
-                            .toList(),
-                      )),
-              icon: const Icon(Icons.more_vert))
+          // IconButton(
+          //     onPressed: () => showModalBottomSheet(
+          //         context: context,
+          //         builder: (context) => Column(
+          //               children: c.listPage
+          //                   .map((e) => ListTile(
+          //                         title: Text(e.title),
+          //                         trailing: Icon(e.icon),
+          //                         onTap: () {},
+          //                       ))
+          //                   .toList(),
+          //             )),
+          //     icon: const Icon(Icons.more_vert))
         ],
         // title: TextForm(hint: 'البحث', controller: search,widget: IconButton(
         //   icon: const Icon(Icons.search),
@@ -78,7 +78,7 @@ class _HomeState extends State<Home> {
       ),
       body:c. listPage[indexPage].page,
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.grey.shade400,
         type: BottomNavigationBarType.shifting, // Shifting
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.grey,
@@ -91,6 +91,7 @@ class _HomeState extends State<Home> {
                 BottomNavigationBarItem(label: e.title, icon: Icon(e.icon),backgroundColor:  Colors.black))
             .toList(),
       ),
+
     );
   }
 }

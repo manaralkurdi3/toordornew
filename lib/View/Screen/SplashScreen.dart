@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
      Future.delayed(const Duration(seconds: 3))
-         .whenComplete(() => c.navigatorOff(context, Welcome()));
+         .whenComplete(() => Controller.navigatorOff(context, Welcome()));
   }
 
   @override

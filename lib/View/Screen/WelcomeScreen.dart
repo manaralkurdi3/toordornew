@@ -20,7 +20,7 @@ class Welcome extends StatelessWidget {
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: ()=> c.navigatorGo(context, Home()),
+        onPressed: ()=> Controller.navigatorGo(context, Home()),
       ),
       body: Background(
         items: [
@@ -34,7 +34,7 @@ class Welcome extends StatelessWidget {
                           style:
                               TextStyle(fontSize: 16, color: Colors.white)))),
               onPressed: () =>
-           c.navigatorGo(context,  SignIN())),
+                  Controller.navigatorGo(context,  SignIN())),
           SizedBox(height: h * 0.01),
           ElevatedButton(
               style: ButtonStyle(
@@ -46,7 +46,7 @@ class Welcome extends StatelessWidget {
                       child: Text('عمل حساب',
                           style:
                               TextStyle(fontSize: 16, color: Colors.white)))),
-              onPressed: () => c.navigatorGo(context, SignUP())),
+              onPressed: () => Controller.navigatorGo(context, SignUP())),
           SizedBox(height: h * 0.01),
 
           SizedBox(height: h * 0.05),
