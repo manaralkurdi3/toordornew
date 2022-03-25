@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 import '../../Controller/Controller.dart';
 
 class Home extends StatefulWidget {
@@ -15,9 +14,9 @@ class _HomeState extends State<Home> {
 
   final GlobalKey<ScaffoldState> _key = GlobalKey();
 
-  Controller c=Controller();
+  Controller c = Controller();
 
-  int indexPage=0;
+  int indexPage = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +39,7 @@ class _HomeState extends State<Home> {
         ),
         actions: [
           IconButton(
-            icon: Icon(
-              Icons.search,
-              color: Theme.of(context).primaryColor,
-            ),
+            icon: Icon(Icons.search, color: Theme.of(context).primaryColor),
             onPressed: () {},
           ),
           // IconButton(
@@ -67,7 +63,7 @@ class _HomeState extends State<Home> {
       ),
       endDrawer: Drawer(
         child: Column(
-          children:c. listPage
+          children: c.listPage
               .map((e) => ListTile(
                     title: Text(e.title),
                     trailing: Icon(e.icon),
@@ -76,22 +72,24 @@ class _HomeState extends State<Home> {
               .toList(),
         ),
       ),
-      body:c. listPage[indexPage].page,
+      body: c.listPage[indexPage].page,
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.grey.shade400,
-        type: BottomNavigationBarType.shifting, // Shifting
+        type: BottomNavigationBarType.shifting,
+        // Shifting
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.grey,
         //fixedColor: Colors.red,
-        onTap: (i)=>setState(() =>indexPage=i),
+        onTap: (i) => setState(() => indexPage = i),
         currentIndex: indexPage,
 
-        items:c. listPage
-            .map((e) =>
-                BottomNavigationBarItem(label: e.title, icon: Icon(e.icon),backgroundColor:  Colors.black))
+        items: c.listPage
+            .map((e) => BottomNavigationBarItem(
+                label: e.title,
+                icon: Icon(e.icon),
+                backgroundColor: Colors.black))
             .toList(),
       ),
-
     );
   }
 }

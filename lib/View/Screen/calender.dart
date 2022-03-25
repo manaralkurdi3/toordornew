@@ -19,6 +19,8 @@ class Calender extends StatelessWidget{
               return Expanded(
                 flex: 7,
                 child: SfCalendar(
+                  allowViewNavigation: false,
+                  showDatePickerButton: true,
                   view: CalendarView.workWeek,
                   timeSlotViewSettings: TimeSlotViewSettings(
                       startHour: 9,
