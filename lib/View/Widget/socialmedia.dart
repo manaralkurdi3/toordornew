@@ -7,22 +7,21 @@ class SocialMedia extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 20,
-      child: Container(
-        width: MediaQuery.of(context).size.width / 1.2,
-        padding: const EdgeInsets.all(8),
-        margin: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(26)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            HomeButton(image: 'assets/google.png', color: Colors.red),
-            HomeButton(image: 'assets/facebook.png', color: Colors.blue),
-            HomeButton(image: 'assets/instagram.png', color: Colors.pink)
-          ],
-        ),
+    return Container(
+       color: Colors.grey.withOpacity(0.1),
+      width: MediaQuery.of(context).size.width/1.2,
+      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(4),
+      child:
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          HomeButton(image: 'assets/google.png', color: Colors.red),
+          HomeButton(image: 'assets/facebook.png', color: Colors.blue),
+          HomeButton(image: 'assets/instagram.png', color: Colors.pink),
+          HomeButton(image: "assets/biometrics.png",color:Colors.white70),
+
+        ],
       ),
     );
   }

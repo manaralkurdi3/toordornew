@@ -1,5 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:sizer/sizer.dart';
 class UserProFile extends StatelessWidget {
   const UserProFile({Key? key}) : super(key: key);
 
@@ -8,58 +9,58 @@ class UserProFile extends StatelessWidget {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(height: h / 20),
-          ListTile(
-            trailing: CircleAvatar(
-              backgroundColor: Colors.indigo,
-                child: Text('M'),
-              radius: 100,
-            ) ,
-            // Container(
-            //   alignment: Alignment.center,
-            //   height: 210,
-            //   width: 210,
-            //   decoration: const BoxDecoration(
-            //       shape: BoxShape.circle, color: Colors.indigo),
-            //   child: const Text('M'),
-            // ),
-            title: const Text('اسم الشخص'),
-            subtitle: const Text('ID:xxxxxxxxxxxx'),
-            leading: const SizedBox(),
-          ),
-          SizedBox(height: h / 20),
-          UserDataForm(
-            title: 'الاسم بالكامل',
-            userData: 'منار الكردي',
-          ),
-          UserDataForm(title: 'رقم الهاتف', userData: '0xxxxxxx'),
-          UserDataForm(
-            title: 'البريد الالكتروني',
-            userData: 'xxxxxxx@xxxxxx.com',
-          ),
-          UserDataForm(
-            title: 'المدينه',
-            userData: 'القدس',
-          ),
-          UserDataForm(
-            title: 'الدوله',
-            userData: 'فلسطين',
-          ),
-          SizedBox(height: h / 15),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                ElevatedButton(onPressed: () {}, child: const Text('حفظ')),
-                ElevatedButton(onPressed: () {}, child: const Text('تعديل')),
-                ElevatedButton(onPressed: () {}, child: const Text('الغاء')),
+                Padding(
+                  padding:  EdgeInsets.only(left: 13.0.sp),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.grey,
+                    child: Text(''),
+                    radius: 30.sp,
+                  ),
+                ) ,
+                Text("Manar alkurdi",style: TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.w700),)
+
               ],
             ),
-          )
-        ],
+            SizedBox(height: h / 20),
+            UserDataForm(
+              title: 'الاسم بالكامل',
+              userData: 'منار الكردي',
+            ),
+            UserDataForm(title: 'رقم الهاتف', userData: '0xxxxxxx'),
+            UserDataForm(
+              title: 'البريد الالكتروني',
+              userData: 'manaralkurdi',
+            ),
+            UserDataForm(
+              title: 'المدينه',
+              userData: 'القدس',
+            ),
+            UserDataForm(
+              title: 'الدوله',
+              userData: 'فلسطين',
+            ),
+            SizedBox(height: h / 15),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(onPressed: () {}, child: const Text('حفظ')),
+                  ElevatedButton(onPressed: () {}, child: const Text('تعديل')),
+                  ElevatedButton(onPressed: () {}, child: const Text('الغاء'),),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -74,21 +75,23 @@ class UserDataForm extends StatelessWidget {
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 7),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(
-            title ?? '',
-            style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w400),
-            textAlign: TextAlign.start,
+          Expanded(
+            child: Text(
+              title ?? '',
+              style:  TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400),
+              textAlign: TextAlign.start,
+            ),
           ),
-          SizedBox(width: w/15),
+          SizedBox(width: 2.w),
           Text(
             userData ?? '',
-            style: const TextStyle(fontSize: 20),
-            textDirection: TextDirection.rtl,
-            textAlign: TextAlign.end,
+            style:  TextStyle(fontSize: 16.sp),
+           // textDirection: TextDirection.rtl,
+            //textAlign: TextAlign.end,
           )
         ],
       ),

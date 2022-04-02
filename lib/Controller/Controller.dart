@@ -13,6 +13,17 @@ import 'package:http/http.dart' as http;
 
 
 class Controller {
+   static List<dynamic> category = [
+    'assets/instagram.png',
+     'assets/instagram.png',
+     'assets/instagram.png',
+     'assets/instagram.png',
+     'assets/instagram.png',
+     'assets/instagram.png',
+     'assets/instagram.png',
+     'assets/instagram.png',
+  ];
+  TimeOfDay selectedTime = TimeOfDay.now();
   Future rssToJson() async{
     List<Users> data=[];
     String url='http://toordor.com/api/Users';
@@ -79,6 +90,24 @@ class Controller {
 
   static navigatorGo(BuildContext context, Widget route) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => route));
+  }
+
+   void selectTime(BuildContext context) async {
+
+    final TimeOfDay? timeOfDay = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+      initialEntryMode: TimePickerEntryMode.input,
+
+    );
+
+    if(timeOfDay != null && timeOfDay != selectedTime)
+    {
+
+      selectedTime = timeOfDay;
+
+    }
+
   }
 
  static navigatorOff(BuildContext context, Widget route) {

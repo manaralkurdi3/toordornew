@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
+import 'package:toordor/Controller/Controller.dart';
 import 'package:toordor/View/Widget/TextForm.dart';
 
 class MyBusiness extends StatelessWidget {
@@ -9,80 +13,93 @@ class MyBusiness extends StatelessWidget {
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
-    return SizedBox(
+    return Container(
+      margin: EdgeInsets.all(10),
       height: h,
       width: w,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          SizedBox(height: h / 20),
-          const ListTile(
-            trailing: CircleAvatar(
-              backgroundColor: Colors.indigo,
-              child: Text('M'),
-              radius: 100,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+             Row(
+               children: [
+                 Padding(
+                   padding:  EdgeInsets.only(left: 13.0.sp),
+                   child: CircleAvatar(
+                     backgroundColor: Colors.grey,
+                     child: Text(''),
+                     radius: 30.sp,
+                   ),
+                 ),
+                 Text("اسم المشروع ",style: TextStyle(fontSize: 19,fontWeight: FontWeight.w800),)
+               ],
             ),
+            SizedBox(height: 10.sp),
+            TextForm(hint: "وقت الخدمة ", controller: business,),
+             Padding(
+               padding: const EdgeInsets.only(left:20.0),
+               child: Row(
+                 children: [
+    Padding(
+        padding:  EdgeInsets.only(left: 20.0.sp),
+        child: ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor:MaterialStateProperty.all(Colors.grey)
+          ),
+        onPressed: () =>Controller().selectTime(context),
+        child: Text("اختر الوقت الخدمة "),
+        ),
+    ),
+    Text("${Controller().selectedTime.hour}:${Controller().selectedTime.minute}"),
+                 ],
+               ),
+             ),
+            Padding(
+              padding:  EdgeInsets.only(bottom:12.0.sp),
+              child: Row(
+                children: [
+                  Text(
+                    'اضافة خدمه جديده',
+                    style: TextStyle(fontSize: 15.sp),
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.grey,
+                            shape: BoxShape.circle),
+                        height: 40,
+                        width: 40,
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.black,
+                        )),
+                  ),
+                ],
 
-            // Container(
-            //   alignment: Alignment.center,
-            //   height: 210,
-            //   width: 210,
-            //   decoration: const BoxDecoration(
-            //       shape: BoxShape.circle, color: Colors.indigo),
-            //   child: const Text('A'),
-            // ),
-            title: Text('اسم المشروع'),
-            subtitle: Text('ID:xxxxxxxxxxxx'),
-            leading: SizedBox(),
-          ),
-          SizedBox(height: h / 10),
-          TextForm(hint: 'نوع الخدمه', controller: business),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: ListTile(
-              leading: Text(
-                'وقت الخدمه:',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-              ),
-              title: Text('x الي x'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListTile(
-              leading: const Text(
-                'اضف خدمه جديده',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-              ),
-              title: TextButton(
-                onPressed: () {},
-                child: Container(
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        shape: BoxShape.circle),
-                    height: 40,
-                    width: 40,
-                    child: const Icon(
-                      Icons.add,
-                      color: Colors.black,
-                    )),
+
               ),
             ),
-          ),
-          SizedBox(height: h / 15),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                ElevatedButton(onPressed: () {}, child: const Text('حفظ')),
-                ElevatedButton(onPressed: () {}, child: const Text('تعديل')),
-                ElevatedButton(onPressed: () {}, child: const Text('الغاء')),
+                ElevatedButton(onPressed: () {}, child: const Text('حفظ'),style: ButtonStyle(
+    backgroundColor:MaterialStateProperty.all(Colors.grey)
+    ),),
+                ElevatedButton(onPressed: () {}, child: const Text('تعديل'),  style: ButtonStyle(
+                    backgroundColor:MaterialStateProperty.all(Colors.grey)
+                ),),
+                ElevatedButton(onPressed: () {}, child: const Text('الغاء'),  style: ButtonStyle(
+                    backgroundColor:MaterialStateProperty.all(Colors.grey)
+                ),),
               ],
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
+
 }

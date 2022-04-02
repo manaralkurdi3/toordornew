@@ -27,7 +27,7 @@ class Background extends StatelessWidget {
       body: Wrap(
         children: [
           Stack(
-            alignment: const Alignment(0, .3),
+            alignment: const Alignment(0, .1),
             children: [
               Column(
                 children: [
@@ -40,8 +40,8 @@ class Background extends StatelessWidget {
                         width: 300),
                     width: w,
                     height: h / 2,
-                    decoration: const BoxDecoration(
-                        color: Colors.grey,
+                    decoration:  BoxDecoration(
+                        color: Colors.grey.withOpacity(0.5),
                         borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(25),
                             bottomRight: Radius.circular(25))),

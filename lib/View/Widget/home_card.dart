@@ -15,9 +15,9 @@ int index ;
       alignment: Alignment.center,
       padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
       decoration: BoxDecoration(
-        color: Colors.blue,
+        color: Colors.transparent,
       ) ,
-      child: Text("$index",style: TextStyle(fontSize: 50),),
+      child: Image.asset("assets/instagram.png")
 
     );
   }

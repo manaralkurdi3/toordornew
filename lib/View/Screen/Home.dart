@@ -78,7 +78,7 @@ class _HomeState extends State<Home> {
       ),
       body:c. listPage[indexPage].page,
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.grey.shade400,
+        backgroundColor: Colors.grey,
         type: BottomNavigationBarType.shifting, // Shifting
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.grey,

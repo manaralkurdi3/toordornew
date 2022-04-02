@@ -26,66 +26,65 @@ class SignIN extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CupertinoActivityIndicator());
-          } else if (snapshot.hasData == false) {
+          } else if (snapshot.hasData == true) {
             return const Center(child: Text("لا توجد بيانات "));
-          } else if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.data != null) {
+          } else if (snapshot.hasData == false) {
             return Background(
               items: [
-                Expanded(
-                    child:
-                    ListView.builder(
-                     itemCount: snapshot.data?.length??0,
-                      itemBuilder: (context,i){
-                      if(snapshot.data!=null)  {
-                     return ListTile(
-                        title: Text(snapshot.data![i].fullName),
-                      );
-                    }else{
-                        return const Center(child: Text('k'),);
-                      }
-                  },
-
-                ))
-                // const SizedBox(height: 30),
-                // TextForm(hint: 'البريد الالكتروني', controller: email),
-                // TextForm(hint: 'كلمه المرور', controller: password),
-                // const SizedBox(height: 15),
-                // ElevatedButton(
-                //     onPressed: () async {
-                //       List matchEmail = [];
-                //       List matchPassword = [];
-                //       matchEmail = snapshot.data!
-                //           .where((user) => user.uName == email)
-                //           .toList();
-                //       matchPassword = snapshot.data!
-                //           .where((user) => user.uPass == password)
-                //           .toList();
-                //       if (matchEmail.isNotEmpty && matchPassword.isNotEmpty) {
-                //         controller.navigatorOff(context, Home());
-                //       } else if (matchEmail.isNotEmpty &&
-                //           matchPassword.isEmpty) {
-                //         showDialog(
-                //             context: context,
-                //             builder: (context) => MyDialog(
-                //                   hasError: true,
-                //                   title: 'كلمه المرور خطا ',
-                //                   content: 'حاول مرة اخرى ',
-                //                 ));
-                //       } else {
-                //         showDialog(
-                //             context: context,
-                //             builder: (context) => MyDialog(
-                //                   hasError: true,
-                //                   title: 'الحساب غير موجود',
-                //                   content: 'يرجى عمل حساب',
-                //                 ));
+                // Expanded(
+                //     child:
+                //     ListView.builder(
+                //      itemCount: snapshot.data?.length??0,
+                //       itemBuilder: (context,i){
+                //       if(snapshot.data!=null)  {
+                //      return ListTile(
+                //         title: Text(snapshot.data![i].fullName),
+                //       );
+                //     }else{
+                //         return const Center(child: Text('k'),);
                 //       }
-                //     },
-                //     child: const Text(
-                //       'تسجيل الدخول',
-                //       style: TextStyle(color: Colors.white),
-                //     )),
+                //   },
+                // )),
+                const SizedBox(height: 15),
+                TextForm(hint: 'البريد الالكتروني', controller: email),
+                TextForm(hint: 'كلمه المرور', controller: password),
+                const SizedBox(height: 15),
+                ElevatedButton(
+                    onPressed: () async {
+                      List matchEmail = [];
+                      List matchPassword = [];
+                      matchEmail = snapshot.data!
+                          .where((user) => user.uName == email)
+                          .toList();
+                      matchPassword = snapshot.data!
+                          .where((user) => user.uPass == password)
+                          .toList();
+                      if (matchEmail.isNotEmpty && matchPassword.isNotEmpty) {
+                        Controller.navigatorOff(context, Home());
+                      } else if (matchEmail.isNotEmpty &&
+                          matchPassword.isEmpty) {
+                        showDialog(
+                            context: context,
+                            builder: (context) => MyDialog(
+                                  hasError: true,
+                                  title: 'كلمه المرور خطا ',
+                                  content: 'حاول مرة اخرى ',
+                                ));
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (context) => MyDialog(
+                                  hasError: true,
+                                  title: 'الحساب غير موجود',
+                                  content: 'يرجى عمل حساب',
+                                ));
+                      }
+                    },
+                    child: const Text(
+                      'تسجيل الدخول',
+                      style: TextStyle(color: Colors.white),
+                    )),
+
               ],
             );
           } else {

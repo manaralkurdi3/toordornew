@@ -26,6 +26,9 @@ class Welcome extends StatelessWidget {
         items: [
           SizedBox(height: h * .09),
           ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(primaryColor)
+            ),
               child: SizedBox(
                   width: w / 1.8,
                   height: h / 20,

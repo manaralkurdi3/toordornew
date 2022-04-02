@@ -7,23 +7,25 @@ import 'package:table_calendar/table_calendar.dart';
 
 class Calender extends StatelessWidget{
  DateTime _focusedDay = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-        const Expanded(flex: 1,child: SizedBox(),),
+         Expanded(flex: 1,child: SizedBox(),),
           StatefulBuilder(
             builder: (context,state) {
               return Expanded(
                 flex: 7,
                 child: SfCalendar(
-                  view: CalendarView.workWeek,
-                  timeSlotViewSettings: TimeSlotViewSettings(
-                      startHour: 9,
-                      endHour: 16,
-                      nonWorkingDays: <int>[DateTime.friday, DateTime.saturday]),
+                  view: CalendarView.month,
+                  showCurrentTimeIndicator: true,
+                  monthViewSettings: MonthViewSettings(showAgenda: true,
+                      appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
+                    showTrailingAndLeadingDates: true
+                  ),
                 ));
 
               //   TableCalendar(
@@ -37,7 +39,6 @@ class Calender extends StatelessWidget{
               // ));
             }
           ),
-          const Expanded(flex: 1,child: const SizedBox(),),
         ],
       ),
     );
