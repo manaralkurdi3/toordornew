@@ -39,6 +39,7 @@ dependencies:
   table_calendar: ^3.0.5
   syncfusion_flutter_calendar: ^19.4.56
   sizer:
+
   flutter_localizations:
     # Add this line
     sdk: flutter

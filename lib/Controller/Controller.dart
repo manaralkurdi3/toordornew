@@ -22,6 +22,14 @@ class Controller {
      'assets/instagram.png',
      'assets/instagram.png',
      'assets/instagram.png',
+     'assets/instagram.png',
+     'assets/instagram.png',
+     'assets/instagram.png',
+     'assets/instagram.png',
+     'assets/instagram.png',
+     'assets/instagram.png',
+     'assets/instagram.png',
+     'assets/instagram.png',
   ];
   TimeOfDay selectedTime = TimeOfDay.now();
   Future rssToJson() async{
@@ -103,7 +111,6 @@ class Controller {
 
     if(timeOfDay != null && timeOfDay != selectedTime)
     {
-
       selectedTime = timeOfDay;
 
     }

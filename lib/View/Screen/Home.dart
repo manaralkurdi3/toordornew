@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toordor/View/Widget/TextForm.dart';
 
 
 import '../../Controller/Controller.dart';
@@ -46,32 +47,32 @@ class _HomeState extends State<Home> {
             ),
             onPressed: () {},
           ),
-          // IconButton(
-          //     onPressed: () => showModalBottomSheet(
-          //         context: context,
-          //         builder: (context) => Column(
-          //               children: c.listPage
-          //                   .map((e) => ListTile(
-          //                         title: Text(e.title),
-          //                         trailing: Icon(e.icon),
-          //                         onTap: () {},
-          //                       ))
-          //                   .toList(),
-          //             )),
-          //     icon: const Icon(Icons.more_vert))
+          IconButton(
+              onPressed: () => showModalBottomSheet(
+                  context: context,
+                  builder: (context) => Column(
+                        children: c. listPage
+        .map((e) => ListTile(
+    title: Text(e.title),
+    trailing: Icon(e.icon),
+    onTap: () {},
+    ))
+        .toList(),
+                      )),
+              icon: const Icon(Icons.more_vert))
         ],
-        // title: TextForm(hint: 'البحث', controller: search,widget: IconButton(
-        //   icon: const Icon(Icons.search),
-        //   onPressed: (){},
-        // ),keyBoardType: TextInputType.text,),
-      ),
+        title: TextForm(hint: 'البحث', controller: search,widget: IconButton(
+          icon: const Icon(Icons.search),
+          onPressed: (){},
+        ),keyBoardType: TextInputType.text,)
+     ),
       endDrawer: Drawer(
         child: Column(
           children:c. listPage
               .map((e) => ListTile(
                     title: Text(e.title),
                     trailing: Icon(e.icon),
-                    onTap: () {},
+                    onTap: () => setState(() =>c.listPage[indexPage]),
                   ))
               .toList(),
         ),
