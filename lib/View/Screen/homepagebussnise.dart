@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class Homepagebussnise extends StatefulWidget {
   const Homepagebussnise({Key? key}) : super(key: key);
@@ -8,6 +10,8 @@ class Homepagebussnise extends StatefulWidget {
 }
 
 class _HomepagebussniseState extends State<Homepagebussnise> {
+  DateTime toDay = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -27,6 +31,7 @@ class _HomepagebussniseState extends State<Homepagebussnise> {
     }
 
     return Scaffold(
+      appBar: AppBar(),
       body: SafeArea(
         child: Column(
           children: [
@@ -35,10 +40,9 @@ class _HomepagebussniseState extends State<Homepagebussnise> {
               children: const [
                 FlutterLogo(size: 30),
                 SizedBox(width: 20),
-                Text(
-                  " اسم المشروع ",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
+                Text(" اسم المشروع ",
+                    style:
+                        TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
               ],
             ),
             SizedBox(height: h / 50),
@@ -48,35 +52,34 @@ class _HomepagebussniseState extends State<Homepagebussnise> {
                   itemCount: 60,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (BuildContext context, int index) {
-                    return employ(index: index);
+                    return employ(index: index+1);
                   }),
             ),
             const SizedBox(height: 10),
-            Expanded(
-              flex: 14,
-              child: Row(
-                children: [
-                  Expanded(
-                      flex: 1,
-                      child: ListView.builder(
-                        itemCount: 31,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            padding:const EdgeInsets.all(8),
-                            margin:const EdgeInsets.all(1),
-                            decoration: BoxDecoration(
-                                color: Colors.blue,
-                               // borderRadius: BorderRadius.circular(12),
-                                border: Border.all(width: 1)),
-                            alignment: Alignment.center,
-                            child: Text('${index+1}'),
-                          );
-                        },
-                      )),
-                  Expanded(flex: 4, child: Container(color: Colors.green))
-                ],
-              ),
-            )
+            Expanded(flex: 14, child: SfCalendar()
+                // Row(
+                //   children: [
+                //     Expanded(
+                //         flex: 1,
+                //         child: ListView.builder(
+                //           itemCount: 31,
+                //           itemBuilder: (context, index) {
+                //             return Container(
+                //               padding:const EdgeInsets.all(8),
+                //               margin:const EdgeInsets.all(1),
+                //               decoration: BoxDecoration(
+                //                   color: Colors.blue,
+                //                  // borderRadius: BorderRadius.circular(12),
+                //                   border: Border.all(width: 1)),
+                //               alignment: Alignment.center,
+                //               child: Text('${index+1}'),
+                //             );
+                //           },
+                //         )),
+                //     Expanded(flex: 4, child: Container(color: Colors.green))
+                //   ],
+                // ),
+                ),
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toordor/View/Widget/AppBarr.dart';
 import 'package:toordor/View/Widget/TextForm.dart';
 
 import '../../Controller/Controller.dart';
@@ -21,7 +22,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _key,
-      appBar: AppBar(
+      appBar:AppBar(
           backgroundColor: Colors.blue,
           leading: Container(
             child: const SizedBox(width: 300),
@@ -46,17 +47,17 @@ class _HomeState extends State<Home> {
             PopupMenuButton(
                 itemBuilder: (context) => Controller.listPage
                     .map((e) => PopupMenuItem(
-                          child: ListTile(trailing: Text(e.title)),
-                          onTap: () {
-                            int i = Controller.listPage.indexOf(e);
-                            setState(() => indexPage = i);
-                          },
-                        ))
+                  child: ListTile(trailing: Text(e.title)),
+                  onTap: () {
+                    int i = Controller.listPage.indexOf(e);
+                    setState(() => indexPage = i);
+                  },
+                ))
                     .toList())
           ],
           title: TextForm(
             hint: 'البحث',
-            controller: search,
+
             widget: IconButton(
               icon: const Icon(Icons.search),
               onPressed: () {},

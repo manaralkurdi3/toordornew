@@ -4,7 +4,7 @@ class TextForm extends StatelessWidget {
   String hint;
   Widget? widget;
   bool? visibility;
-  TextEditingController controller;
+  TextEditingController? controller;
   TextInputType? keyBoardType;
   TextForm({
     Key? key,
@@ -12,7 +12,7 @@ class TextForm extends StatelessWidget {
     this.widget,
     this.visibility,
     this.keyBoardType,
-    required this.controller,
+     this.controller,
   }) : super(key: key);
 
   @override
@@ -27,7 +27,7 @@ class TextForm extends StatelessWidget {
         child: TextField(
           keyboardType:keyBoardType ,
           obscureText: visibility ?? false,
-          controller: controller,
+          controller: controller??TextEditingController(),
           decoration: InputDecoration(
               hintText: hint,
               hintStyle: const TextStyle(fontSize: 12),

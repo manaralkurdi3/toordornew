@@ -15,6 +15,7 @@ class MyBusiness extends StatelessWidget {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
+      appBar: AppBar(),
       body: Container(
         margin: EdgeInsets.all(10),
         height: h,

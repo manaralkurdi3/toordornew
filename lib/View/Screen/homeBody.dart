@@ -148,7 +148,7 @@ class _HomeBodyState extends State<HomeBody> {
         Flexible(
           flex: 7,
           child: Container(
-            color: Colors.blue,
+           child: Text('ads',style: TextStyle(fontSize: 90),),
           ),
         )
       ]),

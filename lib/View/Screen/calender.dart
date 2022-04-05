@@ -101,58 +101,63 @@ class _CalenderState extends State<Calender>with TickerProviderStateMixin {
   Widget build(BuildContext context) {
    double h=MediaQuery.of(context).size.height;
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(height: h/10),
-          Expanded(
-              flex:5,
-              child:
-              SfCalendar(
-                view: CalendarView.month,
-                timeSlotViewSettings:const TimeSlotViewSettings(
-                    startHour: 9,
-                    endHour: 16,
-                    nonWorkingDays: <int>[DateTime.friday, DateTime.saturday]),
-                showCurrentTimeIndicator: true,
-                monthViewSettings: MonthViewSettings(showAgenda: true,
-                  appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
-                  showTrailingAndLeadingDates: true,
+      appBar: AppBar(),
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+           const SizedBox(height: 25),
+            Expanded(
+                flex:5,
+                child:
+                SfCalendar(
+                  view: CalendarView.month,
+                  timeSlotViewSettings:const TimeSlotViewSettings(
+                      startHour: 9,
+                      endHour: 16,
+                      nonWorkingDays: <int>[DateTime.friday, DateTime.saturday]),
+                  showCurrentTimeIndicator: true,
+                  monthViewSettings: MonthViewSettings(showAgenda: true,
+                    appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
+                    showTrailingAndLeadingDates: true,
 
+                  ),
+                )),
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding:  EdgeInsets.all(8.0.sp),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor:MaterialStateProperty.all(Theme.of(context).primaryColor)
+                  ),
+                  onPressed: () =>Controller().selectTime(context),
+                  child: Text("اختر وقت الخدمة "),
                 ),
-              )),
-      Expanded(
-        flex: 1,
-        child: Padding(
-          padding:  EdgeInsets.all(8.0.sp),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor:MaterialStateProperty.all(Theme.of(context).primaryColor)
-                ),
-                onPressed: () =>Controller().selectTime(context),
-                child: Text("اختر وقت الخدمة "),
-              ),
-              Text("${Controller().selectedTime.hour}:${Controller().selectedTime.minute}"),
+                Text("${Controller().selectedTime.hour}:${Controller().selectedTime.minute}"),
 
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-              //   TableCalendar(
-              //     firstDay: DateTime.utc(2010, 10, 16),
-              //     lastDay: DateTime.utc(2030, 3, 14),
-              //     focusedDay: DateTime.now(),
-              //     onPageChanged: (focusedDay) {
-              //       state(()=>
-              //       _focusedDay = focusedDay
-              //       );}
-              // ));
-          SizedBox(height: h/3),
+                //   TableCalendar(
+                //     firstDay: DateTime.utc(2010, 10, 16),
+                //     lastDay: DateTime.utc(2030, 3, 14),
+                //     focusedDay: DateTime.now(),
+                //     onPageChanged: (focusedDay) {
+                //       state(()=>
+                //       _focusedDay = focusedDay
+                //       );}
+                // ));
+            Expanded(flex: 4,
+            child: SfCalendar(),
+            ),
 
-        ],
+          ],
+        ),
       ),
     );
   }

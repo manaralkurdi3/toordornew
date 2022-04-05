@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:toordor/Model/users.dart';
 import 'package:toordor/View/Screen/AddProject.dart';
 import 'package:toordor/View/Screen/MyBusiness.dart';
+import 'package:toordor/View/Screen/MyEmployees.dart';
 import 'package:toordor/View/Screen/UserProfile.dart';
 import 'package:toordor/View/Screen/homeBody.dart';
 import 'package:toordor/const/color.dart';
@@ -94,6 +95,7 @@ class Controller {
     Pages(title: 'حسابي', icon: Icons.person,page: UserProFile()),
     Pages(title: 'اعمالي', icon: Icons.monetization_on,page: MyBusiness()),
     Pages(title: 'انشئ مشروعك الخاص', icon: Icons.add, page: AddProject()),
+   Pages(title: 'عروض التوظيف',icon: Icons.work,page: MyEmployees())
   ];
 
   static MaterialColor myColor = const MaterialColor(0xff808080, <int, Color>{
