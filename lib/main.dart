@@ -34,6 +34,9 @@ class MyApp extends StatelessWidget {
                 hourMinuteTextStyle: TextStyle(fontSize: 19.sp),
                 dayPeriodTextStyle: TextStyle(fontSize: 16.sp),
               ),
+            iconTheme: IconThemeData(
+              color: Theme.of(context).primaryColor
+            ),
             elevatedButtonTheme: ElevatedButtonThemeData(
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(primaryColor)

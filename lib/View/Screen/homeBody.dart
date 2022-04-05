@@ -5,6 +5,8 @@ import 'package:toordor/Controller/Controller.dart';
 import 'package:toordor/View/Screen/calender.dart';
 import 'package:toordor/View/Widget/home_card.dart';
 
+import 'business_details.dart';
+
 class HomeBody extends StatefulWidget {
   HomeBody({Key? key}) : super(key: key);
 
@@ -34,7 +36,7 @@ class _HomeBodyState extends State<HomeBody> {
     var reminder = Controller.category.length.remainder(perPageItem);
     lastPageItemLength = reminder == 0 ? perPageItem : reminder;
     // TODO: implement initState
-    print(Controller.category.length);
+
     super.initState();
   }
 
@@ -67,6 +69,7 @@ class _HomeBodyState extends State<HomeBody> {
                   style: TextStyle(fontSize: 12.sp),
                 ),
               ),
+
             ],
           ),
         ),
@@ -91,7 +94,7 @@ class _HomeBodyState extends State<HomeBody> {
                           ? perPageItem
                           : lastPageItemLength, (index) {
                     return GestureDetector(
-                      onTap: () {},
+                      onTap: () =>Controller.navigatorGo(context, BusinessDetails()),
                       child: Container(
                         width: 50,
                         height: 50,
@@ -144,7 +147,9 @@ class _HomeBodyState extends State<HomeBody> {
                 })),
         Flexible(
           flex: 7,
-          child: Container(color: Colors.blue,),
+          child: Container(
+            color: Colors.blue,
+          ),
         )
       ]),
     ));

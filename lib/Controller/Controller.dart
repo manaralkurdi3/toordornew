@@ -7,12 +7,25 @@ import 'package:toordor/View/Screen/AddProject.dart';
 import 'package:toordor/View/Screen/MyBusiness.dart';
 import 'package:toordor/View/Screen/UserProfile.dart';
 import 'package:toordor/View/Screen/homeBody.dart';
-import 'package:toordor/View/Widget/dialog.dart';
 import 'package:toordor/const/color.dart';
 import 'package:http/http.dart' as http;
 
 
 class Controller {
+  showEmployee(BuildContext context){
+    empolyee({required int index})=>Container(
+      child: Text('empolyee $index'),
+    );
+    showDialog(context: context, builder: (context)=>CupertinoAlertDialog(
+      content: GridView.builder(
+          itemCount: 3,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2), itemBuilder:
+          (context,index)=>empolyee(index: index)
+
+      ),
+
+    ));
+  }
    static List<dynamic> category = [
     'assets/instagram.png',
      'assets/instagram.png',
@@ -76,7 +89,7 @@ class Controller {
   //   return listUsers;
   // }
 
-  List<Pages> listPage = [
+ static List<Pages> listPage = [
     Pages(title: 'الرئيسيه', icon: Icons.home_filled,page: HomeBody()),
     Pages(title: 'حسابي', icon: Icons.person,page: UserProFile()),
     Pages(title: 'اعمالي', icon: Icons.monetization_on,page: MyBusiness()),
