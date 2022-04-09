@@ -2,64 +2,100 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:toordor/Model/login_model.dart';
 import 'package:toordor/Model/users.dart';
 import 'package:toordor/View/Screen/AddProject.dart';
+import 'package:toordor/View/Screen/Home.dart';
 import 'package:toordor/View/Screen/MyBusiness.dart';
 import 'package:toordor/View/Screen/MyEmployees.dart';
 import 'package:toordor/View/Screen/UserProfile.dart';
 import 'package:toordor/View/Screen/homeBody.dart';
 import 'package:toordor/const/color.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:toordor/const/urlLinks.dart';
 
 class Controller {
-  showEmployee(BuildContext context){
-    empolyee({required int index})=>Container(
-      child: Text('empolyee $index'),
-    );
-    showDialog(context: context, builder: (context)=>CupertinoAlertDialog(
-      content: GridView.builder(
-          itemCount: 3,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2), itemBuilder:
-          (context,index)=>empolyee(index: index)
-
-      ),
-
-    ));
+  showEmployee(BuildContext context) {
+    empolyee({required int index}) => Container(
+          child: Text('empolyee $index'),
+        );
+    showDialog(
+        context: context,
+        builder: (context) => CupertinoAlertDialog(
+              content: GridView.builder(
+                  itemCount: 3,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
+                  itemBuilder: (context, index) => empolyee(index: index)),
+            ));
   }
-   static List<dynamic> category = [
+
+  Future fetchAllBusinesses(BuildContext context,
+      {required String token}) async {
+    http.Response response = await http.get(Uri.parse(getBusinesses), headers: {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+    if (response.statusCode == 200) {
+      List list = [];
+      Map<String, dynamic> data = json.decode(response.body);
+      list = data['data']??[];
+      return list;
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+                content: Text('حدث خطا ما  ${response.statusCode}'),
+              ));
+    }
+  }
+
+  static List<dynamic> category = [
     'assets/instagram.png',
-     'assets/instagram.png',
-     'assets/instagram.png',
-     'assets/instagram.png',
-     'assets/instagram.png',
-     'assets/instagram.png',
-     'assets/instagram.png',
-     'assets/instagram.png',
-     'assets/instagram.png',
-     'assets/instagram.png',
-     'assets/instagram.png',
-     'assets/instagram.png',
-     'assets/instagram.png',
-     'assets/instagram.png',
-     'assets/instagram.png',
-     'assets/instagram.png',
+    'assets/instagram.png',
+    'assets/instagram.png',
+    'assets/instagram.png',
+    'assets/instagram.png',
+    'assets/instagram.png',
+    'assets/instagram.png',
+    'assets/instagram.png',
+    'assets/instagram.png',
+    'assets/instagram.png',
+    'assets/instagram.png',
+    'assets/instagram.png',
+    'assets/instagram.png',
+    'assets/instagram.png',
+    'assets/instagram.png',
+    'assets/instagram.png',
   ];
   TimeOfDay selectedTime = TimeOfDay.now();
-  Future rssToJson() async{
-    List<Users> data=[];
-    String url='http://toordor.com/api/Users';
-    try {
-      var response = await http.get(Uri.parse(url));
 
+  Future<void> login(BuildContext context,
+      {required String user, password}) async {
+    http.Response response = await http.post(Uri.parse(authLogin),
+        body: json.encode({"username": user, "password": password}),
+        headers: {"Content-Type": "application/json"});
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+              child: CupertinoAlertDialog(
+                content: CupertinoActivityIndicator(),
+              ),
+            ));
 
-      data.add(Users.fromJson(json.decode(response.body)));
-      print(data[0].phone1);
-     // );
-    } catch (e) {
-      print(e);
+    if (response.statusCode == 200) {
+      Navigator.pop(context);
+      Map<String, String> data = json.decode(response.body);
+      LoginResponse loginResponse = LoginResponse.fromJson(data);
+
+      if (loginResponse.data?.token != null) navigatorOff(context, Home());
+    } else {
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('حدث حطا ما' + ' ' + response.statusCode.toString())));
     }
-
   }
 
   // Future<List> fetchUsersFormDB(BuildContext context) async {
@@ -90,12 +126,12 @@ class Controller {
   //   return listUsers;
   // }
 
- static List<Pages> listPage = [
-    Pages(title: 'الرئيسيه', icon: Icons.home_filled,page: HomeBody()),
-    Pages(title: 'حسابي', icon: Icons.person,page: UserProFile()),
-    Pages(title: 'اعمالي', icon: Icons.monetization_on,page: MyBusiness()),
+  static List<Pages> listPage = [
+    Pages(title: 'الرئيسيه', icon: Icons.home_filled, page: HomeBody()),
+    Pages(title: 'حسابي', icon: Icons.person, page: UserProFile()),
+    Pages(title: 'اعمالي', icon: Icons.monetization_on, page: MyBusiness()),
     Pages(title: 'انشئ مشروعك الخاص', icon: Icons.add, page: AddProject()),
-   Pages(title: 'عروض التوظيف',icon: Icons.work,page: MyEmployees())
+    Pages(title: 'عروض التوظيف', icon: Icons.work, page: MyEmployees())
   ];
 
   static MaterialColor myColor = const MaterialColor(0xff808080, <int, Color>{
@@ -115,24 +151,19 @@ class Controller {
     Navigator.push(context, MaterialPageRoute(builder: (context) => route));
   }
 
-   void selectTime(BuildContext context) async {
-
+  void selectTime(BuildContext context) async {
     final TimeOfDay? timeOfDay = await showTimePicker(
       context: context,
       initialTime: selectedTime,
       initialEntryMode: TimePickerEntryMode.input,
-
     );
 
-    if(timeOfDay != null && timeOfDay != selectedTime)
-    {
+    if (timeOfDay != null && timeOfDay != selectedTime) {
       selectedTime = timeOfDay;
-
     }
-
   }
 
- static navigatorOff(BuildContext context, Widget route) {
+  static navigatorOff(BuildContext context, Widget route) {
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => route));
   }
