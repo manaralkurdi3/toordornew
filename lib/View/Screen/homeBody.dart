@@ -1,10 +1,14 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sizer/sizer.dart';
 import 'package:toordor/Controller/Controller.dart';
 import 'package:toordor/View/Screen/calender.dart';
 import 'package:toordor/View/Widget/home_card.dart';
-
+import 'package:http/http.dart' as http;
+import '../../const/urlLinks.dart';
 import 'business_details.dart';
 
 class HomeBody extends StatefulWidget {
@@ -25,15 +29,37 @@ class _HomeBodyState extends State<HomeBody> {
   int selectedIndex = 0;
   late int lastPageItemLength;
   late PageController pageController;
-
+  List items=[];
   @override
   void initState() {
+
+    Future fetchAllBusinesses(BuildContext context,
+        {required String token}) async {
+      http.Response response = await http.get(Uri.parse(getBusinesses), headers: {
+        "Content-Type": "application/json",
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+      if (response.statusCode == 200) {
+
+        Map<String, dynamic> data = json.decode(response.body);
+        items = data['data']??[];
+
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) => CupertinoAlertDialog(
+              content: Text('حدث خطا ما  ${response.statusCode}'),
+            ));
+      }
+    }
+
     pageController = PageController(initialPage: 0);
-    for (var i in Controller.category) {}
-    var num = (Controller.category.length / perPageItem);
+    for (var i in items) {}
+    var num = (items.length / perPageItem);
     pageCount = num.isInt ? num.toInt() : num.toInt() + 1;
 
-    var reminder = Controller.category.length.remainder(perPageItem);
+    var reminder = items.length.remainder(perPageItem);
     lastPageItemLength = reminder == 0 ? perPageItem : reminder;
     // TODO: implement initState
 
@@ -75,7 +101,7 @@ class _HomeBodyState extends State<HomeBody> {
         ),
         Flexible(
           flex: 16,
-          child: PageView.builder(
+          child:items.isNotEmpty? PageView.builder(
               controller: pageController,
               itemCount: pageCount,
               onPageChanged: (index) => setState(() => selectedIndex = index),
@@ -101,15 +127,20 @@ class _HomeBodyState extends State<HomeBody> {
                         margin: const EdgeInsets.all(12),
                         color: Colors.amber,
                         alignment: Alignment.center,
-                        child: Image.asset(
-                          Controller
-                              .category[index + (pageIndex * perPageItem)],
-                        ),
+                        child:null
+                        //Image.asset(
+                          //Controller
+                           //   .category[index + (pageIndex * perPageItem)],
+                        //),
                       ),
                     );
                   }),
                 );
-              }),
+              }):const Center(
+            child: Text('لا توجد اي عناصر',style: TextStyle(
+              fontSize: 18
+            ),),
+          )
           //   Column(
           //   children: [
           //     Row(

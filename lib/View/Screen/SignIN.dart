@@ -56,6 +56,7 @@ class SignIN extends StatelessWidget {
                       'تسجيل الدخول',
                       style: TextStyle(color: Colors.white),
                     )),
+               // ElevatedButton(child: Text('Send SMS'),onPressed: ()=>controller.sendSMS(),)
               ],
             );
           } else {

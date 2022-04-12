@@ -1,16 +1,12 @@
-import 'dart:convert';
-import 'dart:io';
-
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toordor/View/Widget/background.dart';
-import 'package:toordor/const/color.dart';
-
 import '../../Controller/Controller.dart';
-import '../Widget/ImageButton.dart';
 import '../Widget/TextForm.dart';
-import '../Widget/socialmedia.dart';
-import 'package:http/http.dart' as http;
+
+
+
+import 'Home.dart';
 
 class SignUP extends StatelessWidget {
   SignUP({Key? key}) : super(key: key);
@@ -20,59 +16,7 @@ class SignUP extends StatelessWidget {
   TextEditingController phoneNumber = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController Fullname = TextEditingController();
-  SharedPreferences ?sp;
-  Future<bool> registerapi(
-      String username, String userpassword, String fUllname,String phone1,String userid) async {
-      print("=============");
-      final response = await http.post(
-          Uri.parse(
-              'http://toordor.com/api/Users'),
-          body: ({
-            "UName": username,
-            "UPass": userpassword,
-            "UID": userid,
-            "FullName": fUllname,
-            "Phone1": phone1
-          }),
 
-          );
-      print(username);
-      print(fUllname);
-      print(userid);
-      print(userpassword);
-      print(phone1);
-      print("=============");
-      if (response.statusCode == 200) {
-        Map<String, dynamic> data = json.decode(response.body);
-        data = data;
-        print(data);
-
-        //===== Error Handling :
-
-        //============================
-        var name = data['UName'].toString();
-        var password = data['UPass'].toString();
-        var userid = data['UID'].toString();
-        var phone = data['Phone1'].toString();
-        var userFullName = data['FullName'].toString();
-
-        SharedPreferences pref = await SharedPreferences.getInstance();
-        pref.setString("UName", name);
-        pref.setString("UPass", password);
-        pref.setString("UID", userid);
-        pref.setString("Phone1", phone);
-        pref.setString("FullName", userFullName);
-        return true;
-      }
-      else {
-        print(response.statusCode.toString());
-        Map<String, dynamic> data = json.decode(response.body);
-        data = data;
-        print(data);
-        print("=============");
-        return false;
-      }
-    }
 
   @override
   Widget build(BuildContext context) {
@@ -158,11 +102,11 @@ class SignUP extends StatelessWidget {
                                 style: TextStyle(color: Colors.white),
                               ))),
                           onPressed: () async {
-                            SharedPreferences prefs = await SharedPreferences.getInstance();
-                            registerapi(name.text.toString(), password.text,Fullname.text.toString(), phoneNumber.text.toString(),
-                                "780979842");
+                            // SharedPreferences prefs = await SharedPreferences.getInstance();
+                            // registerapi(name.text.toString(), password.text,Fullname.text.toString(), phoneNumber.text.toString(),
+                            //     "780979842");
 
-                            //   c.navigatorGo(context, OTPScreen())
+                               Controller.navigatorGo(context, OTPScreen(phone: phoneNumber.text));
                           }
                       ),
                       SizedBox(height: h * 0.02),
@@ -187,10 +131,25 @@ class SignUP extends StatelessWidget {
   }
 }
 
-class OTPScreen extends StatelessWidget {
-  OTPScreen({Key? key}) : super(key: key);
-  TextEditingController otp = TextEditingController();
+class OTPScreen extends StatefulWidget {
+  OTPScreen({Key? key,required this.phone}) : super(key: key);
+ String phone;
+  @override
+  State<OTPScreen> createState() => _OTPScreenState();
+}
 
+class _OTPScreenState extends State<OTPScreen> {
+  TextEditingController otp = TextEditingController();
+  late String code;
+  String number='+201090039634';
+   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Random random =Random();
+    code=random.nextInt(100000).toString();
+    Controller.sendSMS(code: code,phoneNumber: number);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -208,7 +167,7 @@ class OTPScreen extends StatelessWidget {
               keyBoardType: TextInputType.phone),
           const SizedBox(height: 20),
           ElevatedButton(
-              onPressed: () {},
+              onPressed: () =>otp.text==code?Controller.navigatorOff(context, const Home()):null,
               child: const Text(
                 'تأكيد',
                 style: TextStyle(color: Colors.white),

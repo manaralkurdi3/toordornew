@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toordor/Model/login_model.dart';
-import 'package:toordor/Model/users.dart';
 import 'package:toordor/View/Screen/AddProject.dart';
 import 'package:toordor/View/Screen/Home.dart';
 import 'package:toordor/View/Screen/MyBusiness.dart';
@@ -13,6 +12,7 @@ import 'package:toordor/View/Screen/homeBody.dart';
 import 'package:toordor/const/color.dart';
 import 'package:http/http.dart' as http;
 import 'package:toordor/const/urlLinks.dart';
+import 'package:twilio_flutter/twilio_flutter.dart';
 
 class Controller {
   showEmployee(BuildContext context) {
@@ -30,45 +30,7 @@ class Controller {
             ));
   }
 
-  Future fetchAllBusinesses(BuildContext context,
-      {required String token}) async {
-    http.Response response = await http.get(Uri.parse(getBusinesses), headers: {
-      "Content-Type": "application/json",
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    });
-    if (response.statusCode == 200) {
-      List list = [];
-      Map<String, dynamic> data = json.decode(response.body);
-      list = data['data']??[];
-      return list;
-    } else {
-      showDialog(
-          context: context,
-          builder: (context) => CupertinoAlertDialog(
-                content: Text('حدث خطا ما  ${response.statusCode}'),
-              ));
-    }
-  }
 
-  static List<dynamic> category = [
-    'assets/instagram.png',
-    'assets/instagram.png',
-    'assets/instagram.png',
-    'assets/instagram.png',
-    'assets/instagram.png',
-    'assets/instagram.png',
-    'assets/instagram.png',
-    'assets/instagram.png',
-    'assets/instagram.png',
-    'assets/instagram.png',
-    'assets/instagram.png',
-    'assets/instagram.png',
-    'assets/instagram.png',
-    'assets/instagram.png',
-    'assets/instagram.png',
-    'assets/instagram.png',
-  ];
   TimeOfDay selectedTime = TimeOfDay.now();
 
   Future<void> login(BuildContext context,
@@ -87,9 +49,10 @@ class Controller {
 
     if (response.statusCode == 200) {
       Navigator.pop(context);
-      Map<String, String> data = json.decode(response.body);
+      Map<String, dynamic> data = json.decode(response.body);
       LoginResponse loginResponse = LoginResponse.fromJson(data);
-
+       print('userKey= ${loginResponse.data!.userKey}');
+       print('token = ${loginResponse.data!.token}');
       if (loginResponse.data?.token != null) navigatorOff(context, Home());
     } else {
       Navigator.pop(context);
@@ -98,34 +61,17 @@ class Controller {
     }
   }
 
-  // Future<List> fetchUsersFormDB(BuildContext context) async {
-  //   String url = 'http://toordor.com/api/Users';
-  //   List listUsers = [];
-  //   var xml;
-  //   http.Response response = await http.get(Uri.parse(url));
-  //   if (response.statusCode == 200) {
-  //     showDialog(
-  //         context: context,
-  //         builder: (context) => MyDialog(
-  //               hasError: false,
-  //               title: 'الاتصال طبيعي',
-  //               content: 'رقم الرد ${response.statusCode}',
-  //             ));
-  //    var xmlCom = XmlDocument.parse(response.body);
-  //    xml=xmlCom.findAllElements("User");
-  //     print(xml);
-  //     listUsers.add(Users.fromXml(xml));
-  //     return listUsers;
-  //   } else {
-  //     showDialog(
-  //         context: context,
-  //         builder: (context) => CupertinoAlertDialog(
-  //               content: Text(response.statusCode.toString()),
-  //             ));
-  //   }
-  //   return listUsers;
-  // }
+ static sendSMS({required String phoneNumber,code}){
 
+  TwilioFlutter twilio = TwilioFlutter(
+       accountSid : 'ACf8250c669d4270b27b45af8f940c0394', // replace *** with Account SID
+       authToken : '6bda4370969cbabea75cdfc61aae5da4',  // replace xxx with Auth Token
+       twilioNumber : '+19362593318'  // replace .... with Twilio Number
+   );
+  //twilioFlutter.sendSMS(toNumber: '+201090039634', messageBody: 'hello');
+   twilio.sendSMS(toNumber: '+201090039634', messageBody: code);
+
+ }
   static List<Pages> listPage = [
     Pages(title: 'الرئيسيه', icon: Icons.home_filled, page: HomeBody()),
     Pages(title: 'حسابي', icon: Icons.person, page: UserProFile()),
@@ -147,9 +93,9 @@ class Controller {
     900: Color(0xff808080),
   });
 
-  static navigatorGo(BuildContext context, Widget route) {
+  static navigatorGo(BuildContext context, Widget route) =>
     Navigator.push(context, MaterialPageRoute(builder: (context) => route));
-  }
+
 
   void selectTime(BuildContext context) async {
     final TimeOfDay? timeOfDay = await showTimePicker(
@@ -163,8 +109,8 @@ class Controller {
     }
   }
 
-  static navigatorOff(BuildContext context, Widget route) {
+  static navigatorOff(BuildContext context, Widget route) =>
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => route));
-  }
+
 }
