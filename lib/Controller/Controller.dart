@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toordor/Model/login_model.dart';
 import 'package:toordor/View/Screen/AddProject.dart';
 import 'package:toordor/View/Screen/Home.dart';
@@ -14,7 +15,14 @@ import 'package:http/http.dart' as http;
 import 'package:toordor/const/urlLinks.dart';
 import 'package:twilio_flutter/twilio_flutter.dart';
 
+import '../Model/fetch_all_businesses.dart';
+
 class Controller {
+
+
+
+
+
   showEmployee(BuildContext context) {
     empolyee({required int index}) => Container(
           child: Text('empolyee $index'),
@@ -50,17 +58,46 @@ class Controller {
     if (response.statusCode == 200) {
       Navigator.pop(context);
       Map<String, dynamic> data = json.decode(response.body);
-      LoginResponse loginResponse = LoginResponse.fromJson(data);
-       print('userKey= ${loginResponse.data!.userKey}');
-       print('token = ${loginResponse.data!.token}');
-      if (loginResponse.data?.token != null) navigatorOff(context, Home());
+     LoginResponse  loginResponse = LoginResponse.fromJson(data);
+       print('userKey= ${loginResponse!.data!.userKey}');
+       print('token = ${loginResponse!.data!.token}');
+      if (loginResponse?.data?.token != null) {
+        SharedPreferences preferences=await SharedPreferences.getInstance();
+        preferences.clear();
+        preferences.setString('token', loginResponse.data!.token??'');
+        navigatorOff(context, Home());
+
+      }
     } else {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('حدث حطا ما' + ' ' + response.statusCode.toString())));
     }
   }
-
+  Future<List<DataFetchAllBusinessesModel>> fetchAllBusinesses(BuildContext context) async {
+    List<DataFetchAllBusinessesModel> items=[];
+    SharedPreferences preferences=await SharedPreferences.getInstance();
+    String _token=preferences.getString('token')??'';
+    http.Response response = await http.get(Uri.parse(getBusinesses), headers: {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    });
+    print('fetchAllBusinesses token=$_token');
+    if (response.statusCode == 200) {
+       Map<String,dynamic>  data=json.decode(response.body);
+       FetchAllBusinessesModel model=FetchAllBusinessesModel.fromJson(data);
+     items =model.data!;
+      return items;
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+            content: Text('حدث خطا ما  ${response.statusCode}'),
+          ));
+      return items;
+    }
+  }
  static sendSMS({required String phoneNumber,code}){
 
   TwilioFlutter twilio = TwilioFlutter(
@@ -69,7 +106,7 @@ class Controller {
        twilioNumber : '+19362593318'  // replace .... with Twilio Number
    );
   //twilioFlutter.sendSMS(toNumber: '+201090039634', messageBody: 'hello');
-   twilio.sendSMS(toNumber: '+201090039634', messageBody: code);
+   twilio.sendSMS(toNumber: phoneNumber, messageBody: code);
 
  }
   static List<Pages> listPage = [
