@@ -19,9 +19,491 @@ import '../Model/fetch_all_businesses.dart';
 
 class Controller {
 
+  Future updateBusiness()async{
+    String _token=await SharedPreferences.getInstance().then((value) => value.getString('token')??'');
+    Map<String,String> header={
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+    http.Response response=await http.post(Uri.parse(updateBusinesses),headers: header,body: json.encode(
+        {
+          "baseSecurityParam": {
+            "userKey": 0,
+            "orgKey": 0,
+            "roleKey": 0
+          },
+          "currentState": 0,
+          "sortExpression": "string",
+          "totalRecord": 0,
+          "pageSize": 0,
+          "currentPage": 0,
+          "rowNumber": 0,
+          "returnKey": 0,
+          "bID": 0,
+          "uID": 0,
+          "bFullName": "string",
+          "bPhone1": "string",
+          "bPhone2": "string",
+          "bEmailAdrs": "string",
+          "adrsCity": "string",
+          "bCountry": "string",
+          "gMaps": "string",
+          "lastLoginDate": 0,
+          "logoPNG": "string",
+          "bBranch1": "string",
+          "bBranch2": "string",
+          "bBranch3": "string",
+          "bBranch4": "string",
+          "bBranch5": "string",
+          "bBranch6": "string",
+          "bBranch7": "string",
+          "isActive1": true
+        }
+    ));
+  }
 
+  Future insertBusiness()async{
+    String _token=await SharedPreferences.getInstance().then((value) => value.getString('token')??'');
+    Map<String,String> header={
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+    http.Response response=await http.post(Uri.parse(addBusinesses),headers: header,body: json.encode(
+        {
+          "baseSecurityParam": {
+            "userKey": 0,
+            "orgKey": 0,
+            "roleKey": 0
+          },
+          "currentState": 0,
+          "sortExpression": "string",
+          "totalRecord": 0,
+          "pageSize": 0,
+          "currentPage": 0,
+          "rowNumber": 0,
+          "returnKey": 0,
+          "bID": 0,
+          "uID": 0,
+          "bFullName": "string",
+          "bPhone1": "string",
+          "bPhone2": "string",
+          "bEmailAdrs": "string",
+          "adrsCity": "string",
+          "bCountry": "string",
+          "gMaps": "string",
+          "lastLoginDate": 0,
+          "logoPNG": "string",
+          "bBranch1": "string",
+          "bBranch2": "string",
+          "bBranch3": "string",
+          "bBranch4": "string",
+          "bBranch5": "string",
+          "bBranch6": "string",
+          "bBranch7": "string",
+          "isActive1": true
+        }
+    ));
+  }
 
+  Future fetchBusiRequists()async{
+    String _token=await SharedPreferences.getInstance().then((value) => value.getString('token')??'');
+   http.Response response=await http.get(Uri.parse(getAllBusiRequists),headers:  {
+     "Content-Type": "application/json",
+     'Accept': 'application/json',
+     'Authorization': 'Bearer $_token',
+   });
+  }
 
+  Future updateBusiRequists()async{
+    String _token=await SharedPreferences.getInstance().then((value) => value.getString('token')??'');
+    http.Response response=await http.post(Uri.parse(updateBusinesses),headers: {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    },body:
+    json.encode(
+        {
+          "baseSecurityParam": {
+            "userKey": 0,
+            "orgKey": 0,
+            "roleKey": 0
+          },
+          "currentState": 0,
+          "sortExpression": "string",
+          "totalRecord": 0,
+          "pageSize": 0,
+          "currentPage": 0,
+          "rowNumber": 0,
+          "returnKey": 0,
+          "bRID": 0,
+          "bID": 0,
+          "uID": 0,
+          "reqUID": 0,
+          "msgText": "string",
+          "sentAtDate": 0,
+          "xMsgText": "string",
+          "confrmdAtDate": 0,
+          "rejctdAtDate": 0,
+          "isActive1": true
+        }
+    )
+
+    );
+  }
+  Future insertBusiRequists()async{
+    String _token=await SharedPreferences.getInstance().then((value) => value.getString('token')??'');
+    http.Response response=await http.post(Uri.parse(addBusiRequists),headers: {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    },body:
+        json.encode(
+            {
+              "baseSecurityParam": {
+                "userKey": 0,
+                "orgKey": 0,
+                "roleKey": 0
+              },
+              "currentState": 0,
+              "sortExpression": "string",
+              "totalRecord": 0,
+              "pageSize": 0,
+              "currentPage": 0,
+              "rowNumber": 0,
+              "returnKey": 0,
+              "bRID": 0,
+              "bID": 0,
+              "uID": 0,
+              "reqUID": 0,
+              "msgText": "string",
+              "sentAtDate": 0,
+              "xMsgText": "string",
+              "confrmdAtDate": 0,
+              "rejctdAtDate": 0,
+              "isActive1": true
+            }
+        )
+
+    );
+  }
+  Future getDiaryShift() async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    http.Response response =
+        await http.get(Uri.parse(getAllDiaryShifts), headers: {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    });
+  }
+
+  Future updateDiaryShift() async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    http.Response response = await http.post(Uri.parse(updateDiaryShifts),
+        body: json.encode({
+          "baseSecurityParam": {"userKey": 0, "orgKey": 0, "roleKey": 0},
+          "currentState": 0,
+          "sortExpression": "string",
+          "totalRecord": 0,
+          "pageSize": 0,
+          "currentPage": 0,
+          "rowNumber": 0,
+          "returnKey": 0,
+          "dSID": 0,
+          "bID": 0,
+          "uID": 0,
+          "cUID": 0,
+          "workDate": 0,
+          "shiftStrt": 0,
+          "shiftEnds": 0,
+          "uTTID": 0,
+          "treatmentType": "string",
+          "trtLenght": 0,
+          "trtPrice": 0,
+          "msg4Users": "string",
+          "msg4Supp": "string",
+          "dSCompleted": true,
+          "isActive1": true
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $_token',
+        });
+  }
+
+  Future insertDiaryShifts() async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    http.Response response = await http.post(Uri.parse(addDiaryShifts),
+        body: json.encode({
+          "baseSecurityParam": {"userKey": 0, "orgKey": 0, "roleKey": 0},
+          "currentState": 0,
+          "sortExpression": "string",
+          "totalRecord": 0,
+          "pageSize": 0,
+          "currentPage": 0,
+          "rowNumber": 0,
+          "returnKey": 0,
+          "dSID": 0,
+          "bID": 0,
+          "uID": 0,
+          "cUID": 0,
+          "workDate": 0,
+          "shiftStrt": 0,
+          "shiftEnds": 0,
+          "uTTID": 0,
+          "treatmentType": "string",
+          "trtLenght": 0,
+          "trtPrice": 0,
+          "msg4Users": "string",
+          "msg4Supp": "string",
+          "dSCompleted": true,
+          "isActive1": true
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $_token',
+        });
+  }
+
+  Future fetchUsers() async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    http.Response response = await http.get(Uri.parse(getUsers), headers: {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    });
+  }
+
+  Future updateUser() async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+
+    http.Response response = await http.post(Uri.parse(updateUsers),
+        headers: {
+          "Content-Type": "application/json",
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $_token',
+        },
+        body: json.encode({
+          "baseSecurityParam": {"userKey": 0, "orgKey": 0, "roleKey": 0},
+          "currentState": 0,
+          "sortExpression": "string",
+          "totalRecord": 0,
+          "pageSize": 0,
+          "currentPage": 0,
+          "rowNumber": 0,
+          "returnKey": 0,
+          "uID": 0,
+          "fullName": "string",
+          "uName": "string",
+          "uPass": "string",
+          "phone1": "string",
+          "emailAdrs": "string",
+          "adrsCity": "string",
+          "usrCountry": "string",
+          "gMaps": "string",
+          "lastLoginDate": 0,
+          "logoPNG": "string",
+          "resetCode": "string",
+          "isSysAdmin": true,
+          "isActive1": true
+        }));
+  }
+
+  Future insertUsers() async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+
+    http.Response response = await http.post(Uri.parse(addUsers),
+        headers: {
+          "Content-Type": "application/json",
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $_token',
+        },
+        body: json.encode({
+          "baseSecurityParam": {"userKey": 0, "orgKey": 0, "roleKey": 0},
+          "currentState": 0,
+          "sortExpression": "string",
+          "totalRecord": 0,
+          "pageSize": 0,
+          "currentPage": 0,
+          "rowNumber": 0,
+          "returnKey": 0,
+          "uID": 0,
+          "fullName": "string",
+          "uName": "string",
+          "uPass": "string",
+          "phone1": "string",
+          "emailAdrs": "string",
+          "adrsCity": "string",
+          "usrCountry": "string",
+          "gMaps": "string",
+          "lastLoginDate": 0,
+          "logoPNG": "string",
+          "resetCode": "string",
+          "isSysAdmin": true,
+          "isActive1": true
+        }));
+  }
+
+  Future fetchTreatsTypes() async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    http.Response response =
+        await http.get(Uri.parse(getUsrTreatsTypes), headers: {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    });
+  }
+
+  Future updateUserTreatsTypes() async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    http.Response response = await http.post(Uri.parse(updateUsrTreatsTypes),
+        headers: {
+          "Content-Type": "application/json",
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $_token',
+        },
+        body: json.encode({
+          "baseSecurityParam": {"userKey": 0, "orgKey": 0, "roleKey": 0},
+          "currentState": 0,
+          "sortExpression": "string",
+          "totalRecord": 0,
+          "pageSize": 0,
+          "currentPage": 0,
+          "rowNumber": 0,
+          "returnKey": 0,
+          "uTTID": 0,
+          "bID": 0,
+          "uID": 0,
+          "treatmentType": "string",
+          "trtLenght": 0,
+          "trtPrice": 0,
+          "msg4Users": "string",
+          "isActive1": true
+        }));
+  }
+
+  Future insertUsrTreatsTypes() async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    http.Response response = await http.post(Uri.parse(addUsrTreatsTypes),
+        headers: {
+          "Content-Type": "application/json",
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $_token',
+        },
+        body: json.encode({
+          "baseSecurityParam": {"userKey": 0, "orgKey": 0, "roleKey": 0},
+          "currentState": 0,
+          "sortExpression": "string",
+          "totalRecord": 0,
+          "pageSize": 0,
+          "currentPage": 0,
+          "rowNumber": 0,
+          "returnKey": 0,
+          "uTTID": 0,
+          "bID": 0,
+          "uID": 0,
+          "treatmentType": "string",
+          "trtLenght": 0,
+          "trtPrice": 0,
+          "msg4Users": "string",
+          "isActive1": true
+        }));
+  }
+
+  Future updateUserWorkHours() async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    http.Response response =
+        await http.post(Uri.parse(updateUsrWorkHours), headers: {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    }, body: {
+      "baseSecurityParam": {"userKey": 0, "orgKey": 0, "roleKey": 0},
+      "currentState": 0,
+      "sortExpression": "string",
+      "totalRecord": 0,
+      "pageSize": 0,
+      "currentPage": 0,
+      "rowNumber": 0,
+      "returnKey": 0,
+      "uWHID": 0,
+      "bID": 0,
+      "uID": 0,
+      "workDate": 0,
+      "dayOff": true,
+      "shiftStrt": 0,
+      "shiftEnds": 0,
+      "isWorkShift": true,
+      "mTLenght": 0,
+      "mTPrice": 0,
+      "msg4Users": "string",
+      "isActive1": true
+    });
+  }
+
+  Future insertUserWorkHours() async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    http.Response response = await http.post(Uri.parse(addUsrWorkHours),
+        headers: {
+          "Content-Type": "application/json",
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $_token',
+        },
+        body: json.encode({
+          "baseSecurityParam": {"userKey": 0, "orgKey": 0, "roleKey": 0},
+          "currentState": 0,
+          "sortExpression": "string",
+          "totalRecord": 0,
+          "pageSize": 0,
+          "currentPage": 0,
+          "rowNumber": 0,
+          "returnKey": 0,
+          "uWHID": 0,
+          "bID": 0,
+          "uID": 0,
+          "workDate": 0,
+          "dayOff": true,
+          "shiftStrt": 0,
+          "shiftEnds": 0,
+          "isWorkShift": true,
+          "mTLenght": 0,
+          "mTPrice": 0,
+          "msg4Users": "string",
+          "isActive1": true
+        }));
+  }
+
+  getAllUsrWorkHours(BuildContext context) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String _token = preferences.getString('token') ?? '';
+
+    http.Response response =
+        await http.get(Uri.parse(getUsrWorkHours), headers: {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    });
+    if (response.statusCode == 200) {
+    } else {
+      showCupertinoDialog(
+          context: context,
+          builder: (context) => Text('حدث خطا ما ${response.statusCode}'));
+    }
+  }
 
   showEmployee(BuildContext context) {
     empolyee({required int index}) => Container(
@@ -37,7 +519,6 @@ class Controller {
                   itemBuilder: (context, index) => empolyee(index: index)),
             ));
   }
-
 
   TimeOfDay selectedTime = TimeOfDay.now();
 
@@ -58,26 +539,28 @@ class Controller {
     if (response.statusCode == 200) {
       Navigator.pop(context);
       Map<String, dynamic> data = json.decode(response.body);
-     LoginResponse  loginResponse = LoginResponse.fromJson(data);
-       print('userKey= ${loginResponse!.data!.userKey}');
-       print('token = ${loginResponse!.data!.token}');
-      if (loginResponse?.data?.token != null) {
-        SharedPreferences preferences=await SharedPreferences.getInstance();
+      LoginResponse loginResponse = LoginResponse.fromJson(data);
+      print('userKey= ${loginResponse.data!.userKey}');
+      print('token = ${loginResponse.data!.token}');
+      if (loginResponse.data?.token != null) {
+        SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.clear();
-        preferences.setString('token', loginResponse.data!.token??'');
+        preferences.setString('token', loginResponse.data!.token ?? '');
+        preferences.setString('name', loginResponse.data!.username ?? '');
         navigatorOff(context, Home());
-
       }
     } else {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('حدث حطا ما' + ' ' + response.statusCode.toString())));
+          content: Text('حدث حطا ما' ' ' + response.statusCode.toString())));
     }
   }
-  Future<List<DataFetchAllBusinessesModel>> fetchAllBusinesses(BuildContext context) async {
-    List<DataFetchAllBusinessesModel> items=[];
-    SharedPreferences preferences=await SharedPreferences.getInstance();
-    String _token=preferences.getString('token')??'';
+
+  Future<List<DataFetchAllBusinessesModel>> fetchAllBusinesses(
+      BuildContext context) async {
+    List<DataFetchAllBusinessesModel> items = [];
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String _token = preferences.getString('token') ?? '';
     http.Response response = await http.get(Uri.parse(getBusinesses), headers: {
       "Content-Type": "application/json",
       'Accept': 'application/json',
@@ -85,30 +568,32 @@ class Controller {
     });
     print('fetchAllBusinesses token=$_token');
     if (response.statusCode == 200) {
-       Map<String,dynamic>  data=json.decode(response.body);
-       FetchAllBusinessesModel model=FetchAllBusinessesModel.fromJson(data);
-     items =model.data!;
+      Map<String, dynamic> data = json.decode(response.body);
+      FetchAllBusinessesModel model = FetchAllBusinessesModel.fromJson(data);
+      items = model.data!;
       return items;
     } else {
       showDialog(
           context: context,
           builder: (context) => CupertinoAlertDialog(
-            content: Text('حدث خطا ما  ${response.statusCode}'),
-          ));
+                content: Text('حدث خطا ما  ${response.statusCode}'),
+              ));
       return items;
     }
   }
- static sendSMS({required String phoneNumber,code}){
 
-  TwilioFlutter twilio = TwilioFlutter(
-       accountSid : 'ACf8250c669d4270b27b45af8f940c0394', // replace *** with Account SID
-       authToken : '6bda4370969cbabea75cdfc61aae5da4',  // replace xxx with Auth Token
-       twilioNumber : '+19362593318'  // replace .... with Twilio Number
-   );
-  //twilioFlutter.sendSMS(toNumber: '+201090039634', messageBody: 'hello');
-   twilio.sendSMS(toNumber: phoneNumber, messageBody: code);
+  static sendSMS({required String phoneNumber, code}) {
+    TwilioFlutter twilio = TwilioFlutter(
+        accountSid: 'ACf8250c669d4270b27b45af8f940c0394',
+        // replace *** with Account SID
+        authToken: '6bda4370969cbabea75cdfc61aae5da4',
+        // replace xxx with Auth Token
+        twilioNumber: '+19362593318' // replace .... with Twilio Number
+        );
+    //twilioFlutter.sendSMS(toNumber: '+201090039634', messageBody: 'hello');
+    twilio.sendSMS(toNumber: phoneNumber, messageBody: code);
+  }
 
- }
   static List<Pages> listPage = [
     Pages(title: 'الرئيسيه', icon: Icons.home_filled, page: HomeBody()),
     Pages(title: 'حسابي', icon: Icons.person, page: UserProFile()),
@@ -131,8 +616,7 @@ class Controller {
   });
 
   static navigatorGo(BuildContext context, Widget route) =>
-    Navigator.push(context, MaterialPageRoute(builder: (context) => route));
-
+      Navigator.push(context, MaterialPageRoute(builder: (context) => route));
 
   void selectTime(BuildContext context) async {
     final TimeOfDay? timeOfDay = await showTimePicker(
@@ -147,7 +631,6 @@ class Controller {
   }
 
   static navigatorOff(BuildContext context, Widget route) =>
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => route));
-
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => route));
 }
