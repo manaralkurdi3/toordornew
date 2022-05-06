@@ -4,42 +4,42 @@ String baseUrl='http://toordor.com/';
 String authLogin='${baseUrl}api/auth/login';//POST
 
 // Businesses
-String businesses='${baseUrl}api/TD02/businesses';
-String getBusinesses='$businesses/getAll';//GET
-String addBusinesses='$businesses/insert';//POST
-String updateBusinesses='$businesses/update';//POST
+String businesses='${baseUrl}api/TD02/Businesses';
+String getBusinesses='$businesses/GetAll';//GET
+String addBusinesses='$businesses/Insert';//POST
+String updateBusinesses='$businesses/Update';//POST
 
 // BusiRequists
-String busiRequists='${baseUrl}api/td02/busiRequists';
-String getAllBusiRequists='$busiRequists/getAll';//GET
-String addBusiRequists='$busiRequists/insert';//POST
-String updateBusiRequists='$busiRequists/update';//POST
+String busiRequists='${baseUrl}api/td02/BusiRequists';
+String getAllBusiRequists='$busiRequists/GetAll';//GET
+String addBusiRequists='$busiRequists/Insert';//POST
+String updateBusiRequists='$busiRequists/Update';//POST
 
 
-// DiaryShifts
-String diaryShifts='${baseUrl}api/td02/diaryShifts';
-String getAllDiaryShifts='$diaryShifts/getAll';//GET
-String addDiaryShifts='$diaryShifts/insert';//POST
-String updateDiaryShifts='$diaryShifts/update';//POST
+// DiaryShifts //مواعيد
+String diaryShifts='${baseUrl}api/td02/DiaryShifts';
+String getAllDiaryShifts='$diaryShifts/GetAll';//GET
+String addDiaryShifts='$diaryShifts/Insert';//POST
+String updateDiaryShifts='$diaryShifts/Update';//POST
 
 // Users
-String users='${baseUrl}api/td02/users';
-String getUsers='$users/getAll';//GET
-String addUsers='$users/insert';//POST
-String updateUsers='$users/update';//POST
+String users='${baseUrl}api/td02/Users';
+String getUsers='$users/GetAll';//GET
+String addUsers='$users/Insert';//POST
+String updateUsers='$users/Update';//POST
 
 
 
-// UsrTreatsTypes
-String usrTreatsTypes='${baseUrl}td02/usrTreatsTypes';
-String getUsrTreatsTypes='$usrTreatsTypes/getAll';//GET
-String addUsrTreatsTypes='$usrTreatsTypes/insert';//POST
-String updateUsrTreatsTypes='$usrTreatsTypes/update';//POST
+// UsrTreatsTypes //services
+String usrTreatsTypes='${baseUrl}td02/UsrTreatsTypes';
+String getUsrTreatsTypes='$usrTreatsTypes/GetAll';//GET
+String addUsrTreatsTypes='$usrTreatsTypes/Insert';//POST
+String updateUsrTreatsTypes='$usrTreatsTypes/Update';//POST
 
 
 
 //UsrWorkHours
-String usrWorkHours='${baseUrl}api/td02/usrWorkHours';
-String getUsrWorkHours='$usrWorkHours/getAll';
-String addUsrWorkHours='$usrWorkHours/insert';
-String updateUsrWorkHours='$usrWorkHours/update';
+String usrWorkHours='${baseUrl}api/td02/UsrWorkHours';
+String getUsrWorkHours='$usrWorkHours/GetAll';
+String addUsrWorkHours='$usrWorkHours/Insert';
+String updateUsrWorkHours='$usrWorkHours/Update';

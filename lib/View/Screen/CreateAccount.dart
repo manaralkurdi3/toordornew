@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:toordor/View/Widget/background.dart';
+import 'package:toordor/View/Widget/headerbacground.dart';
 import '../../Controller/Controller.dart';
 import '../Widget/TextForm.dart';
 
@@ -16,7 +17,7 @@ class SignUP extends StatelessWidget {
   TextEditingController phoneNumber = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController Fullname = TextEditingController();
-
+  double _headerHeight = 250;
 
   @override
   Widget build(BuildContext context) {
@@ -31,103 +32,66 @@ class SignUP extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       body: Wrap(
         children: [
-          Stack(
-            alignment: const Alignment(0, .3),
+          Column(
             children: [
-              Column(
-                children: [
-                  Container(
-                    alignment: const Alignment(0, -.4),
-                    child: Image.asset(
-                      'assets/1f3b82a8-489f-4051-9605-90fc99c2010a-removebg-preview.png',
-                      // fit: BoxFit.fill,
-                    ),
-                    width: w,
-                    height: h / 2,
-                    decoration:  BoxDecoration(
-                      color:  Colors.grey.shade400,
-                        borderRadius:const  BorderRadius.only(
-                            bottomLeft: Radius.circular(18),
-                            bottomRight: Radius.circular(18))),
-                  ),
-                  SizedBox(height: h / 2)
-                ],
-              ),
-              Card(
-                elevation: 22,
-                color: Colors.pink.withOpacity(0),
-                child: Container(
-                  width: w / 1.2,
-                  height: h / 1.92,
-                  child: Column(
-                    children: [
-                      SizedBox(height: h * 0.03),
-                      TextForm(
-                        hint: 'الاسم بالكامل',
-                        controller: name,
-                        keyBoardType: TextInputType.name,
-                      ),
-                      TextForm(
-                        hint: 'اسم المستخدم  ',
-                        controller: Fullname,
-                        keyBoardType: TextInputType.name,
-                      ),
-                      /*TextForm(
-                        hint: 'البريد الالكتروني',
-                        controller: userName,
-                        keyBoardType: TextInputType.emailAddress,
-                      ),
-                      */
-                      TextForm(
-                        hint: 'رقم الهاتف',
-                        controller: phoneNumber,
-                        keyBoardType: TextInputType.phone,
-                      ),
-                      TextForm(
-                          hint: 'كلمه المرور',
-                          controller: password,
-                          visibility: true),
-                      SizedBox(height: h * 0.01),
-                      SizedBox(height: h * 0.01),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                       //    backgroundColor: MaterialStateProperty.all(Colors.grey.shade400)
-    ),
-                          child: SizedBox(
-                              width: w / 1.8,
-                              height: h / 20,
-                              child: const Center(
-                                  child: Text(
-                                'تسجيل الحساب',
-                                style: TextStyle(color: Colors.white),
-                              ))),
-                          onPressed: () async {
-                            // SharedPreferences prefs = await SharedPreferences.getInstance();
-                            // registerapi(name.text.toString(), password.text,Fullname.text.toString(), phoneNumber.text.toString(),
-                            //     "780979842");
-
-                               Controller.navigatorGo(context, OTPScreen(phone: phoneNumber.text));
-                          }
-                      ),
-                      SizedBox(height: h * 0.02),
-                    ],
-                  ),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(18)),
+              Container(
+                height: _headerHeight,
+                child: HeaderWidget(_headerHeight, true, Container(
+                  child: Image.asset(
+                      'assets/1f3b82a8-489f-4051-9605-90fc99c2010a-removebg-preview.png'),
+                ),
                 ),
               ),
-              Column(
-                children: [
-                  SizedBox(height: h / 1.4),
-                 // const SocialMedia(),
-                ],
-              )
-            ],
+          TextForm(
+            hint: 'الاسم بالكامل',
+            controller: name,
+            keyBoardType: TextInputType.name,
+          ),
+          TextForm(
+            hint: 'اسم المستخدم  ',
+            controller: Fullname,
+            keyBoardType: TextInputType.name,
+          ),
+          /*TextForm(
+            hint: 'البريد الالكتروني',
+            controller: userName,
+            keyBoardType: TextInputType.emailAddress,
+          ),
+          */
+          TextForm(
+            hint: 'رقم الهاتف',
+            controller: phoneNumber,
+            keyBoardType: TextInputType.phone,
+          ),
+          TextForm(
+              hint: 'كلمه المرور',
+              controller: password,
+              visibility: true),
+          SizedBox(height: h * 0.01),
+          SizedBox(height: h * 0.01),
+          ElevatedButton(
+            style: ButtonStyle(
+           //    backgroundColor: MaterialStateProperty.all(Colors.grey.shade400)
+    ),
+              child: SizedBox(
+                  width: w / 1.8,
+                  height: h / 20,
+                  child: const Center(
+                      child: Text(
+                    'تسجيل الحساب',
+                    style: TextStyle(color: Colors.white),
+                  ))),
+              onPressed: () async {
+                // SharedPreferences prefs = await SharedPreferences.getInstance();
+                // registerapi(name.text.toString(), password.text,Fullname.text.toString(), phoneNumber.text.toString(),
+                //     "780979842");
+
+                   Controller.navigatorGo(context, OTPScreen(phone: phoneNumber.text));
+              }
           ),
         ],
       ),
-    );
+    ]));
   }
 }
 
@@ -167,7 +131,7 @@ class _OTPScreenState extends State<OTPScreen> {
               keyBoardType: TextInputType.phone),
           const SizedBox(height: 20),
           ElevatedButton(
-              onPressed: () =>otp.text==code?Controller.navigatorOff(context, const Home()):null,
+              onPressed: () =>otp.text==code?Controller.navigatorOff(context,  Home()):null,
               child: const Text(
                 'تأكيد',
                 style: TextStyle(color: Colors.white),

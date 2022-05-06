@@ -19,7 +19,10 @@ import '../Model/fetch_all_businesses.dart';
 
 class Controller {
 
-  Future updateBusiness()async{
+  Future updateBusiness(BuildContext context,
+      {
+        required String phoneNumber, required String nameProject,required String specilization,required String email,
+        required String country , required String city} )async{
     String _token=await SharedPreferences.getInstance().then((value) => value.getString('token')??'');
     Map<String,String> header={
       "Content-Type": "application/json",
@@ -28,42 +31,31 @@ class Controller {
     };
     http.Response response=await http.post(Uri.parse(updateBusinesses),headers: header,body: json.encode(
         {
-          "baseSecurityParam": {
-            "userKey": 0,
-            "orgKey": 0,
-            "roleKey": 0
-          },
-          "currentState": 0,
-          "sortExpression": "string",
-          "totalRecord": 0,
-          "pageSize": 0,
-          "currentPage": 0,
-          "rowNumber": 0,
-          "returnKey": 0,
-          "bID": 0,
-          "uID": 0,
-          "bFullName": "string",
-          "bPhone1": "string",
-          "bPhone2": "string",
-          "bEmailAdrs": "string",
-          "adrsCity": "string",
-          "bCountry": "string",
-          "gMaps": "string",
-          "lastLoginDate": 0,
-          "logoPNG": "string",
-          "bBranch1": "string",
-          "bBranch2": "string",
-          "bBranch3": "string",
-          "bBranch4": "string",
-          "bBranch5": "string",
-          "bBranch6": "string",
-          "bBranch7": "string",
+          "uID": phoneNumber,
+          "bFullName": nameProject,
+          "bPhone1": phoneNumber,
+          "bEmailAdrs": email,
+          "adrsCity":city,
+          "bCountry":country,
+          "logoPNG": null,
+          "bBranch1": specilization,
           "isActive1": true
         }
+
     ));
+    if(response.statusCode==200){
+      Navigator.pop(context);
+    }else{
+      showDialog(context: context, builder: (context)=>CupertinoAlertDialog(
+        content: Text('حدث خطا ما ${response.statusCode}'),
+      ));
+    }
   }
 
-  Future insertBusiness()async{
+  Future insertBusiness(BuildContext context,
+      {
+        required String phoneNumber, required String nameProject,required String specilization,required String email,
+        required String country , required String city} )async{
     String _token=await SharedPreferences.getInstance().then((value) => value.getString('token')??'');
     Map<String,String> header={
       "Content-Type": "application/json",
@@ -72,39 +64,31 @@ class Controller {
     };
     http.Response response=await http.post(Uri.parse(addBusinesses),headers: header,body: json.encode(
         {
-          "baseSecurityParam": {
-            "userKey": 0,
-            "orgKey": 0,
-            "roleKey": 0
-          },
-          "currentState": 0,
-          "sortExpression": "string",
-          "totalRecord": 0,
-          "pageSize": 0,
-          "currentPage": 0,
-          "rowNumber": 0,
-          "returnKey": 0,
-          "bID": 0,
-          "uID": 0,
-          "bFullName": "string",
-          "bPhone1": "string",
-          "bPhone2": "string",
-          "bEmailAdrs": "string",
-          "adrsCity": "string",
-          "bCountry": "string",
-          "gMaps": "string",
-          "lastLoginDate": 0,
-          "logoPNG": "string",
-          "bBranch1": "string",
-          "bBranch2": "string",
-          "bBranch3": "string",
-          "bBranch4": "string",
-          "bBranch5": "string",
-          "bBranch6": "string",
-          "bBranch7": "string",
+          "uID": phoneNumber,
+          "bFullName": nameProject,
+          "bPhone1": phoneNumber,
+          "bEmailAdrs": email,
+          "adrsCity":city,
+          "bCountry":country,
+          "logoPNG": null,
+          "bBranch1": specilization,
           "isActive1": true
         }
+
     ));
+    if(response.statusCode==200){
+      showDialog(context: context, builder: (context)=>CupertinoAlertDialog(
+        content: Text('تمت الاضافه بنجاح'),
+        actions: [
+          ElevatedButton(onPressed: ()=>Navigator.pop(context), child: Text('اغلاق'))
+        ],
+      ));
+    }else{
+      showDialog(context: context, builder: (context)=>CupertinoAlertDialog(
+        content: Text('حدث خطا ما ${response.statusCode}'),
+      ));
+    }
+
   }
 
   Future fetchBusiRequists()async{
@@ -547,7 +531,7 @@ class Controller {
         preferences.clear();
         preferences.setString('token', loginResponse.data!.token ?? '');
         preferences.setString('name', loginResponse.data!.username ?? '');
-        navigatorOff(context, Home());
+     navigatorOff(context, Home());
       }
     } else {
       Navigator.pop(context);

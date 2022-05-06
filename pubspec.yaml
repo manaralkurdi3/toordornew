@@ -36,10 +36,14 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^0.13.3
   shared_preferences: ^2.0.13
-  table_calendar: ^3.0.5
+  sms_autofill : ^2.2.0
+  permission_handler:
+  table_calendar: ^3.0.0
   syncfusion_flutter_calendar: ^19.4.56
   sizer:
   twilio_flutter: ^0.0.9
+  hexcolor: ^2.0.0
+
 
   flutter_localizations:
     # Add this line

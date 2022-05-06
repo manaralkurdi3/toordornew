@@ -16,8 +16,10 @@ class TextForm extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(BuildContext context) =>
+      Container(
     height: 40,
+        width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             border: Border.all(width: 0),
             borderRadius: BorderRadius.circular(12),

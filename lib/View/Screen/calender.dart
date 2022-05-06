@@ -20,7 +20,7 @@ class _CalenderState extends State<Calender>with TickerProviderStateMixin {
  late AnimationController _animationController;
  CalendarFormat _calendarFormat = CalendarFormat.month;
  DateTime? _selectedDay;
- late CalendarController _calendarController;
+ // CalendarController _calendarController;
  void onDaySelected(DateTime day, List events, List holidays) {
    print('CALLBACK: _onDaySelected');
    setState(() {
@@ -88,7 +88,7 @@ class _CalenderState extends State<Calender>with TickerProviderStateMixin {
     };
 
     _selectedEvents = _events[_selectedDay] ?? [];
-    _calendarController = CalendarController();
+  //  _calendarController = CalendarController();
 
     _animationController = AnimationController(
       vsync: this,

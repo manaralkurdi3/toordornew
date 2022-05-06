@@ -50,8 +50,10 @@ class SignIN extends StatelessWidget {
                 TextForm(hint: 'كلمه المرور', controller: password,visibility: true),
                 const SizedBox(height: 15),
                 ElevatedButton(
-                    onPressed: () async => controller.login(context,
-                        user: email.text, password: password.text),
+                    onPressed: () async {
+          //controller.fetchAllUsers(context, email.text),
+          },
+                       // controller.login(context, user: email.text, password: password.text),
                     child: const Text(
                       'تسجيل الدخول',
                       style: TextStyle(color: Colors.white),

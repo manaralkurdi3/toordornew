@@ -5,8 +5,8 @@ import 'package:toordor/View/Widget/TextForm.dart';
 import '../../Controller/Controller.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
-
+   Home({Key? key}) : super(key: key);
+//String? token;
   @override
   State<Home> createState() => _HomeState();
 }
@@ -57,7 +57,6 @@ class _HomeState extends State<Home> {
           ],
           title: TextForm(
             hint: 'البحث',
-
             widget: IconButton(
               icon: const Icon(Icons.search),
               onPressed: () {},

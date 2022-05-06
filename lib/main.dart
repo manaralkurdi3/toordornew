@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:sizer/sizer.dart';
-import 'package:toordor/Controller/Controller.dart';
-import 'package:toordor/const/color.dart';
 
 import 'View/Screen/SplashScreen.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp( MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  Color _primaryColor = HexColor('#808080');
+  Color _accentColor = HexColor('#808080');
+   MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,34 +25,18 @@ class MyApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: const [Locale('ar', 'EG')],
-          theme: ThemeData(
-            fontFamily: 'Cairo',
-              timePickerTheme: TimePickerThemeData(
-                helpTextStyle: TextStyle(
-                  fontSize:4.sp,
-                  height: -7.sp
-                ),
-                hourMinuteTextStyle: TextStyle(fontSize: 19.sp),
-                dayPeriodTextStyle: TextStyle(fontSize: 16.sp),
-              ),
-            iconTheme: IconThemeData(
-              color: Theme.of(context).primaryColor
-            ),
-            elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(primaryColor)
-              )
-            ),
-            textTheme: const TextTheme(
-              headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-              headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-              bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
-            ),
-
-          ),
+          theme:   ThemeData(
+          primaryColor: _primaryColor,
+          accentColor: _accentColor,
+          scaffoldBackgroundColor: Colors.grey.shade100,
+          primarySwatch: Colors.grey,
+        ),
           home: SplashScreen(),
         );
       }
     );
   }
 }
+
+
+

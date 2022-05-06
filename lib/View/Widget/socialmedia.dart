@@ -8,10 +8,10 @@ class SocialMedia extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-       color: Colors.grey.withOpacity(0.1),
-      width: MediaQuery.of(context).size.width/1.2,
-      padding: const EdgeInsets.all(8),
-      margin: const EdgeInsets.all(4),
+       color: Colors.grey,
+      width: MediaQuery.of(context).size.width/1.3,
+      padding: const EdgeInsets.all(3),
+      margin: const EdgeInsets.all(3),
       child:
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,

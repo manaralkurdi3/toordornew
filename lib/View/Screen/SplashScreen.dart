@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toordor/View/Screen/logintest.dart';
 import 'package:toordor/const/color.dart';
 
 import '../../Controller/Controller.dart';
@@ -18,8 +19,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-     Future.delayed(const Duration(seconds: 3))
-         .whenComplete(() => Controller.navigatorOff(context, Welcome()));
+    Future.delayed(const Duration(seconds: 3))
+        .whenComplete(() => Controller.navigatorOff(context, LoginPage()));
   }
 
   @override
@@ -28,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Container(
         color: whiteColor,
         child: Image.asset('assets/4104e2aa-4c5b-417a-9507-ca86bc3a639b-removebg-preview.png',
-        height: 70,
+          height: 70,
           width: 70,
         ),
         height: MediaQuery.of(context).size.height,
