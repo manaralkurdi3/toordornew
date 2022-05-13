@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage>{
                           child: Column(
                                     children: [
                                       TextForm(hint: 'البريد الالكتروني', controller: email),
-                                      TextForm(hint: 'كلمه المرور', controller: password),
+                                      TextForm(hint: 'كلمه المرور', controller: password,visibility: true),
                                       const SizedBox(height: 15),
                                       Container(
                                         margin: EdgeInsets.fromLTRB(10,0,10,20),

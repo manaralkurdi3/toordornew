@@ -80,7 +80,7 @@ class Controller {
       showDialog(context: context, builder: (context)=>CupertinoAlertDialog(
         content: Text('تمت الاضافه بنجاح'),
         actions: [
-          ElevatedButton(onPressed: ()=>Navigator.pop(context), child: Text('اغلاق'))
+          ElevatedButton(onPressed: ()=>Navigator.pop(context), child: const Text('اغلاق'))
         ],
       ));
     }else{
@@ -524,13 +524,17 @@ class Controller {
       Navigator.pop(context);
       Map<String, dynamic> data = json.decode(response.body);
       LoginResponse loginResponse = LoginResponse.fromJson(data);
-      print('userKey= ${loginResponse.data!.userKey}');
       print('token = ${loginResponse.data!.token}');
       if (loginResponse.data?.token != null) {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.clear();
         preferences.setString('token', loginResponse.data!.token ?? '');
         preferences.setString('name', loginResponse.data!.username ?? '');
+       String encodeEmail=json.encode(user);
+       String encodePassword=json.encode(password);
+       preferences.setString('expiration', loginResponse.data!.expiration??'');
+       preferences.setString('email', encodeEmail);
+       preferences.setString('password', encodePassword);
      navigatorOff(context, Home());
       }
     } else {

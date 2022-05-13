@@ -6,6 +6,7 @@ class TextForm extends StatelessWidget {
   bool? visibility;
   TextEditingController? controller;
   TextInputType? keyBoardType;
+  ValueChanged<String>? onchange;
   TextForm({
     Key? key,
     required this.hint,
@@ -13,12 +14,14 @@ class TextForm extends StatelessWidget {
     this.visibility,
     this.keyBoardType,
      this.controller,
+    this.onchange
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) =>
       Container(
     height: 40,
+
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             border: Border.all(width: 0),
@@ -30,7 +33,9 @@ class TextForm extends StatelessWidget {
           keyboardType:keyBoardType ,
           obscureText: visibility ?? false,
           controller: controller??TextEditingController(),
+          onChanged:onchange ,
           decoration: InputDecoration(
+
               hintText: hint,
               hintStyle: const TextStyle(fontSize: 12),
               border: InputBorder.none,

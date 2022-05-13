@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:toordor/View/Screen/Home.dart';
 import 'package:toordor/View/Screen/logintest.dart';
 import 'package:toordor/const/color.dart';
 
 import '../../Controller/Controller.dart';
-import 'WelcomeScreen.dart';
+
 
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({Key? key}) : super(key: key);
-
+  SplashScreen({Key? key,required this.route}) : super(key: key);
+Widget route;
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -20,7 +21,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3))
-        .whenComplete(() => Controller.navigatorOff(context, LoginPage()));
+        .whenComplete(() => Controller.navigatorOff(context,widget.route));
+
   }
 
   @override

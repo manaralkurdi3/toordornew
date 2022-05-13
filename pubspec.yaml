@@ -43,7 +43,8 @@ dependencies:
   sizer:
   twilio_flutter: ^0.0.9
   hexcolor: ^2.0.0
-
+  csc_picker:
+  intl: ^0.17.0
 
   flutter_localizations:
     # Add this line
