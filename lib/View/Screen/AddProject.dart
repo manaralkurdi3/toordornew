@@ -44,15 +44,15 @@ class _AddProjectState extends State<AddProject> {
               TextForm(hint: 'البريد الالكتروني', controller: email),
               TextForm(hint: 'التخصص', controller: specialty),
               SizedBox(height: MySize.height(context) / 20),
-              CSCPicker(
-                defaultCountry: DefaultCountry.Palestinian_Territory_Occupied,
-                showStates: false,
-                onStateChanged: (String? myCity)=>setState(()=>city=myCity??''),
-                countryDropdownLabel: country.isEmpty ? 'اختر دولتك' : country,
-                onCountryChanged: (value) => setState(() => country = value)  ,
-                //onStateChanged: (String? value)=>value!=null?city=value:null,
-                showCities: false,
-              ),
+              // CSCPicker(
+              //   defaultCountry: DefaultCountry.Palestinian_Territory_Occupied,
+              //   showStates: false,
+              // //  onStateChanged: (String? myCity)=>setState(()=>city=myCity??''),
+              //   countryDropdownLabel: country.isEmpty ? 'اختر دولتك' : country,
+              //   onCountryChanged: (value) => setState(() => country = value)  ,
+              //   //onStateChanged: (String? value)=>value!=null?city=value:null,
+              //   showCities: false,
+              // ),
               ElevatedButton(
                   onPressed: () {
                     controller.insertBusiness(context,

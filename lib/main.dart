@@ -67,16 +67,17 @@ last??DateTime.now();
   // print('outputDate'+outputDate);
   // DateTime last=DateTime.parse(outputDate);
   //******************************************************************************//
-  if(date!=null && checkDate!=null&&checkDate.isBefore(DateTime.now())){
-    if(email!=null&&password!=null){
-      runApp(MyApp());
-    }else{
-      runApp(App());
-    }
-
-  }else{
-    runApp(App());
-  }
+  // if(date!=null && checkDate!=null&&checkDate.isBefore(DateTime.now())){
+  //   if(email!=null&&password!=null){
+  //     runApp(MyApp());
+  //   }else{
+  //     runApp(App());
+  //   }
+  //
+  // }else{
+  //   runApp(App());
+  // }
+  runApp(App());
 }
 
 class MyApp extends StatelessWidget {

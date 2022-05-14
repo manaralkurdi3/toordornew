@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage>{
               ),
             SafeArea(
               child: Container(
-                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                 //  margin: EdgeInsets.fromLTRB(20, 10, 20, 10),// This will be the login form
                   child: Column(
                     children: [
@@ -54,13 +54,13 @@ class _LoginPageState extends State<LoginPage>{
                                       TextForm(hint: 'كلمه المرور', controller: password,visibility: true),
                                       const SizedBox(height: 15),
                                       Container(
-                                        margin: EdgeInsets.fromLTRB(10,0,10,20),
+                                        margin: const EdgeInsets.fromLTRB(10,0,10,20),
                                         alignment: Alignment.topRight,
                                         child: GestureDetector(
                                           onTap: () {
                                             // Navigator.push( context, MaterialPageRoute( builder: (context) => ForgotPasswordPage()), );
                                           },
-                                          child: Text( "هل نسيت كلمة المرور؟", style: TextStyle( color: Colors.grey, ),
+                                          child: const Text( "هل نسيت كلمة المرور؟", style: TextStyle( color: Colors.grey, ),
                                           ),
                                         ),
                                       ),
@@ -72,18 +72,18 @@ class _LoginPageState extends State<LoginPage>{
                                               controller.login(context,user:email.text,password: password.text);
                                             },
                                           // controller.login(context, user: email.text, password: password.text),
-                                            child:  Text(
+                                            child:  const Text(
                                               'تسجيل الدخول',
                                               style: TextStyle(color: Colors.white),
                                             )),
                                       ),
                                       Container(
-                                        margin: EdgeInsets.fromLTRB(10,20,10,20),
+                                        margin: const EdgeInsets.fromLTRB(10,20,10,20),
                                         //child: Text('Don\'t have an account? Create'),
                                         child: Text.rich(
                                             TextSpan(
                                                 children: [
-                                                  TextSpan(text: "ليس لديك حساب ؟ "),
+                                                  const TextSpan(text: "ليس لديك حساب ؟ "),
                                                   TextSpan(
                                                     text: 'أنشاء',
                                                     recognizer: TapGestureRecognizer()
@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage>{
                                         ),
                                       ),
                                       Container(
-                                        child: SocialMedia(),
+                                        child: const SocialMedia(),
     )
 
 

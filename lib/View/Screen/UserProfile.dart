@@ -43,7 +43,7 @@ class UserProFile extends StatelessWidget {
                       );
                     }),
                 SizedBox(height: h / 20),
-                UserDataForm(title: 'الاسم بالكامل', userData: 'منار الكردي'),
+                UserDataForm(title: 'الاسم بالكامل', userData: "مرحبا ${snapshot.data!.getString('uName')}"),
                 UserDataForm(title: 'رقم الهاتف', userData: '0xxxxxxx'),
                 UserDataForm(
                     title: 'البريد الالكتروني', userData: 'manaralkurdi'),

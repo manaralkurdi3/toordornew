@@ -1,5 +1,4 @@
-
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -15,6 +14,9 @@ class _CalendarState extends State<Calendar> {
   DateTime focusedDay = DateTime.now();
 
   TextEditingController _eventController = TextEditingController();
+  bool bool1 = false;
+  bool bool2 = false;
+  bool bool3 = false;
 
   @override
   void initState() {
@@ -56,9 +58,34 @@ class _CalendarState extends State<Calendar> {
             //Day Changed
             onDaySelected: (DateTime selectDay, DateTime focusDay) {
               setState(() {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return
+                        Dialog(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              RadioListTile(
+                                  value: bool1,
+                                  groupValue: bool1,
+                                  title: Text('موظف 1'),
+                                  onChanged: (bool? value) =>
+                                  bool1 = value!),
+                              RadioListTile(
+                                  value: bool1,
+                                  groupValue: bool1,
+                                  title: Text('موظف 1'),
+                                  onChanged: (bool? value) =>
+                                  bool1 = value!),
+                            ],
+                          ),
+                        );
+                    });
+                    });
+                print("التاريخ هة ");
                 selectedDay = selectDay;
                 focusedDay = focusDay;
-              });
               print(focusedDay);
             },
             selectedDayPredicate: (DateTime date) {
@@ -104,7 +131,7 @@ class _CalendarState extends State<Calendar> {
             ),
           ),
           ..._getEventsfromDay(selectedDay).map(
-                (Event event) => ListTile(
+            (Event event) => ListTile(
               title: Text(
                 event.title,
               ),
@@ -129,7 +156,6 @@ class _CalendarState extends State<Calendar> {
                 child: Text("Ok"),
                 onPressed: () {
                   if (_eventController.text.isEmpty) {
-
                   } else {
                     if (selectedEvents[selectedDay] != null) {
                       selectedEvents[selectedDay]!.add(
@@ -140,11 +166,10 @@ class _CalendarState extends State<Calendar> {
                         Event(title: _eventController.text)
                       ];
                     }
-
                   }
                   Navigator.pop(context);
                   _eventController.clear();
-                  setState((){});
+                  setState(() {});
                   return;
                 },
               ),
@@ -160,6 +185,7 @@ class _CalendarState extends State<Calendar> {
 
 class Event {
   final String title;
+
   Event({required this.title});
 
   String toString() => this.title;

@@ -1,7 +1,7 @@
 String baseUrl='http://toordor.com/';
 
 //LOGIN
-String authLogin='${baseUrl}api/auth/login';//POST
+String authLogin='${baseUrl}api/Auth/login';//POST
 
 // Businesses
 String businesses='${baseUrl}api/TD02/Businesses';

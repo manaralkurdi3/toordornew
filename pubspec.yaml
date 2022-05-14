@@ -45,6 +45,12 @@ dependencies:
   hexcolor: ^2.0.0
   csc_picker:
   intl: ^0.17.0
+  time_range: ^1.0.2
+
+
+  double_back_to_close_app: ^2.1.0
+
+
 
   flutter_localizations:
     # Add this line

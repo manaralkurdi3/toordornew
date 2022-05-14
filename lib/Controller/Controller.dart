@@ -3,13 +3,16 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toordor/Model/fetch_user_from_list.dart';
 import 'package:toordor/Model/login_model.dart';
+import 'package:toordor/Model/users.dart';
 import 'package:toordor/View/Screen/AddProject.dart';
 import 'package:toordor/View/Screen/Home.dart';
 import 'package:toordor/View/Screen/MyBusiness.dart';
 import 'package:toordor/View/Screen/MyEmployees.dart';
 import 'package:toordor/View/Screen/UserProfile.dart';
 import 'package:toordor/View/Screen/homeBody.dart';
+import 'package:toordor/View/Screen/time_workplace.dart';
 import 'package:toordor/const/color.dart';
 import 'package:http/http.dart' as http;
 import 'package:toordor/const/urlLinks.dart';
@@ -19,101 +22,191 @@ import '../Model/fetch_all_businesses.dart';
 
 class Controller {
 
-  Future updateBusiness(BuildContext context,
-      {
-        required String phoneNumber, required String nameProject,required String specilization,required String email,
-        required String country , required String city} )async{
-    String _token=await SharedPreferences.getInstance().then((value) => value.getString('token')??'');
-    Map<String,String> header={
+  getUserData({required String key}) async {
+    http.Response response = await http.get(Uri.parse(getUsers));
+  }
+
+ static Future filterUsers(BuildContext context) async {
+   SharedPreferences preferences = await SharedPreferences.getInstance();
+   String _token = await SharedPreferences.getInstance()
+       .then((value) => value.getString('token') ?? '');
+   String id=await SharedPreferences.getInstance().then((value) =>
+   value.getString('id')??'');
+   String username=await SharedPreferences.getInstance().then((value) =>
+   value.getString('fullName')??'');
+   String phone=await SharedPreferences.getInstance().then((value) =>
+   value.getString('phone1')??'');
+   Map<String, String> header = {
+     "Content-Type": "application/json",
+     'Accept': 'application/json',
+     'Authorization': 'Bearer $_token',
+   };
+    List list = [];
+    //List userData=[];
+    http.Response response = await http.get(Uri.parse(
+        getUsers+"?uID=$id"),headers: header);
+
+   print(response.body);
+    if (response.statusCode == 200) {
+      Map<String,dynamic> arrayObjsText =jsonDecode(response.body);
+      String encodeEmail = username;
+      String encodePassword = phone;
+      preferences.setString('fullName', arrayObjsText['data'][0]['fullName']);
+      preferences.setString('phone1', arrayObjsText['data'][0]['phone1']);
+      print(arrayObjsText['data'][0]['phone1']);
+      print(arrayObjsText['data'][0]['fullName']);
+    //  Welcome welcome=  Welcome.fromJson(res);
+
+    // print(welcome.data.length);
+
+         // String  decodeData = json.decode(response.body);
+         // print (decodeData);
+         // var tagObjsJson = jsonDecode(decodeData)['data'] as List;
+         // List<Datum> tagObjs = tagObjsJson.map((tagJson) => Datum.fromJson(tagJson)).toList();
+         // print(tagObjs);
+      // Map<String,dynamic> decodeData = json.decode(response.body);
+    //   Map<String, dynamic> map = json.decode(response.body);
+    //   List<dynamic> data = map["data"];
+    //   print(data[0]["fullName"]);
+    // list.add(UserModel.fromJson(decodeData));
+         //List<Datum> userData= tagObjsJson.map((tag)=>Datum.fromJson(tag).toList();
+    //   print( 'UserData == '+ userData.toString());
+    //   return userData;
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('حدث حط ما!')));
+    }
+  }
+
+ static Future<List<UserModel>?> getDafPet() async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    Map<String, String> header = {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     };
-    http.Response response=await http.post(Uri.parse(updateBusinesses),headers: header,body: json.encode(
-        {
+    final response =  await http.get(Uri.parse(getUsers),headers: header);
+    if (response.statusCode == 401) {
+      var data = json.decode(response.body);
+      List<UserModel> itemList = [];
+      data.map((item) {
+        itemList.add(UserModel.fromJson(item));
+      }).toList();
+      print(itemList);
+      return itemList;
+    } else {
+      return null;
+    }
+  }
+  Future updateBusiness(BuildContext context,
+      {required String phoneNumber,
+      required String nameProject,
+      required String specilization,
+      required String email,
+      required String country,
+      required String city}) async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    Map<String, String> header = {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+    http.Response response = await http.post(Uri.parse(updateBusinesses),
+        headers: header,
+        body: json.encode({
           "uID": phoneNumber,
           "bFullName": nameProject,
           "bPhone1": phoneNumber,
           "bEmailAdrs": email,
-          "adrsCity":city,
-          "bCountry":country,
+          "adrsCity": city,
+          "bCountry": country,
           "logoPNG": null,
           "bBranch1": specilization,
           "isActive1": true
-        }
-
-    ));
-    if(response.statusCode==200){
+        }));
+    if (response.statusCode == 200) {
       Navigator.pop(context);
-    }else{
-      showDialog(context: context, builder: (context)=>CupertinoAlertDialog(
-        content: Text('حدث خطا ما ${response.statusCode}'),
-      ));
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+                content: Text('حدث خطا ما ${response.statusCode}'),
+              ));
     }
   }
 
   Future insertBusiness(BuildContext context,
-      {
-        required String phoneNumber, required String nameProject,required String specilization,required String email,
-        required String country , required String city} )async{
-    String _token=await SharedPreferences.getInstance().then((value) => value.getString('token')??'');
-    Map<String,String> header={
+      {required String phoneNumber,
+      required String nameProject,
+      required String specilization,
+      required String email,
+       String? country,
+       String ?city}) async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    Map<String, String> header = {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     };
-    http.Response response=await http.post(Uri.parse(addBusinesses),headers: header,body: json.encode(
-        {
+    http.Response response = await http.post(Uri.parse(addBusinesses),
+        headers: header,
+        body: json.encode({
           "uID": phoneNumber,
           "bFullName": nameProject,
           "bPhone1": phoneNumber,
           "bEmailAdrs": email,
-          "adrsCity":city,
-          "bCountry":country,
+          "adrsCity": city,
+          "bCountry": country,
           "logoPNG": null,
           "bBranch1": specilization,
           "isActive1": true
-        }
-
-    ));
-    if(response.statusCode==200){
-      showDialog(context: context, builder: (context)=>CupertinoAlertDialog(
-        content: Text('تمت الاضافه بنجاح'),
-        actions: [
-          ElevatedButton(onPressed: ()=>Navigator.pop(context), child: const Text('اغلاق'))
-        ],
-      ));
-    }else{
-      showDialog(context: context, builder: (context)=>CupertinoAlertDialog(
-        content: Text('حدث خطا ما ${response.statusCode}'),
-      ));
+        }));
+    if (response.statusCode == 200) {
+      showDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+                content: const Text('تمت الاضافه بنجاح'),
+                actions: [
+                  ElevatedButton(
+                      onPressed: () =>
+          Navigator.push(context, MaterialPageRoute(builder: (context) => MyBusiness())),
+                      child: const Text('اغلاق'))
+                ],
+              ));
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+                content: Text('حدث خطا ما ${response.statusCode}'),
+              ));
     }
-
   }
 
-  Future fetchBusiRequists()async{
-    String _token=await SharedPreferences.getInstance().then((value) => value.getString('token')??'');
-   http.Response response=await http.get(Uri.parse(getAllBusiRequists),headers:  {
-     "Content-Type": "application/json",
-     'Accept': 'application/json',
-     'Authorization': 'Bearer $_token',
-   });
-  }
-
-  Future updateBusiRequists()async{
-    String _token=await SharedPreferences.getInstance().then((value) => value.getString('token')??'');
-    http.Response response=await http.post(Uri.parse(updateBusinesses),headers: {
+  Future fetchBusiRequists() async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    http.Response response =
+        await http.get(Uri.parse(getAllBusiRequists), headers: {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
-    },body:
-    json.encode(
-        {
-          "baseSecurityParam": {
-            "userKey": 0,
-            "orgKey": 0,
-            "roleKey": 0
-          },
+    });
+  }
+
+  Future updateBusiRequists() async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    http.Response response = await http.post(Uri.parse(updateBusinesses),
+        headers: {
+          "Content-Type": "application/json",
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $_token',
+        },
+        body: json.encode({
+          "baseSecurityParam": {"userKey": 0, "orgKey": 0, "roleKey": 0},
           "currentState": 0,
           "sortExpression": "string",
           "totalRecord": 0,
@@ -131,47 +224,40 @@ class Controller {
           "confrmdAtDate": 0,
           "rejctdAtDate": 0,
           "isActive1": true
-        }
-    )
-
-    );
+        }));
   }
-  Future insertBusiRequists()async{
-    String _token=await SharedPreferences.getInstance().then((value) => value.getString('token')??'');
-    http.Response response=await http.post(Uri.parse(addBusiRequists),headers: {
-      "Content-Type": "application/json",
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $_token',
-    },body:
-        json.encode(
-            {
-              "baseSecurityParam": {
-                "userKey": 0,
-                "orgKey": 0,
-                "roleKey": 0
-              },
-              "currentState": 0,
-              "sortExpression": "string",
-              "totalRecord": 0,
-              "pageSize": 0,
-              "currentPage": 0,
-              "rowNumber": 0,
-              "returnKey": 0,
-              "bRID": 0,
-              "bID": 0,
-              "uID": 0,
-              "reqUID": 0,
-              "msgText": "string",
-              "sentAtDate": 0,
-              "xMsgText": "string",
-              "confrmdAtDate": 0,
-              "rejctdAtDate": 0,
-              "isActive1": true
-            }
-        )
 
-    );
+  Future insertBusiRequists() async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    http.Response response = await http.post(Uri.parse(addBusiRequists),
+        headers: {
+          "Content-Type": "application/json",
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $_token',
+        },
+        body: json.encode({
+          "baseSecurityParam": {"userKey": 0, "orgKey": 0, "roleKey": 0},
+          "currentState": 0,
+          "sortExpression": "string",
+          "totalRecord": 0,
+          "pageSize": 0,
+          "currentPage": 0,
+          "rowNumber": 0,
+          "returnKey": 0,
+          "bRID": 0,
+          "bID": 0,
+          "uID": 0,
+          "reqUID": 0,
+          "msgText": "string",
+          "sentAtDate": 0,
+          "xMsgText": "string",
+          "confrmdAtDate": 0,
+          "rejctdAtDate": 0,
+          "isActive1": true
+        }));
   }
+
   Future getDiaryShift() async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
@@ -498,13 +584,14 @@ class Controller {
         builder: (context) => CupertinoAlertDialog(
               content: GridView.builder(
                   itemCount: 3,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2),
                   itemBuilder: (context, index) => empolyee(index: index)),
             ));
   }
 
   TimeOfDay selectedTime = TimeOfDay.now();
+  static String? _usersKey;
 
   Future<void> login(BuildContext context,
       {required String user, password}) async {
@@ -525,17 +612,19 @@ class Controller {
       Map<String, dynamic> data = json.decode(response.body);
       LoginResponse loginResponse = LoginResponse.fromJson(data);
       print('token = ${loginResponse.data!.token}');
+      _usersKey = loginResponse.data?.userKey;
       if (loginResponse.data?.token != null) {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.clear();
         preferences.setString('token', loginResponse.data!.token ?? '');
-        preferences.setString('name', loginResponse.data!.username ?? '');
-       String encodeEmail=json.encode(user);
-       String encodePassword=json.encode(password);
-       preferences.setString('expiration', loginResponse.data!.expiration??'');
-       preferences.setString('email', encodeEmail);
-       preferences.setString('password', encodePassword);
-     navigatorOff(context, Home());
+        preferences.setString('id', loginResponse.data!.userKey ?? '');
+        String encodeEmail = json.encode(user);
+        String encodePassword = json.encode(password);
+        preferences.setString(
+            'expiration', loginResponse.data!.expiration ?? '');
+        preferences.setString('uName', encodeEmail);
+        preferences.setString('password', encodePassword);
+        navigatorOff(context, Home());
       }
     } else {
       Navigator.pop(context);
@@ -587,6 +676,7 @@ class Controller {
     Pages(title: 'حسابي', icon: Icons.person, page: UserProFile()),
     Pages(title: 'اعمالي', icon: Icons.monetization_on, page: MyBusiness()),
     Pages(title: 'انشئ مشروعك الخاص', icon: Icons.add, page: AddProject()),
+    Pages(title: 'اوقات العمل ', icon: Icons.work, page: TimeWorkPlace()),
     Pages(title: 'عروض التوظيف', icon: Icons.work, page: MyEmployees())
   ];
 

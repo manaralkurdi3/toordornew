@@ -1,3 +1,4 @@
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:toordor/View/Widget/TextForm.dart';
 
@@ -19,6 +20,9 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: ()async=>await Controller. filterUsers(context) ,
+      ),
       appBar: AppBar(
           backgroundColor: Colors.blue,
           leading: Container(
@@ -51,7 +55,11 @@ class _HomeState extends State<Home> {
             ),
             keyBoardType: TextInputType.text,
           )),
-      body: Controller.listPage[indexPage].page,
+      body: DoubleBackToCloseApp(
+          snackBar: const SnackBar(
+            content: Text('اضغط مره اخري للحروج'),
+          ),
+          child: Controller.listPage[indexPage].page),
     );
   }
 }

@@ -1,97 +1,125 @@
-class FetchUserFromList {
-  String? status;
-  String? statusmsg;
-  List<Dataa>? data;
+// To parse this JSON data, do
+//
+//     final welcome = welcomeFromJson(jsonString);
 
-  FetchUserFromList({this.status, this.statusmsg, this.data});
+import 'dart:convert';
 
-  FetchUserFromList.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    statusmsg = json['statusmsg'];
-    if (json['data'] != null) {
-      data = <Dataa>[];
-      json['data'].forEach((v) {
-        data!.add(new Dataa.fromJson(v));
-      });
-    }
-  }
+Welcome welcomeFromJson(String str) => Welcome.fromJson(json.decode(str));
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['statusmsg'] = this.statusmsg;
-    if (this.data != null) {
-      data['data'] = this.data!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
+String welcomeToJson(Welcome data) => json.encode(data.toJson());
+
+class Welcome {
+  Welcome({
+    required this.status,
+    required    this.statusmsg,
+    required this.data,
+  });
+
+  late String status;
+  late String statusmsg;
+  late List<Datum> data;
+
+  factory Welcome.fromJson(Map<String, dynamic> json) => Welcome(
+    status: json["status"],
+    statusmsg: json["statusmsg"],
+    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "status": status,
+    "statusmsg": statusmsg,
+    "data": List<dynamic>.from(data.map((x) => x.toJson())),
+  };
 }
 
-class Dataa {
-  int? uID;
-  String? fullName;
-  String? uName;
-  String? uPass;
-  String? phone1;
-  String? emailAdrs;
-  String? adrsCity;
-  String? usrCountry;
-  String? gMaps;
-  int? lastLoginDate;
-  Null? logoPNG;
-  String? resetCode;
-  bool? isSysAdmin;
-  bool? isActive1;
+class Datum {
+  Datum({
+    required  this.bId,
+    required  this.uId,
+    required  this.bFullName,
+    required  this.bPhone1,
+    required this.bPhone2,
+    required this.bEmailAdrs,
+    required this.adrsCity,
+    required  this.bCountry,
+    required this.gMaps,
+    required  this.lastLoginDate,
+    required  this.logoPng,
+    required this.bBranch1,
+    required  this.bBranch2,
+    required   this.bBranch3,
+    required  this.bBranch4,
+    required  this.bBranch5,
+    required   this.bBranch6,
+    required  this.bBranch7,
+    required this.isActive1,
+    required this.currentState,
+  });
 
-  Dataa(
-      {this.uID,
-        this.fullName,
-        this.uName,
-        this.uPass,
-        this.phone1,
-        this.emailAdrs,
-        this.adrsCity,
-        this.usrCountry,
-        this.gMaps,
-        this.lastLoginDate,
-        this.logoPNG,
-        this.resetCode,
-        this.isSysAdmin,
-        this.isActive1});
+  late int bId;
+  late int uId;
+  late String bFullName;
+  late String bPhone1;
+  late String bPhone2;
+  late  String bEmailAdrs;
+  late String adrsCity;
+  late  String bCountry;
+  late String gMaps;
+  late int lastLoginDate;
+  late dynamic logoPng;
+  late  String bBranch1;
+  late String bBranch2;
+  late String bBranch3;
+  late String bBranch4;
+  late String bBranch5;
+  late String bBranch6;
+  late String bBranch7;
+  late bool isActive1;
+  late int currentState;
 
-  Dataa.fromJson(Map<String, dynamic> json) {
-    uID = json['uID'];
-    fullName = json['fullName'];
-    uName = json['uName'];
-    uPass = json['uPass'];
-    phone1 = json['phone1'];
-    emailAdrs = json['emailAdrs'];
-    adrsCity = json['adrsCity'];
-    usrCountry = json['usrCountry'];
-    gMaps = json['gMaps'];
-    lastLoginDate = json['lastLoginDate'];
-    logoPNG = json['logoPNG'];
-    resetCode = json['resetCode'];
-    isSysAdmin = json['isSysAdmin'];
-    isActive1 = json['isActive1'];
-  }
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+    bId: json["bID"],
+    uId: json["uID"],
+    bFullName: json["bFullName"],
+    bPhone1: json["bPhone1"],
+    bPhone2: json["bPhone2"],
+    bEmailAdrs: json["bEmailAdrs"],
+    adrsCity: json["adrsCity"],
+    bCountry: json["bCountry"],
+    gMaps: json["gMaps"],
+    lastLoginDate: json["lastLoginDate"],
+    logoPng: json["logoPNG"],
+    bBranch1: json["bBranch1"],
+    bBranch2: json["bBranch2"],
+    bBranch3: json["bBranch3"],
+    bBranch4: json["bBranch4"],
+    bBranch5: json["bBranch5"],
+    bBranch6: json["bBranch6"],
+    bBranch7: json["bBranch7"],
+    isActive1: json["isActive1"],
+    currentState: json["currentState"],
+  );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['uID'] = this.uID;
-    data['fullName'] = this.fullName;
-    data['uName'] = this.uName;
-    data['uPass'] = this.uPass;
-    data['phone1'] = this.phone1;
-    data['emailAdrs'] = this.emailAdrs;
-    data['adrsCity'] = this.adrsCity;
-    data['usrCountry'] = this.usrCountry;
-    data['gMaps'] = this.gMaps;
-    data['lastLoginDate'] = this.lastLoginDate;
-    data['logoPNG'] = this.logoPNG;
-    data['resetCode'] = this.resetCode;
-    data['isSysAdmin'] = this.isSysAdmin;
-    data['isActive1'] = this.isActive1;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+    "bID": bId,
+    "uID": uId,
+    "bFullName": bFullName,
+    "bPhone1": bPhone1,
+    "bPhone2": bPhone2,
+    "bEmailAdrs": bEmailAdrs,
+    "adrsCity": adrsCity,
+    "bCountry": bCountry,
+    "gMaps": gMaps,
+    "lastLoginDate": lastLoginDate,
+    "logoPNG": logoPng,
+    "bBranch1": bBranch1,
+    "bBranch2": bBranch2,
+    "bBranch3": bBranch3,
+    "bBranch4": bBranch4,
+    "bBranch5": bBranch5,
+    "bBranch6": bBranch6,
+    "bBranch7": bBranch7,
+    "isActive1": isActive1,
+    "currentState": currentState,
+  };
 }

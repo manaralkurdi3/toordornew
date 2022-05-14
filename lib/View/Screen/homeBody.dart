@@ -55,7 +55,7 @@ class _HomeBodyState extends State<HomeBody> {
                   return Container(
                     padding: const EdgeInsets.only(top: 20),
                     child: Text(
-                      "مرحبا ${snapshot.data!.getString('name')}",
+                      "مرحبا ${snapshot.data!.getString('uName')}",
                       style: TextStyle(fontSize: 15.sp),
                     ),
                   );
@@ -104,7 +104,7 @@ class _HomeBodyState extends State<HomeBody> {
                         var reminder = snapshot.data!.length.remainder(perPageItem);
                         lastPageItemLength = reminder == 0 ? perPageItem : reminder;
 
-                        return Column(
+                        return RefreshIndicator(child: Column(
                           children: [
                             Expanded(
                               flex:22,
@@ -127,19 +127,20 @@ class _HomeBodyState extends State<HomeBody> {
                                           (pageCount  - 1) != pageIndex
                                               ? perPageItem
                                               : lastPageItemLength, (index) {
+
                                         return GestureDetector(
                                           onTap: () => Controller.navigatorGo(
-                                              context, BusinessDetails()),
+                                              context, Calendar()),
                                           child: ClipRRect(
                                             borderRadius: BorderRadius.circular(12),
                                             child: Container(
-                                              
+
                                                 width: 50,
                                                 height: 50,
                                                 margin: const EdgeInsets.all(12),
                                                 alignment: Alignment.bottomCenter,
                                                 decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(8),
+                                                    borderRadius: BorderRadius.circular(8),
                                                     color: Color(
                                                         (math.Random().nextDouble() *
                                                             0xFFFFFF)
@@ -183,7 +184,9 @@ class _HomeBodyState extends State<HomeBody> {
                                           ));
                                     }))
                           ],
-                        );
+                        ), onRefresh: ()async{
+                          setState(() {});
+                        });
                       }
                     },
                   ),
