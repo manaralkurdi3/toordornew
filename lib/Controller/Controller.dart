@@ -30,22 +30,26 @@ class Controller {
         .then((value) => value.getString('token') ?? '');
     String id = await SharedPreferences.getInstance()
         .then((value) => value.getString('id') ?? '');
+    print(id);
+    print(_token);
+    String username = await SharedPreferences.getInstance()
+        .then((value) => value.getString('username') ?? '');
+    print(username);
 
     Map<String, String> header = {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     };
-
     http.Response response =
         await http.get(Uri.parse(getUsers + "?uID=$id"), headers: header);
-
+   print(response.body);
     if (response.statusCode == 200) {
       Map<String, dynamic> arrayObjsText = jsonDecode(response.body);
       return arrayObjsText;
     } else {
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('حدث حط ما!')));
+          .showSnackBar(const SnackBar(content: Text('حدث خطأ ما!')));
     }
   }
 
@@ -55,30 +59,46 @@ class Controller {
       required email,
       required city,
       required country}) async {
+    print("function start");
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
+    print(_token);
     String id = await SharedPreferences.getInstance()
         .then((value) => value.getString('id') ?? '');
+    print(id);
+    // String username = await SharedPreferences.getInstance()
+    //     .then((value) => value.getString('username') ?? '');
+    // print(username);
+
 
     Map<String, String> header = {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     };
+    DateTime time = DateTime.now();
 
     http.Response response =
         await http.post(Uri.parse(updateUsers ),
             headers: header,
             body: json.encode({
-              'uID':id,
-              "fullName": fullName,
-              'UName':fullName,
-              "phone1": phone,
-              "emailAdrs": email,
-              "adrsCity": city,
-              "usrCountry": country,
+                "uPass": "",
+                "gMaps": "string",
+                "lastLoginDate": 0 ,
+                "logoPNG": null,
+                "resetCode": null,
+                "isSysAdmin": true,
+                "isActive1": true,
+                  'uID':id,
+                "fullName": fullName,
+                'UName':fullName,
+                "phone1": phone,
+               "emailAdrs": email,
+               "adrsCity": city,
+               "usrCountry": country,
             }));
-
+           print(response.body);
+           print(response.statusCode);
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('تم تعديل البينات')));
