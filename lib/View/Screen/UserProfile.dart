@@ -2,75 +2,100 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:toordor/Controller/size.dart';
+import 'package:toordor/Model/users.dart';
+import 'package:toordor/View/Widget/TextForm.dart';
+
+import '../../Controller/Controller.dart';
 
 class UserProFile extends StatelessWidget {
-  const UserProFile({Key? key}) : super(key: key);
+  UserProFile({Key? key}) : super(key: key);
+  String? fullName, phone, email, city, country;
 
   @override
   Widget build(BuildContext context) {
-    double h = MediaQuery.of(context).size.height;
-    double w = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: Wrap(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                FutureBuilder<SharedPreferences>(
-                    future: SharedPreferences.getInstance(),
-                    builder: (context, d) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 13.0.sp),
-                            child: CircleAvatar(
-                              backgroundColor: Colors.grey,
-                              child: Text(d.data?.getString('name')?[0] ?? ''),
-                              radius: 30.sp,
+      body: FutureBuilder<dynamic>(
+          future: Controller.userData(context),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              var map = snapshot.data?['data'][0];
+              fullName = map['fullName'];
+              phone = map['phone1'];
+              email = map['emailAdrs'];
+              city = map['adrsCity'];
+              country = map['usrCountry'];
+              return Wrap(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: 13.0.sp),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.grey,
+                                child: Text(fullName?[0] ?? ''),
+                                radius: 30.sp,
+                              ),
                             ),
+                            Text(
+                              fullName ?? '',
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: MySize.height(context) / 20),
+                        UserDataForm(
+                            title: 'الاسم بالكامل', userData: fullName ?? ""),
+                        UserDataForm(
+                            title: 'رقم الهاتف', userData: phone ?? ''),
+                        UserDataForm(
+                            title: 'البريد الالكتروني', userData: email ?? ''),
+                        UserDataForm(title: 'المدينه', userData: city ?? ''),
+                        UserDataForm(title: 'الدوله', userData: country ?? ''),
+                        SizedBox(height: MySize.height(context) / 20),
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () {}, child: const Text('حفظ')),
+                              ElevatedButton(
+                                  onPressed: () => Controller.navigatorGo(
+                                      context,
+                                      EditUserData(
+                                          fullName: fullName,
+                                          email: email,
+                                          phone: phone,
+                                          city: city,
+                                          country: country)),
+                                  child: const Text('تعديل')),
+                              ElevatedButton(
+                                onPressed: () {},
+                                child: const Text('الغاء'),
+                              ),
+                            ],
                           ),
-                          Text(
-                            d.data!.getString('name') ?? '',
-                            style: const TextStyle(
-                                fontSize: 15,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700),
-                          )
-                        ],
-                      );
-                    }),
-                SizedBox(height: h / 20),
-                UserDataForm(title: 'الاسم بالكامل', userData: "مرحبا ${snapshot.data!.getString('uName')}"),
-                UserDataForm(title: 'رقم الهاتف', userData: '0xxxxxxx'),
-                UserDataForm(
-                    title: 'البريد الالكتروني', userData: 'manaralkurdi'),
-                UserDataForm(title: 'المدينه', userData: 'القدس'),
-                UserDataForm(title: 'الدوله', userData: 'فلسطين'),
-                SizedBox(height: h / 15),
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ElevatedButton(
-                          onPressed: () {}, child: const Text('حفظ')),
-                      ElevatedButton(
-                          onPressed: () {}, child: const Text('تعديل')),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: const Text('الغاء'),
-                      ),
-                    ],
+                        )
+                      ],
+                    ),
                   ),
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
+                ],
+              );
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          }),
     );
   }
 }
@@ -82,7 +107,6 @@ class UserDataForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double w = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 7),
       child: Row(
@@ -98,10 +122,63 @@ class UserDataForm extends StatelessWidget {
           SizedBox(width: 2.w),
           Text(
             userData ?? '',
-            style: TextStyle(fontSize: 16.sp),
+            style: TextStyle(fontSize: 15.sp),
             // textDirection: TextDirection.rtl,
             //textAlign: TextAlign.end,
           )
+        ],
+      ),
+    );
+  }
+}
+
+class EditUserData extends StatelessWidget {
+  EditUserData(
+      {Key? key,
+      this.fullName,
+      this.phone,
+      this.email,
+      this.city,
+      this.country})
+      : super(key: key);
+  final String? fullName, phone, email, city, country;
+  TextEditingController controller1 = TextEditingController();
+  TextEditingController controller2 = TextEditingController();
+  TextEditingController controller3 = TextEditingController();
+  TextEditingController controller4 = TextEditingController();
+  TextEditingController controller5 = TextEditingController();
+
+  addData() {
+    controller1.text = fullName ?? '';
+    controller2.text = phone ?? '';
+    controller3.text = email ?? '';
+    controller4.text = city ?? '';
+    controller5.text = country ?? '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    addData();
+    return Scaffold(
+      appBar: AppBar(
+          backgroundColor: Colors.blue,
+          title: const Text('تعديل البينات',
+              style: TextStyle(color: Colors.white))),
+      body: Column(
+        children: [
+          TextForm(hint: 'الاسم', controller: controller1),
+          TextForm(hint: 'رقم الهاتف', controller: controller2),
+          TextForm(hint: 'البريد الالكتروني', controller: controller3),
+          TextForm(hint: 'المدينه', controller: controller4),
+          TextForm(hint: 'الدوله', controller: controller5),
+          ElevatedButton(
+              onPressed: () => Controller.editUserData(context,
+                  fullName: fullName,
+                  phone: phone,
+                  email: email,
+                  city: city,
+                  country: country),
+              child:const Text('حفظ التعديلات'))
         ],
       ),
     );

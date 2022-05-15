@@ -21,64 +21,77 @@ import 'package:twilio_flutter/twilio_flutter.dart';
 import '../Model/fetch_all_businesses.dart';
 
 class Controller {
-
-  getUserData({required String key}) async {
+  getUserData() async {
     http.Response response = await http.get(Uri.parse(getUsers));
   }
 
- static Future filterUsers(BuildContext context) async {
-   SharedPreferences preferences = await SharedPreferences.getInstance();
-   String _token = await SharedPreferences.getInstance()
-       .then((value) => value.getString('token') ?? '');
-   String id=await SharedPreferences.getInstance().then((value) =>
-   value.getString('id')??'');
-   String username=await SharedPreferences.getInstance().then((value) =>
-   value.getString('fullName')??'');
-   String phone=await SharedPreferences.getInstance().then((value) =>
-   value.getString('phone1')??'');
-   Map<String, String> header = {
-     "Content-Type": "application/json",
-     'Accept': 'application/json',
-     'Authorization': 'Bearer $_token',
-   };
-    List list = [];
-    //List userData=[];
-    http.Response response = await http.get(Uri.parse(
-        getUsers+"?uID=$id"),headers: header);
+  static Future userData(BuildContext context) async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    String id = await SharedPreferences.getInstance()
+        .then((value) => value.getString('id') ?? '');
 
-   print(response.body);
+    Map<String, String> header = {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+
+    http.Response response =
+        await http.get(Uri.parse(getUsers + "?uID=$id"), headers: header);
+
     if (response.statusCode == 200) {
-      Map<String,dynamic> arrayObjsText =jsonDecode(response.body);
-      String encodeEmail = username;
-      String encodePassword = phone;
-      preferences.setString('fullName', arrayObjsText['data'][0]['fullName']);
-      preferences.setString('phone1', arrayObjsText['data'][0]['phone1']);
-      print(arrayObjsText['data'][0]['phone1']);
-      print(arrayObjsText['data'][0]['fullName']);
-    //  Welcome welcome=  Welcome.fromJson(res);
-
-    // print(welcome.data.length);
-
-         // String  decodeData = json.decode(response.body);
-         // print (decodeData);
-         // var tagObjsJson = jsonDecode(decodeData)['data'] as List;
-         // List<Datum> tagObjs = tagObjsJson.map((tagJson) => Datum.fromJson(tagJson)).toList();
-         // print(tagObjs);
-      // Map<String,dynamic> decodeData = json.decode(response.body);
-    //   Map<String, dynamic> map = json.decode(response.body);
-    //   List<dynamic> data = map["data"];
-    //   print(data[0]["fullName"]);
-    // list.add(UserModel.fromJson(decodeData));
-         //List<Datum> userData= tagObjsJson.map((tag)=>Datum.fromJson(tag).toList();
-    //   print( 'UserData == '+ userData.toString());
-    //   return userData;
+      Map<String, dynamic> arrayObjsText = jsonDecode(response.body);
+      return arrayObjsText;
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('حدث حط ما!')));
     }
   }
 
- static Future<List<UserModel>?> getDafPet() async {
+  static Future editUserData(BuildContext context,
+      {required fullName,
+      required phone,
+      required email,
+      required city,
+      required country}) async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    String id = await SharedPreferences.getInstance()
+        .then((value) => value.getString('id') ?? '');
+
+    Map<String, String> header = {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+
+    http.Response response =
+        await http.post(Uri.parse(updateUsers ),
+            headers: header,
+            body: json.encode({
+              'uID':id,
+              "fullName": fullName,
+              'UName':fullName,
+              "phone1": phone,
+              "emailAdrs": email,
+              "adrsCity": city,
+              "usrCountry": country,
+            }));
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('تم تعديل البينات')));
+      Future.delayed(const Duration(seconds: 2))
+          .whenComplete(() => Navigator.pop(context));
+    } else {
+      print(response.body);
+      ScaffoldMessenger.of(context)
+          .showSnackBar( SnackBar(content: Text(response.body)));
+    }
+  }
+
+  static Future<List<UserModel>?> getDafPet() async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
     Map<String, String> header = {
@@ -86,7 +99,7 @@ class Controller {
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     };
-    final response =  await http.get(Uri.parse(getUsers),headers: header);
+    final response = await http.get(Uri.parse(getUsers), headers: header);
     if (response.statusCode == 401) {
       var data = json.decode(response.body);
       List<UserModel> itemList = [];
@@ -99,6 +112,7 @@ class Controller {
       return null;
     }
   }
+
   Future updateBusiness(BuildContext context,
       {required String phoneNumber,
       required String nameProject,
@@ -142,8 +156,8 @@ class Controller {
       required String nameProject,
       required String specilization,
       required String email,
-       String? country,
-       String ?city}) async {
+      String? country,
+      String? city}) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
     Map<String, String> header = {
@@ -171,8 +185,10 @@ class Controller {
                 content: const Text('تمت الاضافه بنجاح'),
                 actions: [
                   ElevatedButton(
-                      onPressed: () =>
-          Navigator.push(context, MaterialPageRoute(builder: (context) => MyBusiness())),
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MyBusiness())),
                       child: const Text('اغلاق'))
                 ],
               ));
@@ -423,15 +439,41 @@ class Controller {
         }));
   }
 
-  Future fetchTreatsTypes() async {
+  Future fetchTreatsTypes(BuildContext context) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
+    String id = await SharedPreferences.getInstance()
+        .then((value) => value.getString('id') ?? '');
+    http.Response response =
+        await http.get(Uri.parse(getUsrTreatsTypes+'?uID=$id'), headers: {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    });
+    if(response.statusCode==200){
+      var decodeData=json.decode(response.body);
+      return decodeData;
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('حدث خطا ما')));
+    }
+  }
+ static Future queryTreatsTypes(BuildContext context,{required String query}) async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+
     http.Response response =
         await http.get(Uri.parse(getUsrTreatsTypes), headers: {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     });
+    print('queryTreatsTypes ${response.body}');
+    if(response.statusCode==200){
+      var decodeData=json.decode(response.body);
+      return decodeData;
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text('حدث خطا ما'+response.statusCode.toString())));
+    }
   }
 
   Future updateUserTreatsTypes() async {

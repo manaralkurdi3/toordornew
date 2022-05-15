@@ -31,7 +31,7 @@ String updateUsers='$users/Update';//POST
 
 
 // UsrTreatsTypes //services
-String usrTreatsTypes='${baseUrl}td02/UsrTreatsTypes';
+String usrTreatsTypes='${baseUrl}api/td02/UsrTreatsTypes';
 String getUsrTreatsTypes='$usrTreatsTypes/GetAll';//GET
 String addUsrTreatsTypes='$usrTreatsTypes/Insert';//POST
 String updateUsrTreatsTypes='$usrTreatsTypes/Update';//POST

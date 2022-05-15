@@ -20,9 +20,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: ()async=>await Controller. filterUsers(context) ,
-      ),
       appBar: AppBar(
           backgroundColor: Colors.blue,
           leading: Container(
@@ -41,24 +38,20 @@ class _HomeState extends State<Home> {
             PopupMenuButton(
                 itemBuilder: (context) => Controller.listPage
                     .map((e) => PopupMenuItem(
-                          child: ListTile(trailing: Text(e.title)),
-                          onTap: () => setState(
-                              () => indexPage = Controller.listPage.indexOf(e)),
-                        ))
+                        child: ListTile(trailing: Text(e.title)),
+                        onTap: () => setState(
+                            () => indexPage = Controller.listPage.indexOf(e))))
                     .toList())
           ],
           title: TextForm(
-            hint: 'البحث',
-            widget: IconButton(
-              icon: const Icon(Icons.search, color: Colors.blue),
-              onPressed: () {},
-            ),
-            keyBoardType: TextInputType.text,
-          )),
+              hint: 'البحث',
+              widget: IconButton(
+                icon: const Icon(Icons.search, color: Colors.blue),
+                onPressed: () {},
+              ),
+              keyBoardType: TextInputType.text)),
       body: DoubleBackToCloseApp(
-          snackBar: const SnackBar(
-            content: Text('اضغط مره اخري للحروج'),
-          ),
+          snackBar: const SnackBar(content: Text('اضغط مره اخري للحروج')),
           child: Controller.listPage[indexPage].page),
     );
   }

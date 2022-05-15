@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:toordor/Controller/Controller.dart';
 import 'package:toordor/Controller/size.dart';
 import 'package:toordor/View/Widget/TextForm.dart';
 
 class MyEmployees extends StatelessWidget {
-  const MyEmployees({Key? key}) : super(key: key);
+  MyEmployees({Key? key}) : super(key: key);
+  String query = '';
 
   @override
   Widget build(BuildContext context) {
@@ -11,12 +13,27 @@ class MyEmployees extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            TextForm(
-                hint: 'البحث عن هويه',
-                widget: IconButton(icon: Icon(Icons.search), onPressed: () {})),
+            StatefulBuilder(builder: (context, update) {
+              return TextForm(
+                  hint: '"يرجي ادخال رقم الهاتف"البحث عن هويه',
+                  onchange: (String value) => update(() => query = value),
+                  widget: IconButton(
+                      icon: const Icon(Icons.search), onPressed: () {}));
+            }),
+
             SizedBox(
                 height: MySize.height(context) / 3,
-                child: const Center(child: Text('نتائح البحث'))),
+                child: FutureBuilder(
+                  future: Controller.queryTreatsTypes(context, query: query),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                          itemBuilder: (context, index) => Text('Data'));
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
+                )),
             Divider(height: 2),
             employCard(context, name: 'الموظف 1', id: "1"),
             employCard(context, name: 'الموظف 2', id: "2"),
