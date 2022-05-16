@@ -30,8 +30,6 @@ class Controller {
         .then((value) => value.getString('token') ?? '');
     String id = await SharedPreferences.getInstance()
         .then((value) => value.getString('id') ?? '');
-    print(id);
-    print(_token);
     String username = await SharedPreferences.getInstance()
         .then((value) => value.getString('username') ?? '');
     print(username);
@@ -41,6 +39,7 @@ class Controller {
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     };
+
     http.Response response =
         await http.get(Uri.parse(getUsers + "?uID=$id"), headers: header);
    print(response.body);
@@ -66,6 +65,9 @@ class Controller {
     String id = await SharedPreferences.getInstance()
         .then((value) => value.getString('id') ?? '');
     print(id);
+    String username = await SharedPreferences.getInstance()
+        .then((value) => value.getString('username') ?? '');
+    print(username.toString());
     // String username = await SharedPreferences.getInstance()
     //     .then((value) => value.getString('username') ?? '');
     // print(username);
@@ -91,7 +93,7 @@ class Controller {
                 "isActive1": true,
                   'uID':id,
                 "fullName": fullName,
-                'UName':fullName,
+                'UName':username,
                 "phone1": phone,
                "emailAdrs": email,
                "adrsCity": city,
@@ -459,7 +461,7 @@ class Controller {
         }));
   }
 
-  Future fetchTreatsTypes(BuildContext context) async {
+ static  Future fetchTreatsTypes(BuildContext context) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
     String id = await SharedPreferences.getInstance()
@@ -480,16 +482,19 @@ class Controller {
  static Future queryTreatsTypes(BuildContext context,{required String query}) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
-
+    String id = await SharedPreferences.getInstance()
+        .then((value) => value.getString('id') ?? '');
     http.Response response =
-        await http.get(Uri.parse(getUsrTreatsTypes), headers: {
+        await http.get(Uri.parse(getUsrTreatsTypes+"uid= $id"), headers: {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     });
+    print(getUsrTreatsTypes+"uid= $id");
     print('queryTreatsTypes ${response.body}');
     if(response.statusCode==200){
       var decodeData=json.decode(response.body);
+
       return decodeData;
     }else{
       ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text('حدث خطا ما'+response.statusCode.toString())));
@@ -523,11 +528,14 @@ class Controller {
           "msg4Users": "string",
           "isActive1": true
         }));
+
   }
 
-  Future insertUsrTreatsTypes() async {
+ static  Future insertUsrTreatsTypes( BuildContext context ,{required String treatmentType,required dynamic trtLenght }) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
+    String id = await SharedPreferences.getInstance()
+        .then((value) => value.getString('id') ?? '');
     http.Response response = await http.post(Uri.parse(addUsrTreatsTypes),
         headers: {
           "Content-Type": "application/json",
@@ -535,23 +543,21 @@ class Controller {
           'Authorization': 'Bearer $_token',
         },
         body: json.encode({
-          "baseSecurityParam": {"userKey": 0, "orgKey": 0, "roleKey": 0},
-          "currentState": 0,
-          "sortExpression": "string",
-          "totalRecord": 0,
-          "pageSize": 0,
-          "currentPage": 0,
-          "rowNumber": 0,
-          "returnKey": 0,
-          "uTTID": 0,
           "bID": 0,
-          "uID": 0,
-          "treatmentType": "string",
-          "trtLenght": 0,
+          "uID": id,
+          "treatmentType": treatmentType,
+          "trtLenght": trtLenght,
           "trtPrice": 0,
           "msg4Users": "string",
           "isActive1": true
         }));
+    print('queryTreatsTypes ${response.body}');
+    if(response.statusCode==200){
+      var decodeData=json.decode(response.body);
+      return decodeData;
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text('حدث خطا ما'+response.statusCode.toString())));
+    }
   }
 
   Future updateUserWorkHours() async {
@@ -680,6 +686,7 @@ class Controller {
         preferences.clear();
         preferences.setString('token', loginResponse.data!.token ?? '');
         preferences.setString('id', loginResponse.data!.userKey ?? '');
+        preferences.setString('username', loginResponse.data!.username ?? '');
         String encodeEmail = json.encode(user);
         String encodePassword = json.encode(password);
         preferences.setString(

@@ -18,6 +18,13 @@ class UserProFile extends StatefulWidget {
 class _UserProFileState extends State<UserProFile> {
   String? fullName, phone, email, city, country;
 
+
+  @override
+  void initState() {
+    Controller.userData(context);
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
 
