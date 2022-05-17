@@ -25,6 +25,27 @@ class Controller {
     http.Response response = await http.get(Uri.parse(getUsers));
   }
 
+  static Future myBuisness(BuildContext context) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String _token = preferences.getString('token') ?? '';
+    String id = preferences.getString('id') ?? '';
+    Map<String, String> header = {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+    http.Response response =
+        await http.get(Uri.parse(getBusinesses + '?uid=$id'),headers: header);
+    if (response.statusCode == 200) {
+      print(response.body);
+      Map<String,dynamic> decodeData = json.decode(response.body);
+      return decodeData;
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Some ting Wrong!!')));
+    }
+  }
+
   static Future userData(BuildContext context) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
@@ -42,7 +63,7 @@ class Controller {
 
     http.Response response =
         await http.get(Uri.parse(getUsers + "?uID=$id"), headers: header);
-   print(response.body);
+    print(response.body);
     if (response.statusCode == 200) {
       Map<String, dynamic> arrayObjsText = jsonDecode(response.body);
       return arrayObjsText;
@@ -72,7 +93,6 @@ class Controller {
     //     .then((value) => value.getString('username') ?? '');
     // print(username);
 
-
     Map<String, String> header = {
       "Content-Type": "application/json",
       'Accept': 'application/json',
@@ -80,27 +100,26 @@ class Controller {
     };
     DateTime time = DateTime.now();
 
-    http.Response response =
-        await http.post(Uri.parse(updateUsers ),
-            headers: header,
-            body: json.encode({
-                "uPass": "",
-                "gMaps": "string",
-                "lastLoginDate": 0 ,
-                "logoPNG": null,
-                "resetCode": null,
-                "isSysAdmin": true,
-                "isActive1": true,
-                  'uID':id,
-                "fullName": fullName,
-                'UName':username,
-                "phone1": phone,
-               "emailAdrs": email,
-               "adrsCity": city,
-               "usrCountry": country,
-            }));
-           print(response.body);
-           print(response.statusCode);
+    http.Response response = await http.post(Uri.parse(updateUsers),
+        headers: header,
+        body: json.encode({
+          "uPass": "",
+          "gMaps": "string",
+          "lastLoginDate": 0,
+          "logoPNG": null,
+          "resetCode": null,
+          "isSysAdmin": true,
+          "isActive1": true,
+          'uID': id,
+          "fullName": fullName,
+          'UName': username,
+          "phone1": phone,
+          "emailAdrs": email,
+          "adrsCity": city,
+          "usrCountry": country,
+        }));
+    print(response.body);
+    print(response.statusCode);
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('تم تعديل البينات')));
@@ -109,7 +128,7 @@ class Controller {
     } else {
       print(response.body);
       ScaffoldMessenger.of(context)
-          .showSnackBar( SnackBar(content: Text(response.body)));
+          .showSnackBar(SnackBar(content: Text(response.body)));
     }
   }
 
@@ -182,15 +201,18 @@ class Controller {
       String? city}) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
+    String id = await SharedPreferences.getInstance()
+        .then((value) => value.getString('id') ?? '');
     Map<String, String> header = {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     };
+    print(id);
     http.Response response = await http.post(Uri.parse(addBusinesses),
         headers: header,
         body: json.encode({
-          "uID": phoneNumber,
+          "uID": id,
           "bFullName": nameProject,
           "bPhone1": phoneNumber,
           "bEmailAdrs": email,
@@ -201,6 +223,7 @@ class Controller {
           "isActive1": true
         }));
     if (response.statusCode == 200) {
+      print('Business added');
       showDialog(
           context: context,
           builder: (context) => CupertinoAlertDialog(
@@ -461,43 +484,47 @@ class Controller {
         }));
   }
 
- static  Future fetchTreatsTypes(BuildContext context) async {
+  static Future fetchTreatsTypes(BuildContext context) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
     String id = await SharedPreferences.getInstance()
         .then((value) => value.getString('id') ?? '');
     http.Response response =
-        await http.get(Uri.parse(getUsrTreatsTypes+'?uID=$id'), headers: {
+        await http.get(Uri.parse(getUsrTreatsTypes + '?uID=$id'), headers: {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     });
-    if(response.statusCode==200){
-      var decodeData=json.decode(response.body);
+    if (response.statusCode == 200) {
+      var decodeData = json.decode(response.body);
       return decodeData;
-    }else{
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('حدث خطا ما')));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('حدث خطا ما')));
     }
   }
- static Future queryTreatsTypes(BuildContext context,{required String query}) async {
+
+  static Future queryTreatsTypes(BuildContext context,
+      {required String query}) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
     String id = await SharedPreferences.getInstance()
         .then((value) => value.getString('id') ?? '');
     http.Response response =
-        await http.get(Uri.parse(getUsrTreatsTypes+"uid= $id"), headers: {
+        await http.get(Uri.parse(getUsrTreatsTypes + "uid= $id"), headers: {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     });
-    print(getUsrTreatsTypes+"uid= $id");
+    print(getUsrTreatsTypes + "uid= $id");
     print('queryTreatsTypes ${response.body}');
-    if(response.statusCode==200){
-      var decodeData=json.decode(response.body);
+    if (response.statusCode == 200) {
+      var decodeData = json.decode(response.body);
 
       return decodeData;
-    }else{
-      ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text('حدث خطا ما'+response.statusCode.toString())));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('حدث خطا ما' + response.statusCode.toString())));
     }
   }
 
@@ -528,10 +555,10 @@ class Controller {
           "msg4Users": "string",
           "isActive1": true
         }));
-
   }
 
- static  Future insertUsrTreatsTypes( BuildContext context ,{required String treatmentType,required dynamic trtLenght }) async {
+  static Future insertUsrTreatsTypes(BuildContext context,
+      {required String treatmentType, required dynamic trtLenght}) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
     String id = await SharedPreferences.getInstance()
@@ -552,11 +579,12 @@ class Controller {
           "isActive1": true
         }));
     print('queryTreatsTypes ${response.body}');
-    if(response.statusCode==200){
-      var decodeData=json.decode(response.body);
+    if (response.statusCode == 200) {
+      var decodeData = json.decode(response.body);
       return decodeData;
-    }else{
-      ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text('حدث خطا ما'+response.statusCode.toString())));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('حدث خطا ما' + response.statusCode.toString())));
     }
   }
 
@@ -715,6 +743,7 @@ class Controller {
     print('fetchAllBusinesses token=$_token');
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
+      print(data);
       FetchAllBusinessesModel model = FetchAllBusinessesModel.fromJson(data);
       items = model.data!;
       return items;
