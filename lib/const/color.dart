@@ -9,5 +9,6 @@ class Pages {
   String title;
   IconData icon;
   Widget  page;
+
   Pages({required this.title, required this.icon,required this.page});
 }

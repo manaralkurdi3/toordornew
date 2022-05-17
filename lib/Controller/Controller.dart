@@ -12,6 +12,7 @@ import 'package:toordor/View/Screen/MyBusiness.dart';
 import 'package:toordor/View/Screen/MyEmployees.dart';
 import 'package:toordor/View/Screen/UserProfile.dart';
 import 'package:toordor/View/Screen/homeBody.dart';
+import 'package:toordor/View/Screen/logintest.dart';
 import 'package:toordor/View/Screen/time_workplace.dart';
 import 'package:toordor/const/color.dart';
 import 'package:http/http.dart' as http;
@@ -19,12 +20,9 @@ import 'package:toordor/const/urlLinks.dart';
 import 'package:twilio_flutter/twilio_flutter.dart';
 
 import '../Model/fetch_all_businesses.dart';
+import '../View/Screen/logout_screen.dart';
 
 class Controller {
-  getUserData() async {
-    http.Response response = await http.get(Uri.parse(getUsers));
-  }
-
   static Future myBuisness(BuildContext context) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String _token = preferences.getString('token') ?? '';
@@ -35,16 +33,47 @@ class Controller {
       'Authorization': 'Bearer $_token',
     };
     http.Response response =
-        await http.get(Uri.parse(getBusinesses + '?uid=$id'),headers: header);
+        await http.get(Uri.parse(getBusinesses + '?uid=$id'), headers: header);
     if (response.statusCode == 200) {
       print(response.body);
-      Map<String,dynamic> decodeData = json.decode(response.body);
+      Map<String, dynamic> decodeData = json.decode(response.body);
       return decodeData;
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Some ting Wrong!!')));
     }
   }
+
+  static List<String> category = [
+    "صالون حلاقة - מספרות/מעצבי שיער",
+    "صالونات تجميل - מכוני יופי",
+    "تصميم اظافر - עיצוב ציפורניים",
+    "تعليم القيادة - מורי נהיגה",
+    "غسيل سيارات - שטיפת רכבים",
+    "مدرس خاص - מורים פרטיים",
+    "صالات رسم الوشم - מכוני קעקועים",
+    "مدرب شخصي - מאמן אישי",
+    "علاج واستشارة طبية - יעוץ וטיפול רפואי",
+    "تصوير - צילום",
+    "مدرب حيوانات - מאלפי חיות",
+    "مدرب سباحة - מורה שחיה",
+    "تدريب الفنون - מאמני אומנות",
+    "كراجات وتصليح - מוסכים",
+    "مدقق حسابات - רואי חשבון",
+    "محامين - עורכי דין",
+    "ميادين الرماية - מטווחי ירי",
+    "عرافة - מגידת עתידות",
+    "علاج طبيعي/ فيزوترابيا - פיזוטרפיה",
+    "منتجع صحي وتدليك - מכוני ספא ומסאג'",
+    "طباعة الوشم - מכוני קעקועים",
+    "مستشار - יועצים",
+    "وسيط/وكيل - מתווכים",
+    "طبيب بيطري - ויטרינר וטיפולי חיות",
+    "مطاحن - מטחנות קמח",
+    "مجالس محلية - מועצות מקומיות",
+    "معاصر الزيتون - בתי בד",
+    "طبيب اسنان - רופא שיניים",
+  ];
 
   static Future userData(BuildContext context) async {
     String _token = await SharedPreferences.getInstance()
@@ -197,6 +226,7 @@ class Controller {
       required String nameProject,
       required String specilization,
       required String email,
+      required setState,
       String? country,
       String? city}) async {
     String _token = await SharedPreferences.getInstance()
@@ -208,7 +238,7 @@ class Controller {
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     };
-    print(id);
+
     http.Response response = await http.post(Uri.parse(addBusinesses),
         headers: header,
         body: json.encode({
@@ -224,19 +254,7 @@ class Controller {
         }));
     if (response.statusCode == 200) {
       print('Business added');
-      showDialog(
-          context: context,
-          builder: (context) => CupertinoAlertDialog(
-                content: const Text('تمت الاضافه بنجاح'),
-                actions: [
-                  ElevatedButton(
-                      onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MyBusiness())),
-                      child: const Text('اغلاق'))
-                ],
-              ));
+      setState(() => listPage[2]);
     } else {
       showDialog(
           context: context,
@@ -558,7 +576,9 @@ class Controller {
   }
 
   static Future insertUsrTreatsTypes(BuildContext context,
-      {required String treatmentType, required dynamic trtLenght}) async {
+      {required String treatmentType,
+      required dynamic trtLenght,
+      required bID}) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
     String id = await SharedPreferences.getInstance()
@@ -570,7 +590,7 @@ class Controller {
           'Authorization': 'Bearer $_token',
         },
         body: json.encode({
-          "bID": 0,
+          "bID": bID,
           "uID": id,
           "treatmentType": treatmentType,
           "trtLenght": trtLenght,
@@ -757,6 +777,12 @@ class Controller {
     }
   }
 
+  static logout(BuildContext context) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.clear();
+    navigatorOff(context, LoginPage());
+  }
+
   static sendSMS({required String phoneNumber, code}) {
     TwilioFlutter twilio = TwilioFlutter(
         accountSid: 'ACf8250c669d4270b27b45af8f940c0394',
@@ -775,7 +801,8 @@ class Controller {
     Pages(title: 'اعمالي', icon: Icons.monetization_on, page: MyBusiness()),
     Pages(title: 'انشئ مشروعك الخاص', icon: Icons.add, page: AddProject()),
     Pages(title: 'اوقات العمل ', icon: Icons.work, page: TimeWorkPlace()),
-    Pages(title: 'عروض التوظيف', icon: Icons.work, page: MyEmployees())
+    Pages(title: 'عروض التوظيف', icon: Icons.work, page: MyEmployees()),
+    Pages(title: 'تسجيل الخروج', icon: Icons.work, page: Logout()),
   ];
 
   static MaterialColor myColor = const MaterialColor(0xff808080, <int, Color>{
@@ -798,7 +825,6 @@ class Controller {
     final TimeOfDay? timeOfDay = await showTimePicker(
       context: context,
       initialTime: selectedTime,
-      initialEntryMode: TimePickerEntryMode.input,
     );
 
     if (timeOfDay != null && timeOfDay != selectedTime) {

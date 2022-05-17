@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toordor/Controller/Controller.dart';
 import 'package:toordor/Controller/size.dart';
+import 'package:toordor/View/Screen/UserProfile.dart';
 import 'package:toordor/View/Widget/TextForm.dart';
 
 class MyEmployees extends StatelessWidget {
   MyEmployees({Key? key}) : super(key: key);
   String query = '';
+
+  Future<SharedPreferences> data() async {
+    return await SharedPreferences.getInstance();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +26,6 @@ class MyEmployees extends StatelessWidget {
                   widget: IconButton(
                       icon: const Icon(Icons.search), onPressed: () {}));
             }),
-
             SizedBox(
                 height: MySize.height(context) / 3,
                 child: FutureBuilder(
@@ -34,11 +39,13 @@ class MyEmployees extends StatelessWidget {
                     }
                   },
                 )),
-            Divider(height: 2),
-            employCard(context, name: 'الموظف 1', id: "1"),
-            employCard(context, name: 'الموظف 2', id: "2"),
-            employCard(context, name: 'الموظف3', id: "3"),
-            employCard(context, name: 'الموظف 4', id: "4"),
+            const Divider(height: 2),
+            FutureBuilder(
+              future: Controller.fetchTreatsTypes(context),
+              builder: (context, snapshot) {
+                return const SizedBox();
+              },
+            )
           ],
         ),
       ),

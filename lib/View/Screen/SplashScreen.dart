@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toordor/View/Screen/Home.dart';
+import 'package:toordor/View/Screen/SignIN.dart';
 import 'package:toordor/View/Screen/logintest.dart';
 import 'package:toordor/const/color.dart';
 
@@ -16,12 +20,25 @@ Widget route;
 
 class _SplashScreenState extends State<SplashScreen> {
   Controller c = Controller();
-
+  String? username;
+  String? password;
+  getData()async{
+   SharedPreferences preferences= await SharedPreferences.getInstance();
+   username=preferences.getString('uName');
+   password=preferences.getString('password');
+   if(username!=null&&password!=null){
+     var dataUser=json.decode(username??'');
+     var dataPass=json.decode(password??'');
+     Controller().login(context, user: dataUser,password: dataPass);
+   }else{
+     Controller.navigatorOff(context, LoginPage());
+   }
+  }
   @override
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3))
-        .whenComplete(() => Controller.navigatorOff(context,widget.route));
+        .whenComplete(() => getData());
 
   }
 
