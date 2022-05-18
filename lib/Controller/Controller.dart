@@ -11,6 +11,7 @@ import 'package:toordor/View/Screen/Home.dart';
 import 'package:toordor/View/Screen/MyBusiness.dart';
 import 'package:toordor/View/Screen/MyEmployees.dart';
 import 'package:toordor/View/Screen/UserProfile.dart';
+import 'package:toordor/View/Screen/category_screen.dart';
 import 'package:toordor/View/Screen/homeBody.dart';
 import 'package:toordor/View/Screen/logintest.dart';
 import 'package:toordor/View/Screen/time_workplace.dart';
@@ -45,7 +46,7 @@ class Controller {
   }
 
   static List<String> category = [
-    "صالون حلاقة - מספרות/מעצבי שיער",
+    "صالون حلاقة -  מספרות/מעצבי שיער",
     "صالونات تجميل - מכוני יופי",
     "تصميم اظافر - עיצוב ציפורניים",
     "تعليم القيادة - מורי נהיגה",
@@ -796,7 +797,7 @@ class Controller {
   }
 
   static List<Pages> listPage = [
-    Pages(title: 'الرئيسيه', icon: Icons.home_filled, page: HomeBody()),
+    Pages(title: 'الرئيسيه', icon: Icons.home_filled, page: CategoryScreen()),
     Pages(title: 'حسابي', icon: Icons.person, page: UserProFile()),
     Pages(title: 'اعمالي', icon: Icons.monetization_on, page: MyBusiness()),
     Pages(title: 'انشئ مشروعك الخاص', icon: Icons.add, page: AddProject()),
