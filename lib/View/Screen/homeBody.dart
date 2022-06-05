@@ -5,10 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:sizer/sizer.dart';
 import 'package:toordor/Controller/Controller.dart';
-import 'package:toordor/View/Screen/calender.dart';
 
 import '../../Model/fetch_all_businesses.dart';
-import 'business_details.dart';
 import 'calenderevent.dart';
 
 class HomeBody extends StatefulWidget {
@@ -205,13 +203,11 @@ class _HomeBodyState extends State<HomeBody> {
                 ),
               ),
             )),
-        Flexible(
+        const Flexible(
           flex: 7,
-          child: Container(
-            child: Text(
-              'ads',
-              style: TextStyle(fontSize: 90),
-            ),
+          child: Text(
+            'ads',
+            style: TextStyle(fontSize: 90),
           ),
         )
       ]),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../../const/color.dart';
+
 class Homepagebussnise extends StatefulWidget {
   const Homepagebussnise({Key? key}) : super(key: key);
 
@@ -31,7 +33,7 @@ class _HomepagebussniseState extends State<Homepagebussnise> {
     }
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(backgroundColor: primaryColor),
       body: SafeArea(
         child: Column(
           children: [
@@ -52,11 +54,12 @@ class _HomepagebussniseState extends State<Homepagebussnise> {
                   itemCount: 60,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (BuildContext context, int index) {
-                    return employ(index: index+1);
+                    return employ(index: index + 1);
                   }),
             ),
             const SizedBox(height: 10),
-            Expanded(flex: 14, child: SfCalendar()
+            Expanded(
+                flex: 14, child: SfCalendar(blackoutDates: [DateTime.now()])
                 // Row(
                 //   children: [
                 //     Expanded(
