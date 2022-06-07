@@ -17,6 +17,7 @@ import 'package:toordor/View/Screen/logintest.dart';
 import 'package:toordor/View/Screen/time_workplace.dart';
 import 'package:toordor/const/color.dart';
 import 'package:http/http.dart' as http;
+import 'package:toordor/const/new_url_links.dart';
 import 'package:toordor/const/urlLinks.dart';
 import 'package:twilio_flutter/twilio_flutter.dart';
 
@@ -46,8 +47,8 @@ class Controller {
   }
 
   static List<String> category = [
-    "صالون حلاقة -  מספרות/מעצבי שיער",
-    "صالونات تجميل - מכוני יופי",
+    "صالون حلاقة ",
+    "صالونات تجميل ",
     "تصميم اظافر - עיצוב ציפורניים",
     "تعليم القيادة - מורי נהיגה",
     "غسيل سيارات - שטיפת רכבים",
@@ -162,27 +163,27 @@ class Controller {
     }
   }
 
-  static Future<List<UserModel>?> getDafPet() async {
-    String _token = await SharedPreferences.getInstance()
-        .then((value) => value.getString('token') ?? '');
-    Map<String, String> header = {
-      "Content-Type": "application/json",
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $_token',
-    };
-    final response = await http.get(Uri.parse(getUsers), headers: header);
-    if (response.statusCode == 401) {
-      var data = json.decode(response.body);
-      List<UserModel> itemList = [];
-      data.map((item) {
-        itemList.add(UserModel.fromJson(item));
-      }).toList();
-      print(itemList);
-      return itemList;
-    } else {
-      return null;
-    }
-  }
+  // static Future<List<UserModel>?> getDafPet() async {
+  //   String _token = await SharedPreferences.getInstance()
+  //       .then((value) => value.getString('token') ?? '');
+  //   Map<String, String> header = {
+  //     "Content-Type": "application/json",
+  //     'Accept': 'application/json',
+  //     'Authorization': 'Bearer $_token',
+  //   };
+  //   final response = await http.get(Uri.parse(getUsers), headers: header);
+  //   if (response.statusCode == 401) {
+  //     var data = json.decode(response.body);
+  //     List<UserModel> itemList = [];
+  //     data.map((item) {
+  //       itemList.add(UserModel.fromJson(item));
+  //     }).toList();
+  //     print(itemList);
+  //     return itemList;
+  //   } else {
+  //     return null;
+  //   }
+  // }
 
   Future updateBusiness(BuildContext context,
       {required String phoneNumber,
@@ -711,9 +712,9 @@ class Controller {
   static String? _usersKey;
 
   Future<void> login(BuildContext context,
-      {required String user, password}) async {
-    http.Response response = await http.post(Uri.parse(authLogin),
-        body: json.encode({"username": user, "password": password}),
+      {required String phone, password}) async {
+    http.Response response = await http.post(Uri.parse(ApiLinks.login),
+        body: json.encode({"phone": phone, "password": password}),
         headers: {"Content-Type": "application/json"});
     showDialog(
         context: context,
@@ -729,18 +730,18 @@ class Controller {
       Map<String, dynamic> data = json.decode(response.body);
       LoginResponse loginResponse = LoginResponse.fromJson(data);
       print('token = ${loginResponse.data!.token}');
-      _usersKey = loginResponse.data?.userKey;
+      print('UserName === ${loginResponse.data!.username}');
+      print(data);
+     // _usersKey = loginResponse.data?.userKey;
       if (loginResponse.data?.token != null) {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.clear();
         preferences.setString('token', loginResponse.data!.token ?? '');
-        preferences.setString('id', loginResponse.data!.userKey ?? '');
+      //  preferences.setString('id', loginResponse.data!.userKey ?? '');
         preferences.setString('username', loginResponse.data!.username ?? '');
-        String encodeEmail = json.encode(user);
+        String encodephone = json.encode(phone);
         String encodePassword = json.encode(password);
-        preferences.setString(
-            'expiration', loginResponse.data!.expiration ?? '');
-        preferences.setString('uName', encodeEmail);
+        preferences.setString('phone', encodephone);
         preferences.setString('password', encodePassword);
         navigatorOff(context, Home());
       }
@@ -750,6 +751,48 @@ class Controller {
           content: Text('حدث حطا ما' ' ' + response.statusCode.toString())));
     }
   }
+
+
+
+  Future<void> register (BuildContext context,
+      {required String phone, required String password,required String fullName,required String userName }) async {
+    http.Response response = await http.post(Uri.parse(ApiLinks.register),
+        body: json.encode({"phone": phone, "password": password,"fullname":fullName,"username":userName}),
+        headers: {"Content-Type": "application/json"});
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CupertinoAlertDialog(
+            content: CupertinoActivityIndicator(),
+          ),
+        ));
+
+    if (response.statusCode == 200) {
+    print("succses");
+
+   var jsonResponse = json.decode(response.body.toString());
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content:Text(" ${jsonResponse['message']}")));
+    print(jsonResponse['message'].toString());
+      }
+    else {
+      var jsonResponse = json.decode(response.body.toString());
+      print(response.body.toString());
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('حدث حطا ما' ' ' + response.statusCode.toString())));
+    }
+  }
+
+
+
+
+
+
+
+
+
 
   Future<List<DataFetchAllBusinessesModel>> fetchAllBusinesses(
       BuildContext context) async {

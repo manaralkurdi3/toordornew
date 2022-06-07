@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
    if(username!=null&&password!=null){
      var dataUser=json.decode(username??'');
      var dataPass=json.decode(password??'');
-     Controller().login(context, user: dataUser,password: dataPass);
+     Controller().login(context, phone: dataUser,password: dataPass);
    }else{
      Controller.navigatorOff(context, LoginPage());
    }

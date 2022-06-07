@@ -43,18 +43,18 @@ class _AddProjectState extends State<AddProject> {
               TextForm(hint: 'رقم الهاتف', controller: phoneNumber),
               TextForm(hint: 'البريد الالكتروني', controller: email),
               TextForm(hint: 'التخصص', controller: specialty),
-              StatefulBuilder(builder: (context, update) {
-                return DropdownButton(
-                    hint: Text(category.isEmpty ? 'اختر القسم' : category),
-                    items: Controller.category
-                        .map((e) => DropdownMenuItem(child: Text(e), value: e))
-                        .toList(),
-                    onChanged: (String? value) {
-                      if (value != null) {
-                        update(() => category = value);
-                      }
-                    });
-              }),
+              // StatefulBuilder(builder: (context, update) {
+              //   return DropdownButton(
+              //       hint: Text(category.isEmpty ? 'اختر القسم' : category),
+              //       items: Controller.category
+              //           .map((e) => DropdownMenuItem(child: Text(e), value: e))
+              //           .toList(),
+              //       onChanged: (String? value) {
+              //         if (value != null) {
+              //           update(() => category = value);
+              //         }
+              //       });
+              // }),
               SizedBox(height: MySize.height(context) / 20),
               CSCPicker(
                 defaultCountry: DefaultCountry.Palestinian_Territory_Occupied,

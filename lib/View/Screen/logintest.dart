@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage>{
                                             onPressed: () async {
                                           //  print(snapshot.data.toString()+"bkhvjdkc") ;
                                              // controller.fetchAllUsers(context, email.text);
-                                              controller.login(context,user:email.text,password: password.text);
+                                              controller.login(context,phone:email.text,password: password.text);
                                             },
                                           // controller.login(context, user: email.text, password: password.text),
                                             child:  const Text(

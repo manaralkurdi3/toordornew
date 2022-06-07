@@ -18,6 +18,7 @@ class SignUP extends StatelessWidget {
   TextEditingController password = TextEditingController();
   TextEditingController Fullname = TextEditingController();
   double _headerHeight = 250;
+  Controller controller = Controller();
 
   @override
   Widget build(BuildContext context) {
@@ -82,11 +83,12 @@ class SignUP extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ))),
               onPressed: () async {
+                controller.register(context,phone:phoneNumber.text,password: password.text,fullName: name.text,userName: Fullname.text);
                 // SharedPreferences prefs = await SharedPreferences.getInstance();
                 // registerapi(name.text.toString(), password.text,Fullname.text.toString(), phoneNumber.text.toString(),
                 //     "780979842");
 
-                   Controller.navigatorGo(context, OTPScreen(phone: phoneNumber.text));
+                //   Controller.navigatorGo(context, OTPScreen(phone: phoneNumber.text));
               }
           ),
         ],
