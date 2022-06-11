@@ -93,7 +93,7 @@ class Controller {
     };
 
     http.Response response =
-        await http.get(Uri.parse(getUsers + "?uID=$id"), headers: header);
+        await http.get(Uri.parse(ApiLinks.book + "?uID=$id"), headers: header);
     print(response.body);
     if (response.statusCode == 200) {
       Map<String, dynamic> arrayObjsText = jsonDecode(response.body);
@@ -693,6 +693,28 @@ class Controller {
     }
   }
 
+  static Future <void > categoryy(BuildContext context,) async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+
+    http.Response response =
+    await http.get(Uri.parse(ApiLinks.index), headers: {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    });
+    print('category ${response.body}');
+    if (response.statusCode == 200) {
+      var decodeData = json.decode(response.body);
+
+      return decodeData;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('حدث خطا ما' + response.statusCode.toString())));
+    }
+  }
+
+
   showEmployee(BuildContext context) {
     empolyee({required int index}) => Container(
           child: Text('empolyee $index'),
@@ -818,6 +840,28 @@ class Controller {
                 content: Text('حدث خطا ما  ${response.statusCode}'),
               ));
       return items;
+    }
+  }
+
+
+  static Future <void > Bussnisefetchall(BuildContext context,categoruid) async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+
+    http.Response response =
+    await http.get(Uri.parse(ApiLinks.busineesIndex+categoruid), headers: {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    });
+    print('Bussnise ${response.body}');
+    if (response.statusCode == 200) {
+      var decodeData = json.decode(response.body);
+
+      return decodeData;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('حدث خطا ما' + response.statusCode.toString())));
     }
   }
 

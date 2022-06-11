@@ -74,7 +74,7 @@ class _MyBusinessState extends State<MyBusiness> {
                                     ),
                                   ),
                                   Text(
-                                      data[index]['bFullName'].toString() ?? '',
+                                       '',
                                       style: const TextStyle(
                                           fontSize: 19,
                                           fontWeight: FontWeight.w800))

@@ -4,7 +4,7 @@ import 'package:toordor/View/Widget/TextForm.dart';
 
 import '../../Controller/Controller.dart';
 
-class Home extends StatefulWidget {
+class Home extends AppBar {
   Home({Key? key}) : super(key: key);
 
 //String? token;
