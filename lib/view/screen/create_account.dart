@@ -2,12 +2,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:toordor/View/Widget/background.dart';
 import 'package:toordor/View/Widget/headerbacground.dart';
-import '../../Controller/Controller.dart';
+import '../../Controller/controller.dart';
 import '../Widget/TextForm.dart';
 
 
 
-import 'Home.dart';
+import 'home.dart';
 
 class SignUP extends StatelessWidget {
   SignUP({Key? key}) : super(key: key);
@@ -112,9 +112,9 @@ class _OTPScreenState extends State<OTPScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Random random =Random();
-    code=random.nextInt(100000).toString();
-    Controller.sendSMS(code: code,phoneNumber: number);
+    //Random random =Random();
+   // code=random.nextInt(100000).toString();
+    //controller.sendSMS(code: code,phoneNumber: number);
   }
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:toordor/View/Widget/TextForm.dart';
 
-import '../../Controller/Controller.dart';
+import '../../Controller/controller.dart';
 
 
 class AppBarr extends StatefulWidget  {

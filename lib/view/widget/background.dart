@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:toordor/Controller/Controller.dart';
-import 'package:toordor/View/Screen/CreateAccount.dart';
-import 'package:toordor/View/Screen/Home.dart';
+import 'package:toordor/Controller/controller.dart';
+import 'package:toordor/View/Screen/create_account.dart';
+import 'package:toordor/View/Screen/home.dart';
 import 'package:toordor/View/Widget/ImageButton.dart';
 import 'package:toordor/View/Widget/TextForm.dart';
 import 'package:toordor/View/Widget/socialmedia.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:toordor/Controller/Controller.dart';
+import 'package:toordor/Controller/controller.dart';
 import 'package:toordor/Controller/size.dart';
-import 'package:toordor/View/Screen/Home.dart';
+import 'package:toordor/View/Screen/home.dart';
 
 class Logout extends StatefulWidget {
   const Logout({Key? key}) : super(key: key);

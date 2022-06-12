@@ -6,7 +6,7 @@ import 'package:sizer/sizer.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../Controller/Controller.dart';
+import '../../Controller/controller.dart';
 
 class Calender extends StatefulWidget{
   @override

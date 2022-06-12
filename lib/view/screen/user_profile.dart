@@ -1,12 +1,12 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:toordor/Controller/size.dart';
-import 'package:toordor/Model/users.dart';
+
 import 'package:toordor/View/Widget/TextForm.dart';
 
-import '../../Controller/Controller.dart';
+import '../../Controller/controller.dart';
 
 class UserProFile extends StatefulWidget {
   UserProFile({Key? key}) : super(key: key);
@@ -16,7 +16,6 @@ class UserProFile extends StatefulWidget {
 }
 
 class _UserProFileState extends State<UserProFile> {
-  String? fullName, phone, email, city, country;
 
 
   @override
@@ -25,28 +24,23 @@ class _UserProFileState extends State<UserProFile> {
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.refresh),
-        onPressed: ()=>setState((){}),
+        onPressed: () => setState(() {}),
       ),
       body: RefreshIndicator(
-        onRefresh: ()async{
-        await  Controller.userData(context);
+        onRefresh: () async {
+          await Controller.userData(context);
         },
-        child: FutureBuilder<dynamic>(
-            future: Controller.userData(context),
+        child: FutureBuilder<SharedPreferences>(
+            future: SharedPreferences.getInstance(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                var map = snapshot.data?['data'][0];
-                fullName = map['fullName'];
-                phone = map['phone1'];
-                email = map['emailAdrs'];
-                city = map['adrsCity'];
-                country = map['usrCountry'];
+
                 return Wrap(
                   children: [
                     Padding(
@@ -62,12 +56,12 @@ class _UserProFileState extends State<UserProFile> {
                                 padding: EdgeInsets.only(left: 13.0.sp),
                                 child: CircleAvatar(
                                   backgroundColor: Colors.grey,
-                                  child: Text(fullName?[0] ?? ''),
+                                  child: Text(snapshot.data?.getString('fullname')?[0] ?? ''),
                                   radius: 30.sp,
                                 ),
                               ),
                               Text(
-                                fullName ?? '',
+                                snapshot.data?.getString('fullname') ?? '',
                                 style: const TextStyle(
                                     fontSize: 15,
                                     color: Colors.black,
@@ -77,13 +71,15 @@ class _UserProFileState extends State<UserProFile> {
                           ),
                           SizedBox(height: MySize.height(context) / 20),
                           UserDataForm(
-                              title: 'الاسم بالكامل', userData: fullName ?? ""),
+                              title: 'الاسم بالكامل', userData: snapshot.data?.getString('fullname') ?? ""),
                           UserDataForm(
-                              title: 'رقم الهاتف', userData: phone ?? ''),
+                              title: 'رقم الهاتف', userData: snapshot.data?.getString('phone') ?? ''),
                           UserDataForm(
-                              title: 'البريد الالكتروني', userData: email ?? ''),
-                          UserDataForm(title: 'المدينه', userData: city ?? ''),
-                          UserDataForm(title: 'الدوله', userData: country ?? ''),
+                              title: 'اسم المسنخدم',
+                              userData: snapshot.data?.getString('username') ?? ''),
+                          UserDataForm(title: 'المدينه', userData: snapshot.data?.getString('city') ?? ''),
+                          UserDataForm(
+                              title: 'الدوله', userData:  snapshot.data?.getString('country') ?? ''),
                           SizedBox(height: MySize.height(context) / 20),
                           Padding(
                             padding: const EdgeInsets.all(8),
@@ -93,14 +89,7 @@ class _UserProFileState extends State<UserProFile> {
                                 ElevatedButton(
                                     onPressed: () {}, child: const Text('حفظ')),
                                 ElevatedButton(
-                                    onPressed: () => Controller.navigatorGo(
-                                        context,
-                                        EditUserData(
-                                            fullName: fullName,
-                                            email: email,
-                                            phone: phone,
-                                            city: city,
-                                            country: country)),
+                                    onPressed: () => null,
                                     child: const Text('تعديل')),
                                 ElevatedButton(
                                   onPressed: () {},
@@ -143,11 +132,14 @@ class UserDataForm extends StatelessWidget {
             ),
           ),
           SizedBox(width: 2.w),
-          Text(
-            userData ?? '',
-            style: TextStyle(fontSize: 15.sp),
-            // textDirection: TextDirection.rtl,
-            //textAlign: TextAlign.end,
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: Text(
+              userData ?? '',
+              style: TextStyle(fontSize: 15.sp),
+              // textDirection: TextDirection.rtl,
+              //textAlign: TextAlign.end,
+            ),
           )
         ],
       ),
@@ -195,15 +187,7 @@ class EditUserData extends StatelessWidget {
           TextForm(hint: 'المدينه', controller: controller4),
           TextForm(hint: 'الدوله', controller: controller5),
           ElevatedButton(
-              onPressed: ()async =>
-                  
-              await  Controller.editUserData(context,
-                  fullName: fullName,
-                  phone: phone,
-                  email: email,
-                  city: city,
-                  country: country).whenComplete(() => Controller.userData(context)),
-              child:const Text('حفظ التعديلات'))
+              onPressed: ()  => null, child: const Text('حفظ التعديلات'))
         ],
       ),
     );

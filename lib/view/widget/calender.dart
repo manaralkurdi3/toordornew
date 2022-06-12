@@ -1,7 +1,7 @@
 //
 // import 'package:flutter/material.dart';
 // import 'package:table_calendar/table_calendar.dart';
-// import 'package:toordor/View/Widget/utilites.dart';
+// import 'package:toordor/view/widget/utilites.dart';
 //
 //
 // class TableEventsExample extends StatefulWidget {
@@ -81,7 +81,7 @@
 //   }
 //
 //   @override
-//   Widget build(BuildContext context) {
+//   widget build(BuildContext context) {
 //     return Scaffold(
 //       // appBar: AppBar(
 //       //   title: Text('TableCalendar - Events'),

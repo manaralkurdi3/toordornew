@@ -6,14 +6,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toordor/Model/fetch_user_from_list.dart';
 import 'package:toordor/Model/login_model.dart';
 import 'package:toordor/Model/users.dart';
-import 'package:toordor/View/Screen/AddProject.dart';
-import 'package:toordor/View/Screen/Home.dart';
-import 'package:toordor/View/Screen/MyBusiness.dart';
-import 'package:toordor/View/Screen/MyEmployees.dart';
-import 'package:toordor/View/Screen/UserProfile.dart';
+import 'package:toordor/View/Screen/add_project.dart';
+import 'package:toordor/View/Screen/home.dart';
+import 'package:toordor/View/Screen/my_business.dart';
+import 'package:toordor/View/Screen/my_employees.dart';
+import 'package:toordor/View/Screen/user_profile.dart';
 import 'package:toordor/View/Screen/category_screen.dart';
-import 'package:toordor/View/Screen/homeBody.dart';
-import 'package:toordor/View/Screen/logintest.dart';
+import 'package:toordor/View/Screen/home_body.dart';
+
 import 'package:toordor/View/Screen/time_workplace.dart';
 import 'package:toordor/const/color.dart';
 import 'package:http/http.dart' as http;
@@ -23,6 +23,7 @@ import 'package:twilio_flutter/twilio_flutter.dart';
 
 import '../Model/fetch_all_businesses.dart';
 import '../View/Screen/logout_screen.dart';
+import '../view/screen/login_screen.dart';
 
 class Controller {
   static Future myBuisness(BuildContext context) async {
@@ -103,87 +104,6 @@ class Controller {
           .showSnackBar(const SnackBar(content: Text('حدث خطأ ما!')));
     }
   }
-
-  static Future editUserData(BuildContext context,
-      {required fullName,
-      required phone,
-      required email,
-      required city,
-      required country}) async {
-    print("function start");
-    String _token = await SharedPreferences.getInstance()
-        .then((value) => value.getString('token') ?? '');
-    print(_token);
-    String id = await SharedPreferences.getInstance()
-        .then((value) => value.getString('id') ?? '');
-    print(id);
-    String username = await SharedPreferences.getInstance()
-        .then((value) => value.getString('username') ?? '');
-    print(username.toString());
-    // String username = await SharedPreferences.getInstance()
-    //     .then((value) => value.getString('username') ?? '');
-    // print(username);
-
-    Map<String, String> header = {
-      "Content-Type": "application/json",
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $_token',
-    };
-    DateTime time = DateTime.now();
-
-    http.Response response = await http.post(Uri.parse(updateUsers),
-        headers: header,
-        body: json.encode({
-          "uPass": "",
-          "gMaps": "string",
-          "lastLoginDate": 0,
-          "logoPNG": null,
-          "resetCode": null,
-          "isSysAdmin": true,
-          "isActive1": true,
-          'uID': id,
-          "fullName": fullName,
-          'UName': username,
-          "phone1": phone,
-          "emailAdrs": email,
-          "adrsCity": city,
-          "usrCountry": country,
-        }));
-    print(response.body);
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('تم تعديل البينات')));
-      Future.delayed(const Duration(seconds: 2))
-          .whenComplete(() => Navigator.pop(context));
-    } else {
-      print(response.body);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(response.body)));
-    }
-  }
-
-  // static Future<List<UserModel>?> getDafPet() async {
-  //   String _token = await SharedPreferences.getInstance()
-  //       .then((value) => value.getString('token') ?? '');
-  //   Map<String, String> header = {
-  //     "Content-Type": "application/json",
-  //     'Accept': 'application/json',
-  //     'Authorization': 'Bearer $_token',
-  //   };
-  //   final response = await http.get(Uri.parse(getUsers), headers: header);
-  //   if (response.statusCode == 401) {
-  //     var data = json.decode(response.body);
-  //     List<UserModel> itemList = [];
-  //     data.map((item) {
-  //       itemList.add(UserModel.fromJson(item));
-  //     }).toList();
-  //     print(itemList);
-  //     return itemList;
-  //   } else {
-  //     return null;
-  //   }
-  // }
 
   Future updateBusiness(BuildContext context,
       {required String phoneNumber,
@@ -693,17 +613,18 @@ class Controller {
     }
   }
 
-  static Future <void > categoryy(BuildContext context,) async {
+  static Future<void> categoryy(
+    BuildContext context,
+  ) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
 
     http.Response response =
-    await http.get(Uri.parse(ApiLinks.index), headers: {
+        await http.get(Uri.parse(ApiLinks.index), headers: {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     });
-    print('category ${response.body}');
     if (response.statusCode == 200) {
       var decodeData = json.decode(response.body);
 
@@ -714,11 +635,26 @@ class Controller {
     }
   }
 
+  static Future<List> query({String? query}) async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    List list = [];
+    http.Response response = await http.get(
+      Uri.parse(ApiLinks.search),
+      headers: {
+        "Content-Type": "application/json",
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $_token',
+      },
+    );
+    Map decodedData = json.decode(response.body);
+    // list=await decodedData;
+    print(await response.body);
+    return list;
+  }
 
   showEmployee(BuildContext context) {
-    empolyee({required int index}) => Container(
-          child: Text('empolyee $index'),
-        );
+    empolyee({required int index}) => Text('empolyee $index');
     showDialog(
         context: context,
         builder: (context) => CupertinoAlertDialog(
@@ -751,20 +687,17 @@ class Controller {
       Navigator.pop(context);
       Map<String, dynamic> data = json.decode(response.body);
       LoginResponse loginResponse = LoginResponse.fromJson(data);
-      print('token = ${loginResponse.data!.token}');
-      print('UserName === ${loginResponse.data!.username}');
-      print(data);
-     // _usersKey = loginResponse.data?.userKey;
+
       if (loginResponse.data?.token != null) {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.clear();
         preferences.setString('token', loginResponse.data!.token ?? '');
-      //  preferences.setString('id', loginResponse.data!.userKey ?? '');
+        preferences.setString('fullname', loginResponse.data!.fullname ?? '');
         preferences.setString('username', loginResponse.data!.username ?? '');
-        String encodephone = json.encode(phone);
-        String encodePassword = json.encode(password);
-        preferences.setString('phone', encodephone);
-        preferences.setString('password', encodePassword);
+        preferences.setString('country', loginResponse.data!.country ?? '');
+        preferences.setString('city', loginResponse.data!.city ?? '');
+        preferences.setString('phone', loginResponse.data!.phone ?? '');
+
         navigatorOff(context, Home());
       }
     } else {
@@ -774,54 +707,45 @@ class Controller {
     }
   }
 
-
-
-  Future<void> register (BuildContext context,
-      {required String phone, required String password,required String fullName,required String userName }) async {
+  Future<void> register(BuildContext context,
+      {required String phone,
+      required String password,
+      required String fullName,
+      required String userName}) async {
     http.Response response = await http.post(Uri.parse(ApiLinks.register),
-        body: json.encode({"phone": phone, "password": password,"fullname":fullName,"username":userName}),
+        body: json.encode({
+          "phone": phone,
+          "password": password,
+          "fullname": fullName,
+          "username": userName
+        }),
         headers: {"Content-Type": "application/json"});
     showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => const Center(
-          child: CupertinoAlertDialog(
-            content: CupertinoActivityIndicator(),
-          ),
-        ));
+              child: CupertinoAlertDialog(
+                content: CupertinoActivityIndicator(),
+              ),
+            ));
 
     if (response.statusCode == 200) {
-    print("succses");
-
-   var jsonResponse = json.decode(response.body.toString());
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content:Text(" ${jsonResponse['message']}")));
-    print(jsonResponse['message'].toString());
-      }
-    else {
       var jsonResponse = json.decode(response.body.toString());
-      print(response.body.toString());
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(" ${jsonResponse['message']}")));
+    } else {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('حدث حطا ما' ' ' + response.statusCode.toString())));
     }
   }
 
-
-
-
-
-
-
-
-
-
   Future<List<DataFetchAllBusinessesModel>> fetchAllBusinesses(
       BuildContext context) async {
     List<DataFetchAllBusinessesModel> items = [];
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String _token = preferences.getString('token') ?? '';
-    http.Response response = await http.get(Uri.parse(getBusinesses), headers: {
+    http.Response response = await http.get(Uri.parse(ApiLinks.busineesGet), headers: {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
@@ -843,13 +767,12 @@ class Controller {
     }
   }
 
-
-  static Future <void > Bussnisefetchall(BuildContext context,categoruid) async {
+  static Future<void> Bussnisefetchall(BuildContext context, categoryUid) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
 
-    http.Response response =
-    await http.get(Uri.parse(ApiLinks.busineesIndex+categoruid), headers: {
+    http.Response response = await http
+        .get(Uri.parse(ApiLinks.busineesIndex + categoryUid), headers: {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
@@ -868,20 +791,20 @@ class Controller {
   static logout(BuildContext context) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.clear();
-    navigatorOff(context, LoginPage());
+    navigatorOff(context, const LoginPage());
   }
 
-  static sendSMS({required String phoneNumber, code}) {
-    TwilioFlutter twilio = TwilioFlutter(
-        accountSid: 'ACf8250c669d4270b27b45af8f940c0394',
-        // replace *** with Account SID
-        authToken: '6bda4370969cbabea75cdfc61aae5da4',
-        // replace xxx with Auth Token
-        twilioNumber: '+19362593318' // replace .... with Twilio Number
-        );
-    //twilioFlutter.sendSMS(toNumber: '+201090039634', messageBody: 'hello');
-    twilio.sendSMS(toNumber: phoneNumber, messageBody: code);
-  }
+  // static sendSMS({required String phoneNumber, code}) {
+  //   TwilioFlutter twilio = TwilioFlutter(
+  //       accountSid: 'ACf8250c669d4270b27b45af8f940c0394',
+  //       // replace *** with Account SID
+  //       authToken: '6bda4370969cbabea75cdfc61aae5da4',
+  //       // replace xxx with Auth Token
+  //       twilioNumber: '+19362593318' // replace .... with Twilio Number
+  //       );
+  //   //twilioFlutter.sendSMS(toNumber: '+201090039634', messageBody: 'hello');
+  //   twilio.sendSMS(toNumber: phoneNumber, messageBody: code);
+  // }
 
   static List<Pages> listPage = [
     Pages(title: 'الرئيسيه', icon: Icons.home_filled, page: CategoryScreen()),

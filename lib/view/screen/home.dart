@@ -2,9 +2,9 @@ import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:toordor/View/Widget/TextForm.dart';
 
-import '../../Controller/Controller.dart';
+import '../../controller/controller.dart';
 
-class Home extends AppBar {
+class Home extends  StatefulWidget {
   Home({Key? key}) : super(key: key);
 
 //String? token;
@@ -45,6 +45,13 @@ class _HomeState extends State<Home> {
           ],
           title: TextForm(
               hint: 'البحث',
+              onchange: (String? value){
+                setState((){
+
+                  Controller.query(query:value);
+                });
+
+              },
               widget: IconButton(
                 icon: const Icon(Icons.search, color: Colors.blue),
                 onPressed: () {},

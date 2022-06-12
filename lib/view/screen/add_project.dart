@@ -2,7 +2,7 @@ import 'package:csc_picker/csc_picker.dart';
 import 'package:csc_picker/model/select_status_model.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:toordor/Controller/Controller.dart';
+import 'package:toordor/Controller/controller.dart';
 import 'package:toordor/Controller/size.dart';
 import 'package:toordor/View/Widget/TextForm.dart';
 import 'package:toordor/const/CountriesOfTheWorld.dart';

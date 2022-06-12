@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:toordor/Controller/Controller.dart';
+import 'package:toordor/Controller/controller.dart';
 import 'package:toordor/Controller/size.dart';
-import 'package:toordor/View/Screen/UserProfile.dart';
+import 'package:toordor/View/Screen/user_profile.dart';
 import 'package:toordor/View/Widget/TextForm.dart';
 
 class MyEmployees extends StatelessWidget {

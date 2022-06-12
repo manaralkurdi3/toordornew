@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:toordor/Controller/Controller.dart';
+import 'package:toordor/Controller/controller.dart';
 import 'package:toordor/Model/users.dart';
-import 'package:toordor/View/Screen/Home.dart';
+import 'package:toordor/View/Screen/home.dart';
 import 'package:toordor/View/Widget/TextForm.dart';
 import 'package:toordor/View/Widget/background.dart';
 import 'package:toordor/View/Widget/dialog.dart';
@@ -46,7 +46,7 @@ class SignIN extends StatelessWidget {
                 //   },
                 // )),
                 const SizedBox(height: 15),
-                TextForm(hint: 'البريد الالكتروني', controller: email),
+                TextForm(hint: 'رقم الهاتف', controller: email),
                 TextForm(hint: 'كلمه المرور', controller: password,visibility: true),
                 const SizedBox(height: 15),
                 ElevatedButton(

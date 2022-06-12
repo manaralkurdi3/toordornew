@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:toordor/Controller/Controller.dart';
+import 'package:toordor/Controller/controller.dart';
 import 'package:toordor/Controller/size.dart';
-import 'package:toordor/View/Screen/homepagebussnise.dart';
+import 'package:toordor/View/Screen/home_page_bussnise.dart';
 import 'package:toordor/View/Widget/TextForm.dart';
 
 class MyBusiness extends StatefulWidget {
