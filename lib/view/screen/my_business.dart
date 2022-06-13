@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:toordor/Controller/controller.dart';
-import 'package:toordor/Controller/size.dart';
-import 'package:toordor/View/Screen/home_page_bussnise.dart';
-import 'package:toordor/View/Widget/TextForm.dart';
+import 'package:toordor/controller/controller.dart';
+import 'package:toordor/controller/size.dart';
+import 'package:toordor/view/Screen/home_page_bussnise.dart';
+import 'package:toordor/view/Widget/TextForm.dart';
 
 class MyBusiness extends StatefulWidget {
   MyBusiness({Key? key}) : super(key: key);
@@ -18,12 +18,12 @@ class _MyBusinessState extends State<MyBusiness> {
   TextEditingController business = TextEditingController();
   TextEditingController timer = TextEditingController();
 
-  String? trymenttype, lengthtrytype;
-  Future? userservice;
+  String? tryMentType, lengthTryType;
+  Future? userService;
 
   @override
   void initState() {
-    userservice = Controller.fetchTreatsTypes(context);
+    userService = Controller.fetchTreatsTypes(context);
     // TODO: implement initState
     super.initState();
   }
@@ -36,11 +36,11 @@ class _MyBusinessState extends State<MyBusiness> {
 
     return Scaffold(
       body: FutureBuilder<dynamic>(
-        future: Controller.myBuisness(context),
+        future: Controller.myBuisness(context,id:1),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List data = snapshot.data!['data'];
-            print('data ===${data.length}');
+
             return ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, index) {

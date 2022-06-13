@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:toordor/Controller/controller.dart';
-import 'package:toordor/View/Screen/category.dart';
+
 
 
 class CategoryScreen extends StatefulWidget {
@@ -73,9 +73,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   GestureDetector(
                                     onTap: () => Controller.navigatorGo(
                                         context,
-                                        Category(snapshot.data['data'][index]
-                                                ['id']
-                                            )),
+                                        //
+                                        SizedBox()),
                                     child: Container(
                                       width: 50,
                                       height: 50,

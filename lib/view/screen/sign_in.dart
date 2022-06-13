@@ -46,7 +46,7 @@ class SignIN extends StatelessWidget {
                 //   },
                 // )),
                 const SizedBox(height: 15),
-                TextForm(hint: 'رقم الهاتف', controller: email),
+                TextForm(hint: 'رقم الهاتف', controller: email,keyBoardType: TextInputType.phone),
                 TextForm(hint: 'كلمه المرور', controller: password,visibility: true),
                 const SizedBox(height: 15),
                 ElevatedButton(

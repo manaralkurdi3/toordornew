@@ -1,14 +1,14 @@
 import 'package:csc_picker/csc_picker.dart';
-import 'package:csc_picker/model/select_status_model.dart';
+
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:toordor/Controller/controller.dart';
-import 'package:toordor/Controller/size.dart';
-import 'package:toordor/View/Widget/TextForm.dart';
-import 'package:toordor/const/CountriesOfTheWorld.dart';
+
+import 'package:toordor/controller/controller.dart';
+import 'package:toordor/controller/size.dart';
+import 'package:toordor/view/Widget/TextForm.dart';
 
 class AddProject extends StatefulWidget {
-  AddProject({Key? key}) : super(key: key);
+  const AddProject({Key? key}) : super(key: key);
 
   @override
   State<AddProject> createState() => _AddProjectState();
@@ -30,6 +30,9 @@ class _AddProjectState extends State<AddProject> {
   String category = '';
 
   Controller controller = Controller();
+  TimeOfDay? form;
+
+  TimeOfDay? to;
 
   @override
   Widget build(BuildContext context) {
@@ -43,18 +46,29 @@ class _AddProjectState extends State<AddProject> {
               TextForm(hint: 'رقم الهاتف', controller: phoneNumber),
               TextForm(hint: 'البريد الالكتروني', controller: email),
               TextForm(hint: 'التخصص', controller: specialty),
-              // StatefulBuilder(builder: (context, update) {
-              //   return DropdownButton(
-              //       hint: Text(category.isEmpty ? 'اختر القسم' : category),
-              //       items: Controller.category
-              //           .map((e) => DropdownMenuItem(child: Text(e), value: e))
-              //           .toList(),
-              //       onChanged: (String? value) {
-              //         if (value != null) {
-              //           update(() => category = value);
-              //         }
-              //       });
-              // }),
+              const Text('اوقات العمل'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FloatingActionButton(
+                      child: const Text('من'),
+                      onPressed: () => showTimePicker(
+                          context: context,
+                          initialTime: form ?? TimeOfDay.now())),
+                  SizedBox(width: MySize.width(context) / 3),
+                  FloatingActionButton(
+                      child: const Text('الي'),
+                      onPressed: () => showTimePicker(
+                          context: context,
+                          initialTime: to ?? TimeOfDay.now())),
+                ],
+              ),
+              Row(
+                children: [
+                  form != null ? Text('$form') : const SizedBox(),
+                  to != null ? Text('$to') : const SizedBox(),
+                ],
+              ),
               SizedBox(height: MySize.height(context) / 20),
               CSCPicker(
                 defaultCountry: DefaultCountry.Palestinian_Territory_Occupied,
@@ -74,9 +88,11 @@ class _AddProjectState extends State<AddProject> {
                         setState: setState,
                         nameProject: projectName.text,
                         phoneNumber: phoneNumber.text,
-                        specilization: specialty.text);
-                    // Controller.navigatorGo(context, MyBusiness());
+                        specialization: specialty.text,
+                        from: form ?? TimeOfDay.now(),
+                        to: to ?? TimeOfDay.now());
                   },
+                  // Controller.navigatorGo(context, MyBusiness());
                   child: const Text("حفظ"))
             ],
           ),

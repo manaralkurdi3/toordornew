@@ -26,19 +26,18 @@ import '../View/Screen/logout_screen.dart';
 import '../view/screen/login_screen.dart';
 
 class Controller {
-  static Future myBuisness(BuildContext context) async {
+  static Future myBuisness(BuildContext context, {required int? id}) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String _token = preferences.getString('token') ?? '';
-    String id = preferences.getString('id') ?? '';
+
     Map<String, String> header = {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     };
-    http.Response response =
-        await http.get(Uri.parse(getBusinesses + '?uid=$id'), headers: header);
+    http.Response response = await http
+        .get(Uri.parse(ApiLinks.serviceIndex + '$id'), headers: header);
     if (response.statusCode == 200) {
-      print(response.body);
       Map<String, dynamic> decodeData = json.decode(response.body);
       return decodeData;
     } else {
@@ -146,34 +145,52 @@ class Controller {
   Future insertBusiness(BuildContext context,
       {required String phoneNumber,
       required String nameProject,
-      required String specilization,
+      required String specialization,
       required String email,
       required setState,
       String? country,
-      String? city}) async {
+      String? city,
+      required TimeOfDay from,
+      required TimeOfDay to,
+      }) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
-    String id = await SharedPreferences.getInstance()
-        .then((value) => value.getString('id') ?? '');
+
     Map<String, String> header = {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     };
+    Uri uri=Uri.parse(ApiLinks.busineesCreate);
+     uri.replace(queryParameters:  {
+       "business_name":nameProject,
+       "phone":phoneNumber,
+       "email":email,
+       "specialization":specialization,
+       "weekends":"",
+       "from_date":from,
+       "to_date":to,
+       "country_id":country,
+       "city_id":2
 
-    http.Response response = await http.post(Uri.parse(addBusinesses),
-        headers: header,
-        body: json.encode({
-          "uID": id,
-          "bFullName": nameProject,
-          "bPhone1": phoneNumber,
-          "bEmailAdrs": email,
-          "adrsCity": city,
-          "bCountry": country,
-          "logoPNG": null,
-          "bBranch1": specilization,
-          "isActive1": true
-        }));
+     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+    http.Response response = await http.get(uri,
+        headers: header);
+
+
     if (response.statusCode == 200) {
       print('Business added');
       setState(() => listPage[2]);
@@ -635,22 +652,28 @@ class Controller {
     }
   }
 
-  static Future<List> query({String? query}) async {
+  static Future query(BuildContext context, {String? query}) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
+    Uri uri = Uri.parse(ApiLinks.search);
     List list = [];
+    uri.replace(queryParameters: {'phone': query});
     http.Response response = await http.get(
-      Uri.parse(ApiLinks.search),
+      uri,
       headers: {
         "Content-Type": "application/json",
         'Accept': 'application/json',
         'Authorization': 'Bearer $_token',
+        "callMethod": "DOCTOR_AVAILABILITY"
       },
     );
-    Map decodedData = json.decode(response.body);
+    if (response.statusCode == 200) {
+      Map decodedData = json.decode(response.body);
+      decodedData.forEach((key, value) => list.add(value));
+      
+    }
     // list=await decodedData;
-    print(await response.body);
-    return list;
+
   }
 
   showEmployee(BuildContext context) {
@@ -667,13 +690,9 @@ class Controller {
   }
 
   TimeOfDay selectedTime = TimeOfDay.now();
-  static String? _usersKey;
 
   Future<void> login(BuildContext context,
-      {required String phone, password}) async {
-    http.Response response = await http.post(Uri.parse(ApiLinks.login),
-        body: json.encode({"phone": phone, "password": password}),
-        headers: {"Content-Type": "application/json"});
+      {required String phone, required String password}) async {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -682,6 +701,9 @@ class Controller {
                 content: CupertinoActivityIndicator(),
               ),
             ));
+    http.Response response = await http.post(Uri.parse(ApiLinks.login),
+        body: json.encode({"phone": phone, "password": password}),
+        headers: {"Content-Type": "application/json"});
 
     if (response.statusCode == 200) {
       Navigator.pop(context);
@@ -689,6 +711,7 @@ class Controller {
       LoginResponse loginResponse = LoginResponse.fromJson(data);
 
       if (loginResponse.data?.token != null) {
+        print('token = ${loginResponse.data!.token}');
         SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.clear();
         preferences.setString('token', loginResponse.data!.token ?? '');
@@ -730,7 +753,7 @@ class Controller {
             ));
 
     if (response.statusCode == 200) {
-      var jsonResponse = json.decode(response.body.toString());
+      var jsonResponse = json.decode(response.body);
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(" ${jsonResponse['message']}")));
     } else {
@@ -745,7 +768,8 @@ class Controller {
     List<DataFetchAllBusinessesModel> items = [];
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String _token = preferences.getString('token') ?? '';
-    http.Response response = await http.get(Uri.parse(ApiLinks.busineesGet), headers: {
+    http.Response response =
+        await http.get(Uri.parse(ApiLinks.busineesGet), headers: {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
@@ -767,7 +791,8 @@ class Controller {
     }
   }
 
-  static Future<void> Bussnisefetchall(BuildContext context, categoryUid) async {
+  static Future<void> bussniseFetchAll(
+      BuildContext context, categoryUid) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
 
@@ -826,7 +851,7 @@ class Controller {
     600: Color(0xff808080),
     700: Color(0xff808080),
     800: Color(0xff808080),
-    900: Color(0xff808080),
+    900: Color(0xff808080)
   });
 
   static navigatorGo(BuildContext context, Widget route) =>
