@@ -11,7 +11,7 @@ String welcomeToJson(Welcome data) => json.encode(data.toJson());
 class Welcome {
   Welcome({
     required this.status,
-    required    this.statusmsg,
+    required  this.statusmsg,
     required this.data,
   });
 

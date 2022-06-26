@@ -3,26 +3,22 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:toordor/Model/fetch_user_from_list.dart';
 import 'package:toordor/Model/login_model.dart';
-import 'package:toordor/Model/users.dart';
 import 'package:toordor/View/Screen/add_project.dart';
-import 'package:toordor/View/Screen/home.dart';
 import 'package:toordor/View/Screen/my_business.dart';
 import 'package:toordor/View/Screen/my_employees.dart';
 import 'package:toordor/View/Screen/user_profile.dart';
-import 'package:toordor/View/Screen/category_screen.dart';
-import 'package:toordor/View/Screen/home_body.dart';
-
 import 'package:toordor/View/Screen/time_workplace.dart';
 import 'package:toordor/const/color.dart';
 import 'package:http/http.dart' as http;
 import 'package:toordor/const/new_url_links.dart';
 import 'package:toordor/const/urlLinks.dart';
-import 'package:twilio_flutter/twilio_flutter.dart';
-
-import '../Model/fetch_all_businesses.dart';
+import 'package:toordor/View/screen/home_body_category.dart';
+import 'package:toordor/view/screen/bussnise_of_category_screen.dart';
+import '../View/Screen/category_screen.dart';
 import '../View/Screen/logout_screen.dart';
+import '../model/employee_services.dart';
+import '../model/services.dart';
 import '../view/screen/login_screen.dart';
 
 class Controller {
@@ -46,45 +42,14 @@ class Controller {
     }
   }
 
-  static List<String> category = [
-    "صالون حلاقة ",
-    "صالونات تجميل ",
-    "تصميم اظافر - עיצוב ציפורניים",
-    "تعليم القيادة - מורי נהיגה",
-    "غسيل سيارات - שטיפת רכבים",
-    "مدرس خاص - מורים פרטיים",
-    "صالات رسم الوشم - מכוני קעקועים",
-    "مدرب شخصي - מאמן אישי",
-    "علاج واستشارة طبية - יעוץ וטיפול רפואי",
-    "تصوير - צילום",
-    "مدرب حيوانات - מאלפי חיות",
-    "مدرب سباحة - מורה שחיה",
-    "تدريب الفنون - מאמני אומנות",
-    "كراجات وتصليح - מוסכים",
-    "مدقق حسابات - רואי חשבון",
-    "محامين - עורכי דין",
-    "ميادين الرماية - מטווחי ירי",
-    "عرافة - מגידת עתידות",
-    "علاج طبيعي/ فيزوترابيا - פיזוטרפיה",
-    "منتجع صحي وتدليك - מכוני ספא ומסאג'",
-    "طباعة الوشم - מכוני קעקועים",
-    "مستشار - יועצים",
-    "وسيط/وكيل - מתווכים",
-    "طبيب بيطري - ויטרינר וטיפולי חיות",
-    "مطاحن - מטחנות קמח",
-    "مجالس محلية - מועצות מקומיות",
-    "معاصر الزيتون - בתי בד",
-    "طبيب اسنان - רופא שיניים",
-  ];
-
   static Future userData(BuildContext context) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
-    String id = await SharedPreferences.getInstance()
-        .then((value) => value.getString('id') ?? '');
-    String username = await SharedPreferences.getInstance()
-        .then((value) => value.getString('username') ?? '');
-    print(username);
+    // String id = await SharedPreferences.getInstance()
+    //     .then((value) => value.getString('id') ?? '');
+    // String username = await SharedPreferences.getInstance()
+    //     .then((value) => value.getString('username') ?? '');
+    // print(username);
 
     Map<String, String> header = {
       "Content-Type": "application/json",
@@ -93,11 +58,144 @@ class Controller {
     };
 
     http.Response response =
-        await http.get(Uri.parse(ApiLinks.book + "?uID=$id"), headers: header);
-    print(response.body);
+    await http.get(Uri.parse(ApiLinks.user), headers: header);
     if (response.statusCode == 200) {
-      Map<String, dynamic> arrayObjsText = jsonDecode(response.body);
-      return arrayObjsText;
+      var decodeData = json.decode(response.body);
+      return decodeData;
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('حدث خطأ ما!')));
+    }
+  }
+
+  static Future<List<ServicesIndexOfbussnise>> servicesIndex(
+      BuildContext context, dynamic bussniseId) async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    // String id = await SharedPreferences.getInstance()
+    //     .then((value) => value.getString('id') ?? '');
+    // String username = await SharedPreferences.getInstance()
+    //     .then((value) => value.getString('username') ?? '');
+    // print(username);
+
+    Map<String, String> header = {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+
+    http.Response response =
+    await http.get(
+        Uri.parse(ApiLinks.serviceIndex + bussniseId), headers: header);
+
+    List<ServicesIndexOfbussnise> serviceindex = [];
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      var rest = data["data"] as List;
+      // var error = data['error'];
+      serviceindex = rest.map<ServicesIndexOfbussnise>((json) =>
+          ServicesIndexOfbussnise.fromJson(json)).toList();
+    }
+
+
+    else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('حدث خطأ ما!')));
+      return serviceindex;
+    }
+    return serviceindex;
+
+      // var decodeData = json.decode(response.body);
+      //
+      // serviceindex.add(
+      //     ServicesIndexOfbussnise.fromJson(decodeData['data'])
+      // );
+      // return serviceindex;
+
+
+  }
+  static Future<List<ServicesEmployee>> servicesEmployee(
+      BuildContext context, String employeeId) async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    // String id = await SharedPreferences.getInstance()
+    //     .then((value) => value.getString('id') ?? '');
+    // String username = await SharedPreferences.getInstance()
+    //     .then((value) => value.getString('username') ?? '');
+    // print(username);
+
+    Map<String, String> header = {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+
+    http.Response response =
+    await http.get(
+        Uri.parse(ApiLinks.serviceEmploy + employeeId), headers: header);
+
+    List<ServicesEmployee> serviceEmployee = [];
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      print(data);
+      List rest = data['message']["data"] ;
+      // var error = data['error'];
+      serviceEmployee = rest.map<ServicesEmployee>((json) =>
+          ServicesEmployee.fromJson(json)).toList();
+    }
+
+
+    else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('حدث خطأ ما!')));
+      return serviceEmployee;
+    }
+    return serviceEmployee;
+
+    // var decodeData = json.decode(response.body);
+    //
+    // serviceindex.add(
+    //     ServicesIndexOfbussnise.fromJson(decodeData['data'])
+    // );
+    // return serviceindex;
+
+
+  }
+
+
+
+
+
+
+  static Future userDataEdit(BuildContext context,{required TextEditingController fulname,
+    required TextEditingController phone,required TextEditingController city,required TextEditingController name,required TextEditingController country, }) async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    // String id = await SharedPreferences.getInstance()
+    //     .then((value) => value.getString('id') ?? '');
+    // String username = await SharedPreferences.getInstance()
+    //     .then((value) => value.getString('username') ?? '');
+    // print(username);
+
+    Map<String, String> header = {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+
+    http.Response response =
+    await http.post(Uri.parse(ApiLinks.editUser), headers: header,body:jsonEncode(
+     { "fullname": fulname.text,
+      "username":name.text ,
+      "phone": phone.text,
+      "country_id": country.text,
+      "city_id": city.text,}
+    ) );
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('تم تعديل البيانات ')));
+
+      Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('حدث خطأ ما!')));
@@ -192,7 +290,6 @@ class Controller {
 
 
     if (response.statusCode == 200) {
-      print('Business added');
       setState(() => listPage[2]);
     } else {
       showDialog(
@@ -473,8 +570,6 @@ class Controller {
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     });
-    print(getUsrTreatsTypes + "uid= $id");
-    print('queryTreatsTypes ${response.body}');
     if (response.statusCode == 200) {
       var decodeData = json.decode(response.body);
 
@@ -537,7 +632,6 @@ class Controller {
           "msg4Users": "string",
           "isActive1": true
         }));
-    print('queryTreatsTypes ${response.body}');
     if (response.statusCode == 200) {
       var decodeData = json.decode(response.body);
       return decodeData;
@@ -715,13 +809,9 @@ class Controller {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.clear();
         preferences.setString('token', loginResponse.data!.token ?? '');
-        preferences.setString('fullname', loginResponse.data!.fullname ?? '');
-        preferences.setString('username', loginResponse.data!.username ?? '');
-        preferences.setString('country', loginResponse.data!.country ?? '');
-        preferences.setString('city', loginResponse.data!.city ?? '');
-        preferences.setString('phone', loginResponse.data!.phone ?? '');
 
-        navigatorOff(context, Home());
+
+        navigatorOff(context, HomeBody());
       }
     } else {
       Navigator.pop(context);
@@ -763,9 +853,9 @@ class Controller {
     }
   }
 
-  Future<List<DataFetchAllBusinessesModel>> fetchAllBusinesses(
+  Future<dynamic> fetchAllBusinesses(
       BuildContext context) async {
-    List<DataFetchAllBusinessesModel> items = [];
+  //  List<DataFetchAllBusinessesModel> items = [];
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String _token = preferences.getString('token') ?? '';
     http.Response response =
@@ -774,25 +864,23 @@ class Controller {
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     });
-    print('fetchAllBusinesses token=$_token');
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
-      print(data);
-      FetchAllBusinessesModel model = FetchAllBusinessesModel.fromJson(data);
-      items = model.data!;
-      return items;
+     // FetchAllBusinessesModel model = FetchAllBusinessesModel.fromJson(data);
+    //  items = model.data!;
+      return ;
     } else {
       showDialog(
           context: context,
           builder: (context) => CupertinoAlertDialog(
                 content: Text('حدث خطا ما  ${response.statusCode}'),
               ));
-      return items;
+      return ;
     }
   }
 
-  static Future<void> bussniseFetchAll(
-      BuildContext context, categoryUid) async {
+  static Future bussniseFetchAll(
+      BuildContext context, dynamic categoryUid) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
 
@@ -802,7 +890,7 @@ class Controller {
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     });
-    print('Bussnise ${response.body}');
+
     if (response.statusCode == 200) {
       var decodeData = json.decode(response.body);
 
@@ -832,7 +920,8 @@ class Controller {
   // }
 
   static List<Pages> listPage = [
-    Pages(title: 'الرئيسيه', icon: Icons.home_filled, page: CategoryScreen()),
+    Pages(title: 'الرئيسيه', icon: Icons.home_filled, page: HomeBody()),
+    //Pages(title: 'بزنس', icon: Icons.home_filled, page: HomeBody1("")),
     Pages(title: 'حسابي', icon: Icons.person, page: UserProFile()),
     Pages(title: 'اعمالي', icon: Icons.monetization_on, page: MyBusiness()),
     Pages(title: 'انشئ مشروعك الخاص', icon: Icons.add, page: AddProject()),

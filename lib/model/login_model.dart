@@ -54,14 +54,14 @@
 
 class LoginResponse {
   bool? success;
-  Data? data;
+  LoginApiData? data;
   String? message;
 
   LoginResponse({this.success, this.data, this.message});
 
   LoginResponse.fromJson(Map<String, dynamic> json) {
     success = json['success'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? new LoginApiData.fromJson(json['data']) : null;
     message = json['message'];
   }
 
@@ -76,16 +76,16 @@ class LoginResponse {
   }
 }
 
-class Data {
+class LoginApiData {
   String? token;
   String? tokenType;
   String? fullname;
   String? username;
-  Null? country;
-  Null? city;
+  String? country;
+  String? city;
   String? phone;
 
-  Data(
+  LoginApiData(
       {this.token,
         this.tokenType,
         this.fullname,
@@ -94,7 +94,7 @@ class Data {
         this.city,
         this.phone});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  LoginApiData.fromJson(Map<String, dynamic> json) {
     token = json['token'];
     tokenType = json['token_type'];
     fullname = json['fullname'];

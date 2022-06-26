@@ -9,6 +9,7 @@ import 'package:toordor/View/Widget/TextForm.dart';
 import '../../Controller/controller.dart';
 
 class UserProFile extends StatefulWidget {
+
   UserProFile({Key? key}) : super(key: key);
 
   @override
@@ -36,73 +37,77 @@ class _UserProFileState extends State<UserProFile> {
         onRefresh: () async {
           await Controller.userData(context);
         },
-        child: FutureBuilder<SharedPreferences>(
-            future: SharedPreferences.getInstance(),
+        child: FutureBuilder<dynamic>(
+            future: Controller.userData(context),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-
-                return Wrap(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10.0, vertical: 20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
+                    return Wrap(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 20),
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: 13.0.sp),
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.grey,
-                                  child: Text(snapshot.data?.getString('fullname')?[0] ?? ''),
-                                  radius: 30.sp,
-                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 13.0.sp),
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.grey,
+                                      child: const Text(""),
+                                      radius: 30.sp,
+                                    ),
+                                  ),
+                                  Text(
+                    snapshot.data?['message']['fullname']??"",
+                                    style: const TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w700),
+                                  )
+                                ],
                               ),
-                              Text(
-                                snapshot.data?.getString('fullname') ?? '',
-                                style: const TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700),
+                              SizedBox(height: MySize.height(context) / 20),
+                              UserDataForm(
+                                  title: 'الاسم بالكامل', userData: snapshot.data?['message']['fullname']??"",),
+                              UserDataForm(
+                                  title: 'رقم الهاتف', userData: snapshot.data?['message']['phone']??"",),
+                              UserDataForm(
+                                  title: 'اسم المسنخدم',
+                                  userData:snapshot.data?['message']['username'] ),
+                              UserDataForm(title: 'المدينه', userData: snapshot.data?['message']['country_id']??"",),
+                              UserDataForm(
+                                  title: 'الدوله', userData:snapshot.data?['message']['city_id']??"",),
+                              SizedBox(height: MySize.height(context) / 20),
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    ElevatedButton(
+                                        onPressed: () {}, child: const Text('حفظ')),
+                                    ElevatedButton(
+                                        onPressed: () => Controller.navigatorGo(context, EditUserData(
+                                          fullName: snapshot.data?['message']['fullname'],
+                                        phone: snapshot.data?['message']['phone'] ,email:snapshot.data?['message']['username'] ,
+                                          country:snapshot.data?['message']['country_id'],city:snapshot.data?['message']['city_id'] ,)),
+                                        child: const Text('تعديل')),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('الغاء'),
+                                    ),
+                                  ],
+                                ),
                               )
                             ],
                           ),
-                          SizedBox(height: MySize.height(context) / 20),
-                          UserDataForm(
-                              title: 'الاسم بالكامل', userData: snapshot.data?.getString('fullname') ?? ""),
-                          UserDataForm(
-                              title: 'رقم الهاتف', userData: snapshot.data?.getString('phone') ?? ''),
-                          UserDataForm(
-                              title: 'اسم المسنخدم',
-                              userData: snapshot.data?.getString('username') ?? ''),
-                          UserDataForm(title: 'المدينه', userData: snapshot.data?.getString('city') ?? ''),
-                          UserDataForm(
-                              title: 'الدوله', userData:  snapshot.data?.getString('country') ?? ''),
-                          SizedBox(height: MySize.height(context) / 20),
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                ElevatedButton(
-                                    onPressed: () {}, child: const Text('حفظ')),
-                                ElevatedButton(
-                                    onPressed: () => null,
-                                    child: const Text('تعديل')),
-                                ElevatedButton(
-                                  onPressed: () {},
-                                  child: const Text('الغاء'),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                );
+                        ),
+                      ],
+                    );
               } else {
                 return const Center(child: CircularProgressIndicator());
               }
@@ -127,7 +132,7 @@ class UserDataForm extends StatelessWidget {
           Expanded(
             child: Text(
               title ?? '',
-              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400),
+              style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400),
               textAlign: TextAlign.start,
             ),
           ),
@@ -136,7 +141,7 @@ class UserDataForm extends StatelessWidget {
             textDirection: TextDirection.ltr,
             child: Text(
               userData ?? '',
-              style: TextStyle(fontSize: 15.sp),
+              style: TextStyle(fontSize: 13.sp),
               // textDirection: TextDirection.rtl,
               //textAlign: TextAlign.end,
             ),
@@ -187,9 +192,9 @@ class EditUserData extends StatelessWidget {
           TextForm(hint: 'المدينه', controller: controller4),
           TextForm(hint: 'الدوله', controller: controller5),
           ElevatedButton(
-              onPressed: ()  => null, child: const Text('حفظ التعديلات'))
-        ],
-      ),
-    );
-  }
-}
+        child:Text("حفظ التعديلات "),
+              onPressed: ()  => Controller.userDataEdit(context,phone:controller2,city:controller4,country:controller5,name:controller3, fulname: controller1)
+
+
+          )]));
+  }}
