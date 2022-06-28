@@ -1,15 +1,14 @@
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:toordor/Controller/size.dart';
-
 import 'package:toordor/View/Widget/TextForm.dart';
+import 'package:toordor/view/cubit/home_cubit.dart';
+import 'package:toordor/view/cubit/home_state.dart';
 
 import '../../Controller/controller.dart';
 
 class UserProFile extends StatefulWidget {
-
   UserProFile({Key? key}) : super(key: key);
 
   @override
@@ -17,8 +16,6 @@ class UserProFile extends StatefulWidget {
 }
 
 class _UserProFileState extends State<UserProFile> {
-
-
   @override
   void initState() {
     Controller.userData(context);
@@ -28,19 +25,25 @@ class _UserProFileState extends State<UserProFile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.refresh),
-        onPressed: () => setState(() {}),
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await Controller.userData(context);
-        },
-        child: FutureBuilder<dynamic>(
-            future: Controller.userData(context),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
+    return BlocConsumer<HomeCubit, HomeState>(
+      listener: (context, state) {
+        // TODO: implement listener
+      },
+      builder: (context, state) {
+        var cubit = HomeCubit.get(context);
+        return Scaffold(
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.refresh),
+            onPressed: () => setState(() {}),
+          ),
+          body: RefreshIndicator(
+            onRefresh: () async {
+              await Controller.userData(context);
+            },
+            child: FutureBuilder<dynamic>(
+                future: Controller.userData(context),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
                     return Wrap(
                       children: [
                         Padding(
@@ -61,7 +64,7 @@ class _UserProFileState extends State<UserProFile> {
                                     ),
                                   ),
                                   Text(
-                    snapshot.data?['message']['fullname']??"",
+                                    snapshot.data?['message']['fullname'] ?? "",
                                     style: const TextStyle(
                                         fontSize: 15,
                                         color: Colors.black,
@@ -71,28 +74,52 @@ class _UserProFileState extends State<UserProFile> {
                               ),
                               SizedBox(height: MySize.height(context) / 20),
                               UserDataForm(
-                                  title: 'الاسم بالكامل', userData: snapshot.data?['message']['fullname']??"",),
+                                title: 'الاسم بالكامل',
+                                userData:
+                                    snapshot.data?['message']['fullname'] ?? "",
+                              ),
                               UserDataForm(
-                                  title: 'رقم الهاتف', userData: snapshot.data?['message']['phone']??"",),
+                                title: 'رقم الهاتف',
+                                userData:
+                                    snapshot.data?['message']['phone'] ?? "",
+                              ),
                               UserDataForm(
                                   title: 'اسم المسنخدم',
-                                  userData:snapshot.data?['message']['username'] ),
-                              UserDataForm(title: 'المدينه', userData: snapshot.data?['message']['country_id']??"",),
+                                  userData: snapshot.data?['message']
+                                      ['username']),
                               UserDataForm(
-                                  title: 'الدوله', userData:snapshot.data?['message']['city_id']??"",),
+                                title: 'المدينه',
+                                userData: cubit.address ?? "",
+                              ),
+                              UserDataForm(
+                                title: 'الدوله',
+                                userData: cubit.address ?? "",
+                              ),
                               SizedBox(height: MySize.height(context) / 20),
                               Padding(
                                 padding: const EdgeInsets.all(8),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
                                   children: [
                                     ElevatedButton(
-                                        onPressed: () {}, child: const Text('حفظ')),
+                                        onPressed: () {},
+                                        child: const Text('حفظ')),
                                     ElevatedButton(
-                                        onPressed: () => Controller.navigatorGo(context, EditUserData(
-                                          fullName: snapshot.data?['message']['fullname'],
-                                        phone: snapshot.data?['message']['phone'] ,email:snapshot.data?['message']['username'] ,
-                                          country:snapshot.data?['message']['country_id'],city:snapshot.data?['message']['city_id'] ,)),
+                                        onPressed: () => Controller.navigatorGo(
+                                            context,
+                                            EditUserData(
+                                              fullName: snapshot
+                                                  .data?['message']['fullname'],
+                                              phone: snapshot.data?['message']
+                                                  ['phone'],
+                                              email: snapshot.data?['message']
+                                                  ['username'],
+                                              country: snapshot.data?['message']
+                                                  ['country_id'],
+                                              city: snapshot.data?['message']
+                                                  ['city_id'],
+                                            )),
                                         child: const Text('تعديل')),
                                     ElevatedButton(
                                       onPressed: () {
@@ -108,11 +135,13 @@ class _UserProFileState extends State<UserProFile> {
                         ),
                       ],
                     );
-              } else {
-                return const Center(child: CircularProgressIndicator());
-              }
-            }),
-      ),
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                }),
+          ),
+        );
+      },
     );
   }
 }
@@ -180,21 +209,24 @@ class EditUserData extends StatelessWidget {
   Widget build(BuildContext context) {
     addData();
     return Scaffold(
-      appBar: AppBar(
-          backgroundColor: Colors.blue,
-          title: const Text('تعديل البينات',
-              style: TextStyle(color: Colors.white))),
-      body: Column(
-        children: [
+        appBar: AppBar(
+            backgroundColor: Colors.blue,
+            title: const Text('تعديل البينات',
+                style: TextStyle(color: Colors.white))),
+        body: Column(children: [
           TextForm(hint: 'الاسم', controller: controller1),
           TextForm(hint: 'رقم الهاتف', controller: controller2),
           TextForm(hint: 'البريد الالكتروني', controller: controller3),
           TextForm(hint: 'المدينه', controller: controller4),
           TextForm(hint: 'الدوله', controller: controller5),
           ElevatedButton(
-        child:Text("حفظ التعديلات "),
-              onPressed: ()  => Controller.userDataEdit(context,phone:controller2,city:controller4,country:controller5,name:controller3, fulname: controller1)
-
-
-          )]));
-  }}
+              child: Text("حفظ التعديلات "),
+              onPressed: () => Controller.userDataEdit(context,
+                  phone: controller2,
+                  city: controller4,
+                  country: controller5,
+                  name: controller3,
+                  fulname: controller1))
+        ]));
+  }
+}
