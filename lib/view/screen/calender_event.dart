@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:toordor/controller/controller.dart';
@@ -25,11 +28,14 @@ class _CalendarEventState extends State<CalendarEvent> {
   bool bool1 = false;
   bool bool2 = false;
   bool bool3 = false;
-String serviceName="";
-  String  services = "" ;
-  String  servicesEmployee = "" ;
-  int idServices=0;
-  bool showServiceEmployee=false;
+  String serviceName = "";
+  String services = "";
+  String servicesEmployee = "";
+  int idServices = 0;
+  bool showServiceEmployee = false;
+
+  TimeOfDay? timePicked;
+
   @override
   void initState() {
     selectedEvents = {};
@@ -55,75 +61,74 @@ String serviceName="";
       ),
       body: Column(
         children: [
-        FutureBuilder<List<ServicesIndexOfbussnise>>(
-          future: Controller.servicesIndex(context, widget.bussniseId.toString()),
-          builder: (context,snapshot) {
-           if(snapshot.hasData){
-             return Container(
-                 decoration: BoxDecoration(
-                     borderRadius:  BorderRadius.circular(3),
-                     color: Colors.grey[300]),
-                 child: DropdownButtonHideUnderline
-                   (
-                 child: DropdownButton(hint:  Text(services.isEmpty? "اختر الخدمة ":services),
-
-                 items: snapshot.data!.map((value) {
-               return  DropdownMenuItem(
-                 onTap: ()=>idServices=value.id??1,
-                 value: value.serviceName,
-                 child:  Text(
-                   value.serviceName??'',
-                 ),
-               );
-             }).toList(),
-               onChanged: (val){
-                   setState(() {
-                     services=val.toString();
-                    showServiceEmployee=true;
-
-                   });
-
-               })));
-           }else{
-             print(snapshot.error);
-             return const Center(child: CircularProgressIndicator());
-           }
-          }
-        ),
+          FutureBuilder<List<ServicesIndexOfbussnise>>(
+              future: Controller.servicesIndex(
+                  context, widget.bussniseId.toString()),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(3),
+                          color: Colors.grey[300]),
+                      child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                              hint: Text(
+                                  services.isEmpty ? "اختر الخدمة " : services),
+                              items: snapshot.data!.map((value) {
+                                return DropdownMenuItem(
+                                  onTap: () => idServices = value.id ?? 1,
+                                  value: value.serviceName,
+                                  child: Text(
+                                    value.serviceName ?? '',
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (val) {
+                                setState(() {
+                                  services = val.toString();
+                                  showServiceEmployee = true;
+                                });
+                              })));
+                } else {
+                  print(snapshot.error);
+                  return const Center(child: CircularProgressIndicator());
+                }
+              }),
           Visibility(
             visible: showServiceEmployee,
             child: FutureBuilder<List<ServicesEmployee>>(
-                future: Controller.servicesEmployee(context,idServices.toString()??'0'),
-                builder: (context,snapshot) {
-                  if(snapshot.hasData){
+                future: Controller.servicesEmployee(
+                    context, idServices.toString() ?? '0'),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
                     return Container(
                         decoration: BoxDecoration(
-                            borderRadius:  BorderRadius.circular(3),
+                            borderRadius: BorderRadius.circular(3),
                             color: Colors.grey[300]),
-                        child: DropdownButtonHideUnderline
-                          (
-                            child: DropdownButton(hint:  Text(servicesEmployee.isEmpty? "اختر الموظف ":servicesEmployee),
+                        child: DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                                hint: Text(servicesEmployee.isEmpty
+                                    ? "اختر الموظف "
+                                    : servicesEmployee),
                                 items: snapshot.data!.map((value) {
-                                  return  DropdownMenuItem(
-                                    value: value.name??"",
-                                    child:  Text(
-                                      value.name??'',
+                                  return DropdownMenuItem(
+                                    value: value.name ?? "",
+                                    child: Text(
+                                      value.name ?? '',
                                     ),
                                   );
                                 }).toList(),
-                                onChanged: (val){
+                                onChanged: (val) {
                                   setState(() {
-                                    servicesEmployee=val.toString();
+                                    servicesEmployee = val.toString();
                                     print(val);
                                   });
-
                                 })));
-                  }else{
+                  } else {
                     print(snapshot.data);
                     return const Center(child: CircularProgressIndicator());
                   }
-                }
-            ),
+                }),
           ),
           Expanded(
             child: TableCalendar(
@@ -139,37 +144,22 @@ String serviceName="";
               startingDayOfWeek: StartingDayOfWeek.sunday,
               daysOfWeekVisible: true,
               //Day Changed
-              onDaySelected: (DateTime selectDay, DateTime focusDay) {
-                print(selectDay.month);
+              onDaySelected: (DateTime selectDay, DateTime focusDay) async {
+                if (kDebugMode) {
+                  print('/////// timepick: $timePicked');
+                }
+
+                log('////// selectedday: $focusDay');
                 setState(() {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                              return Dialog(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    RadioListTile(
-                                        value: bool1,
-                                        groupValue: bool1,
-                                        title: Text('موظف 1'),
-                                        onChanged: (bool? value) =>
-                                        bool1 = value!),
-                                    RadioListTile(
-                                        value: bool1,
-                                        groupValue: bool1,
-                                        title: Text('موظف 1'),
-                                        onChanged: (bool? value) =>
-                                        bool1 = value!),
-                                  ],
-                                ),
-                              );
-                      });
-                      });
-                  print("التاريخ هة ");
                   selectedDay = selectDay;
                   focusedDay = focusDay;
-                print(focusedDay);
+                });
+
+                timePicked = await showTimePicker(
+                  context: context,
+                  initialTime: TimeOfDay.now(),
+                );
+                log('/////fomat date only: $focusedDay');
               },
               selectedDayPredicate: (DateTime date) {
                 return isSameDay(selectedDay, date);
@@ -265,6 +255,13 @@ String serviceName="";
       ),
     );
   }
+}
+
+Future<TimeOfDay?> timePicker(BuildContext context) {
+  return showTimePicker(
+    initialTime: TimeOfDay.now(),
+    context: context,
+  );
 }
 
 class Event {

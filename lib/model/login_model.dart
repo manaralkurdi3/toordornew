@@ -51,7 +51,6 @@
 //   }
 // }
 
-
 class LoginResponse {
   bool? success;
   LoginApiData? data;
@@ -61,13 +60,14 @@ class LoginResponse {
 
   LoginResponse.fromJson(Map<String, dynamic> json) {
     success = json['success'];
-    data = json['data'] != null ? new LoginApiData.fromJson(json['data']) : null;
+    data =
+        json['data'] != null ? new LoginApiData.fromJson(json['data']) : null;
     message = json['message'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['success'] = this.success;
+    data['success'] = success;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -87,12 +87,12 @@ class LoginApiData {
 
   LoginApiData(
       {this.token,
-        this.tokenType,
-        this.fullname,
-        this.username,
-        this.country,
-        this.city,
-        this.phone});
+      this.tokenType,
+      this.fullname,
+      this.username,
+      this.country,
+      this.city,
+      this.phone});
 
   LoginApiData.fromJson(Map<String, dynamic> json) {
     token = json['token'];

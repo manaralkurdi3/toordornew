@@ -1,15 +1,11 @@
-import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:toordor/Controller/controller.dart';
 import 'package:toordor/view/screen/bussnise_of_category_screen.dart';
-import 'package:toordor/view/screen/calender_event.dart';
 
 class HomeBody extends StatefulWidget {
-
-
   @override
   State<HomeBody> createState() => _HomeBodyState();
 }
@@ -22,11 +18,12 @@ class _HomeBodyState extends State<HomeBody> {
   Controller controller = Controller();
   late int pageCount;
   int selectedIndex = 0;
-  late PageController pageController=new PageController() ;
+  late PageController pageController = new PageController();
   bool indicator = false;
   Future<SharedPreferences> preferences = SharedPreferences.getInstance();
   Future? cashing;
   late int lastPageItemLength;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -38,56 +35,56 @@ class _HomeBodyState extends State<HomeBody> {
 
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
+    return Scaffold(
       body: Column(
         children: [
-      Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+          Column(
             children: [
-              FutureBuilder<SharedPreferences>(
-                future: SharedPreferences.getInstance(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Container(
-                      padding: const EdgeInsets.only(top: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  FutureBuilder<SharedPreferences>(
+                    future: SharedPreferences.getInstance(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Container(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Text(
+                            "مرحبا ${snapshot.data!.getString('fullname')}",
+                            style: TextStyle(fontSize: 15.sp),
+                          ),
+                        );
+                      } else {
+                        return const CupertinoActivityIndicator();
+                      }
+                    },
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {},
                       child: Text(
-                        "مرحبا ${snapshot.data!.getString('fullname')}",
-                        style: TextStyle(fontSize: 15.sp),
+                        "مواعيدي",
+                        style: TextStyle(fontSize: 12.sp),
                       ),
-                    );
-                  } else {
-                    return const CupertinoActivityIndicator();
-                  }
-                },
-              )
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text(
-                    "مواعيدي",
-                    style: TextStyle(fontSize: 12.sp),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
           Expanded(
             child: FutureBuilder<dynamic>(
                 future: Controller.categoryy(context),
                 builder: (context, snapshot) {
-                  if(snapshot.connectionState==ConnectionState.none){
-                    return const Center(child: Text('لا يتوافر اتصال بالانترنت'));
-                  }else
-                  if (snapshot.hasData) {
+                  if (snapshot.connectionState == ConnectionState.none) {
+                    return const Center(
+                        child: Text('لا يتوافر اتصال بالانترنت'));
+                  } else if (snapshot.hasData) {
                     return PageView.builder(
                         controller: pageController,
                         itemCount: snapshot.data.length,
@@ -113,8 +110,13 @@ class _HomeBodyState extends State<HomeBody> {
                               return Column(
                                 children: [
                                   GestureDetector(
-                                    onTap: () =>  Navigator.pushReplacement(
-                                  context, MaterialPageRoute(builder: (context) => HomeBody1( snapshot.data['data'][index]['id'].toString()))),
+                                    onTap: () => Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => HomeBody1(
+                                                snapshot.data['data'][index]
+                                                        ['id']
+                                                    .toString()))),
                                     child: Container(
                                       width: 50,
                                       height: 50,
@@ -141,7 +143,7 @@ class _HomeBodyState extends State<HomeBody> {
                             }),
                           );
                         });
-                  }else {
+                  } else {
                     return const Center(child: CircularProgressIndicator());
                   }
                 }),
@@ -161,7 +163,7 @@ class _HomeBodyState extends State<HomeBody> {
                     duration: const Duration(milliseconds: 100),
                     decoration: BoxDecoration(
                         borderRadius:
-                        const BorderRadius.all(Radius.circular(10)),
+                            const BorderRadius.all(Radius.circular(10)),
                         color: Colors.red
                             .withOpacity(selectedIndex == index ? 1 : 0.5)),
                     margin: const EdgeInsets.all(5),
