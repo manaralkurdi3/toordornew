@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:toordor/Model/login_model.dart';
 import 'package:toordor/View/Screen/add_project.dart';
 import 'package:toordor/View/Screen/my_business.dart';
@@ -14,6 +15,7 @@ import 'package:http/http.dart' as http;
 import 'package:toordor/const/new_url_links.dart';
 import 'package:toordor/const/urlLinks.dart';
 import 'package:toordor/View/screen/home_body_category.dart';
+import 'package:toordor/model/appointment.dart';
 import 'package:toordor/view/screen/bussnise_of_category_screen.dart';
 import '../View/Screen/category_screen.dart';
 import '../View/Screen/logout_screen.dart';
@@ -58,7 +60,7 @@ class Controller {
     };
 
     http.Response response =
-    await http.get(Uri.parse(ApiLinks.user), headers: header);
+        await http.get(Uri.parse(ApiLinks.user), headers: header);
     if (response.statusCode == 200) {
       var decodeData = json.decode(response.body);
       return decodeData;
@@ -66,6 +68,39 @@ class Controller {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('حدث خطأ ما!')));
     }
+  }
+
+  static Future<List<Appointment>> getAppointments(
+    BuildContext context,
+    dynamic businessId,
+    employeeId,
+    date,
+    fromDate,
+    toDate,
+    comment,
+  ) async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    Map<String, String> header = {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+    http.Response response =
+        await http.get(Uri.parse(ApiLinks.book + businessId), headers: header);
+    List<Appointment> meetings = <Appointment>[];
+    final DateTime today = DateTime.now();
+    final DateTime fromDate = DateTime(today.year, today.month, today.day);
+    final DateTime toDate = fromDate.add(
+      const Duration(hours: 2),
+    );
+    meetings.add(Appointment(
+      startTime: fromDate,
+      endTime: toDate,
+      subject: 'newappointment',
+      color: Colors.blue,
+    ));
+    return meetings;
   }
 
   static Future<List<ServicesIndexOfbussnise>> servicesIndex(
@@ -84,36 +119,33 @@ class Controller {
       'Authorization': 'Bearer $_token',
     };
 
-    http.Response response =
-    await http.get(
-        Uri.parse(ApiLinks.serviceIndex + bussniseId), headers: header);
+    http.Response response = await http
+        .get(Uri.parse(ApiLinks.serviceIndex + bussniseId), headers: header);
 
     List<ServicesIndexOfbussnise> serviceindex = [];
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       var rest = data["data"] as List;
       // var error = data['error'];
-      serviceindex = rest.map<ServicesIndexOfbussnise>((json) =>
-          ServicesIndexOfbussnise.fromJson(json)).toList();
-    }
-
-
-    else {
+      serviceindex = rest
+          .map<ServicesIndexOfbussnise>(
+              (json) => ServicesIndexOfbussnise.fromJson(json))
+          .toList();
+    } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('حدث خطأ ما!')));
       return serviceindex;
     }
     return serviceindex;
 
-      // var decodeData = json.decode(response.body);
-      //
-      // serviceindex.add(
-      //     ServicesIndexOfbussnise.fromJson(decodeData['data'])
-      // );
-      // return serviceindex;
-
-
+    // var decodeData = json.decode(response.body);
+    //
+    // serviceindex.add(
+    //     ServicesIndexOfbussnise.fromJson(decodeData['data'])
+    // );
+    // return serviceindex;
   }
+
   static Future<List<ServicesEmployee>> servicesEmployee(
       BuildContext context, String employeeId) async {
     String _token = await SharedPreferences.getInstance()
@@ -130,22 +162,19 @@ class Controller {
       'Authorization': 'Bearer $_token',
     };
 
-    http.Response response =
-    await http.get(
-        Uri.parse(ApiLinks.serviceEmploy + employeeId), headers: header);
+    http.Response response = await http
+        .get(Uri.parse(ApiLinks.serviceEmploy + employeeId), headers: header);
 
     List<ServicesEmployee> serviceEmployee = [];
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       print(data);
-      List rest = data['message']["data"] ;
+      List rest = data['message']["data"];
       // var error = data['error'];
-      serviceEmployee = rest.map<ServicesEmployee>((json) =>
-          ServicesEmployee.fromJson(json)).toList();
-    }
-
-
-    else {
+      serviceEmployee = rest
+          .map<ServicesEmployee>((json) => ServicesEmployee.fromJson(json))
+          .toList();
+    } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('حدث خطأ ما!')));
       return serviceEmployee;
@@ -158,17 +187,16 @@ class Controller {
     //     ServicesIndexOfbussnise.fromJson(decodeData['data'])
     // );
     // return serviceindex;
-
-
   }
 
-
-
-
-
-
-  static Future userDataEdit(BuildContext context,{required TextEditingController fulname,
-    required TextEditingController phone,required TextEditingController city,required TextEditingController name,required TextEditingController country, }) async {
+  static Future userDataEdit(
+    BuildContext context, {
+    required TextEditingController fulname,
+    required TextEditingController phone,
+    required TextEditingController city,
+    required TextEditingController name,
+    required TextEditingController country,
+  }) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
     // String id = await SharedPreferences.getInstance()
@@ -183,14 +211,15 @@ class Controller {
       'Authorization': 'Bearer $_token',
     };
 
-    http.Response response =
-    await http.post(Uri.parse(ApiLinks.editUser), headers: header,body:jsonEncode(
-     { "fullname": fulname.text,
-      "username":name.text ,
-      "phone": phone.text,
-      "country_id": country.text,
-      "city_id": city.text,}
-    ) );
+    http.Response response = await http.post(Uri.parse(ApiLinks.editUser),
+        headers: header,
+        body: jsonEncode({
+          "fullname": fulname.text,
+          "username": name.text,
+          "phone": phone.text,
+          "country_id": country.text,
+          "city_id": city.text,
+        }));
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('تم تعديل البيانات ')));
@@ -240,17 +269,18 @@ class Controller {
     }
   }
 
-  Future insertBusiness(BuildContext context,
-      {required String phoneNumber,
-      required String nameProject,
-      required String specialization,
-      required String email,
-      required setState,
-      String? country,
-      String? city,
-      required TimeOfDay from,
-      required TimeOfDay to,
-      }) async {
+  Future insertBusiness(
+    BuildContext context, {
+    required String phoneNumber,
+    required String nameProject,
+    required String specialization,
+    required String email,
+    required setState,
+    String? country,
+    String? city,
+    required TimeOfDay from,
+    required TimeOfDay to,
+  }) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
 
@@ -259,35 +289,20 @@ class Controller {
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
     };
-    Uri uri=Uri.parse(ApiLinks.busineesCreate);
-     uri.replace(queryParameters:  {
-       "business_name":nameProject,
-       "phone":phoneNumber,
-       "email":email,
-       "specialization":specialization,
-       "weekends":"",
-       "from_date":from,
-       "to_date":to,
-       "country_id":country,
-       "city_id":2
+    Uri uri = Uri.parse(ApiLinks.busineesCreate);
+    uri.replace(queryParameters: {
+      "business_name": nameProject,
+      "phone": phoneNumber,
+      "email": email,
+      "specialization": specialization,
+      "weekends": "",
+      "from_date": from,
+      "to_date": to,
+      "country_id": country,
+      "city_id": 2
+    });
 
-     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-    http.Response response = await http.get(uri,
-        headers: header);
-
+    http.Response response = await http.get(uri, headers: header);
 
     if (response.statusCode == 200) {
       setState(() => listPage[2]);
@@ -764,10 +779,8 @@ class Controller {
     if (response.statusCode == 200) {
       Map decodedData = json.decode(response.body);
       decodedData.forEach((key, value) => list.add(value));
-      
     }
     // list=await decodedData;
-
   }
 
   showEmployee(BuildContext context) {
@@ -809,7 +822,6 @@ class Controller {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.clear();
         preferences.setString('token', loginResponse.data!.token ?? '');
-
 
         navigatorOff(context, HomeBody());
       }
@@ -853,9 +865,8 @@ class Controller {
     }
   }
 
-  Future<dynamic> fetchAllBusinesses(
-      BuildContext context) async {
-  //  List<DataFetchAllBusinessesModel> items = [];
+  Future<dynamic> fetchAllBusinesses(BuildContext context) async {
+    //  List<DataFetchAllBusinessesModel> items = [];
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String _token = preferences.getString('token') ?? '';
     http.Response response =
@@ -866,16 +877,16 @@ class Controller {
     });
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
-     // FetchAllBusinessesModel model = FetchAllBusinessesModel.fromJson(data);
-    //  items = model.data!;
-      return ;
+      // FetchAllBusinessesModel model = FetchAllBusinessesModel.fromJson(data);
+      //  items = model.data!;
+      return;
     } else {
       showDialog(
           context: context,
           builder: (context) => CupertinoAlertDialog(
                 content: Text('حدث خطا ما  ${response.statusCode}'),
               ));
-      return ;
+      return;
     }
   }
 

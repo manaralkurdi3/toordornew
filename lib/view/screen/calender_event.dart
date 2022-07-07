@@ -1,17 +1,24 @@
 import 'dart:developer';
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:toordor/controller/controller.dart';
+import 'package:toordor/model/appointment.dart';
+import 'package:toordor/view/screen/calender.dart';
+//import 'package:toordor/view/screen/appointement.dart';
+import 'package:toordor/view/screen/from_to_time.dart';
+import 'package:toordor/view/screen/meeeting.dart';
 
 import '../../model/employee_services.dart';
 import '../../model/services.dart';
 
 class CalendarEvent extends StatefulWidget {
   int bussniseId;
-
   CalendarEvent(this.bussniseId);
 
   @override
@@ -20,11 +27,13 @@ class CalendarEvent extends StatefulWidget {
 
 class _CalendarEventState extends State<CalendarEvent> {
   late Map<DateTime, List<Event>> selectedEvents;
+  late Map<DateTime, List<Appointment>> _dataCollection;
+
   CalendarFormat format = CalendarFormat.month;
   DateTime selectedDay = DateTime.now();
   DateTime focusedDay = DateTime.now();
 
-  TextEditingController _eventController = TextEditingController();
+  final TextEditingController _eventController = TextEditingController();
   bool bool1 = false;
   bool bool2 = false;
   bool bool3 = false;
@@ -33,12 +42,18 @@ class _CalendarEventState extends State<CalendarEvent> {
   String servicesEmployee = "";
   int idServices = 0;
   bool showServiceEmployee = false;
-
+  Controller controller = Controller();
+  late DateTime fromDate;
+  late DateTime toDate;
   TimeOfDay? timePicked;
+
+  late var _calenderDataSource;
 
   @override
   void initState() {
     selectedEvents = {};
+    //  _dataCollection = getAppointments();
+    // _calenderDataSource = MeetingDataSource(<Meeting>[]);
     super.initState();
   }
 
@@ -55,8 +70,9 @@ class _CalendarEventState extends State<CalendarEvent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text("ESTech Calendar"),
+        title: Text("Calender Event"),
         centerTitle: true,
       ),
       body: Column(
@@ -66,29 +82,100 @@ class _CalendarEventState extends State<CalendarEvent> {
                   context, widget.bussniseId.toString()),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(3),
-                          color: Colors.grey[300]),
-                      child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                              hint: Text(
-                                  services.isEmpty ? "اختر الخدمة " : services),
-                              items: snapshot.data!.map((value) {
-                                return DropdownMenuItem(
-                                  onTap: () => idServices = value.id ?? 1,
-                                  value: value.serviceName,
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(3),
+                            color: Colors.grey[300]),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2(
+                            isExpanded: true,
+                            hint: Row(
+                              children: [
+                                Icon(
+                                  Icons.list,
+                                  size: 16,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Expanded(
                                   child: Text(
-                                    value.serviceName ?? '',
+                                    services.isEmpty
+                                        ? "اختر الخدمة "
+                                        : services,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                );
-                              }).toList(),
-                              onChanged: (val) {
-                                setState(() {
-                                  services = val.toString();
-                                  showServiceEmployee = true;
-                                });
-                              })));
+                                ),
+                              ],
+                            ),
+                            items: snapshot.data!.map((value) {
+                              return DropdownMenuItem(
+                                onTap: () => idServices = value.id ?? 1,
+                                value: value.serviceName,
+                                child: Text(
+                                  value.serviceName ?? '',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (val) {
+                              setState(() {
+                                services = val.toString();
+                                showServiceEmployee = true;
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.arrow_forward_ios_outlined,
+                            ),
+                            iconSize: 14,
+                            iconEnabledColor: Colors.white,
+                            iconDisabledColor: Colors.grey,
+                            buttonHeight: 50,
+                            buttonWidth: 160,
+                            buttonPadding:
+                                const EdgeInsets.only(left: 14, right: 14),
+                            buttonDecoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(
+                                color: Colors.black,
+                              ),
+                              color: Colors.blue,
+                            ),
+                            buttonElevation: 2,
+                            itemHeight: 40,
+                            itemPadding:
+                                const EdgeInsets.only(left: 14, right: 14),
+                            dropdownMaxHeight: 200,
+                            dropdownWidth: 200,
+                            dropdownPadding: null,
+                            dropdownDecoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              color: Colors.blue,
+                            ),
+                            dropdownElevation: 8,
+                            scrollbarRadius: const Radius.circular(40),
+                            scrollbarThickness: 6,
+                            scrollbarAlwaysShow: true,
+                            offset: const Offset(-20, 0),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
                 } else {
                   print(snapshot.error);
                   return const Center(child: CircularProgressIndicator());
@@ -97,33 +184,103 @@ class _CalendarEventState extends State<CalendarEvent> {
           Visibility(
             visible: showServiceEmployee,
             child: FutureBuilder<List<ServicesEmployee>>(
-                future: Controller.servicesEmployee(
-                    context, idServices.toString() ?? '0'),
+                future:
+                    Controller.servicesEmployee(context, idServices.toString()),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(3),
-                            color: Colors.grey[300]),
-                        child: DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                                hint: Text(servicesEmployee.isEmpty
-                                    ? "اختر الموظف "
-                                    : servicesEmployee),
-                                items: snapshot.data!.map((value) {
-                                  return DropdownMenuItem(
-                                    value: value.name ?? "",
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(3),
+                              color: Colors.grey[300]),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton2(
+                              isExpanded: true,
+                              hint: Row(
+                                children: [
+                                  Icon(
+                                    Icons.list,
+                                    size: 16,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    width: 4,
+                                  ),
+                                  Expanded(
                                     child: Text(
-                                      value.name ?? '',
+                                      servicesEmployee.isEmpty
+                                          ? "اختر الموظف "
+                                          : servicesEmployee,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                  );
-                                }).toList(),
-                                onChanged: (val) {
-                                  setState(() {
-                                    servicesEmployee = val.toString();
-                                    print(val);
-                                  });
-                                })));
+                                  ),
+                                ],
+                              ),
+                              items: snapshot.data!.map((value) {
+                                return DropdownMenuItem(
+                                  value: value.name ?? "",
+                                  child: Text(
+                                    value.name ?? '',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (val) {
+                                setState(() {
+                                  servicesEmployee = val.toString();
+                                  print(val);
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.arrow_forward_ios_outlined,
+                              ),
+                              iconSize: 14,
+                              iconEnabledColor: Colors.white,
+                              iconDisabledColor: Colors.grey,
+                              buttonHeight: 50,
+                              buttonWidth: 160,
+                              buttonPadding:
+                                  const EdgeInsets.only(left: 14, right: 14),
+                              buttonDecoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                  color: Colors.black26,
+                                ),
+                                color: Colors.blue,
+                              ),
+                              buttonElevation: 2,
+                              itemHeight: 40,
+                              itemPadding:
+                                  const EdgeInsets.only(left: 14, right: 14),
+                              dropdownMaxHeight: 200,
+                              dropdownWidth: 200,
+                              dropdownPadding: null,
+                              dropdownDecoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                color: Colors.blue,
+                              ),
+                              dropdownElevation: 8,
+                              scrollbarRadius: const Radius.circular(40),
+                              scrollbarThickness: 6,
+                              scrollbarAlwaysShow: true,
+                              offset: const Offset(-20, 0),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
                   } else {
                     print(snapshot.data);
                     return const Center(child: CircularProgressIndicator());
@@ -213,46 +370,55 @@ class _CalendarEventState extends State<CalendarEvent> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text("Add Event"),
-            content: TextFormField(
-              controller: _eventController,
-            ),
-            actions: [
-              TextButton(
-                child: Text("Cancel"),
-                onPressed: () => Navigator.pop(context),
-              ),
-              TextButton(
-                child: Text("Ok"),
-                onPressed: () {
-                  if (_eventController.text.isEmpty) {
-                  } else {
-                    if (selectedEvents[selectedDay] != null) {
-                      selectedEvents[selectedDay]!.add(
-                        Event(title: _eventController.text),
-                      );
-                    } else {
-                      selectedEvents[selectedDay] = [
-                        Event(title: _eventController.text)
-                      ];
-                    }
-                  }
-                  Navigator.pop(context);
-                  _eventController.clear();
-                  setState(() {});
-                  return;
-                },
-              ),
-            ],
-          ),
-        ),
-        label: Text("Add Event"),
-        icon: Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: () => showDialog(
+      //     context: context,
+      //     builder: (context) => AlertDialog(
+      //       title: Text("Add Appointment"),
+      //       content: TextFormField(
+      //         controller: _eventController,
+      //       ),
+      //       actions: [
+      //         TextButton(
+      //           child: Text("Cancel"),
+      //           onPressed: () => Navigator.pop(context),
+      //         ),
+      //         TextButton(
+      //           child: Text("Ok"),
+      //           onPressed: () {
+      //             if (_eventController.text.isEmpty) {
+      //             } else {
+      //               if (selectedEvents[selectedDay] != null) {
+      //                 selectedEvents[selectedDay]!.add(
+      //                   Event(
+      //                     title: _eventController.text,
+
+      //                     // from: fromDate,
+      //                     // to: toDate,
+      //                   ),
+      //                 );
+      //               } else {
+      //                 selectedEvents[selectedDay] = [
+      //                   Event(
+      //                     title: _eventController.text,
+      //                     // from: fromDate,
+      //                     // to: toDate,
+      //                   ),
+      //                 ];
+      //               }
+      //             }
+      //             Navigator.pop(context);
+      //             // _eventController.clear();
+      //             setState(() {});
+      //             return;
+      //           },
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      //   label: Text("Add Appointement"),
+      //   icon: Icon(Icons.add),
+      // ),
     );
   }
 }
@@ -270,4 +436,10 @@ class Event {
   Event({required this.title});
 
   String toString() => this.title;
+}
+
+class AppointmentDataSource extends CalendarDataSource {
+  MeetingDataSource(List<Appointment> source) {
+    appointments = source;
+  }
 }

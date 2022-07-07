@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toordor/const/color.dart';
 
 import 'ImageButton.dart';
 
@@ -8,19 +9,18 @@ class SocialMedia extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-       color: Colors.grey,
-      width: MediaQuery.of(context).size.width/1.3,
+      color: selectBackGround,
+      clipBehavior: Clip.none,
+      width: MediaQuery.of(context).size.width / 1.3,
       padding: const EdgeInsets.all(3),
       margin: const EdgeInsets.all(3),
-      child:
-      Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           HomeButton(image: 'assets/google.png', color: Colors.red),
           HomeButton(image: 'assets/facebook.png', color: Colors.blue),
           HomeButton(image: 'assets/instagram.png', color: Colors.pink),
-          HomeButton(image: "assets/biometrics.png",color:Colors.white70),
-
+          //HomeButton(image: "assets/biometrics.png", color: Colors.white70),
         ],
       ),
     );

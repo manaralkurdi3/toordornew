@@ -1,17 +1,15 @@
-
-
-
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:toordor/View/Screen/calender_event.dart';
+//import 'package:toordor/View/Screen/calender_event.dart';
 import 'package:time_range/time_range.dart';
+//import 'package:toordor/view/screen/appointement.dart';
+import 'package:toordor/view/screen/calender_event.dart';
+
 class TimeWorkPlace extends StatefulWidget {
   const TimeWorkPlace({Key? key}) : super(key: key);
-State<TimeWorkPlace> createState() => _TimeWorkPlaceState();
+  State<TimeWorkPlace> createState() => _TimeWorkPlaceState();
 }
-
-
 
 class _TimeWorkPlaceState extends State<TimeWorkPlace> {
   TimeOfDay selectedTime = TimeOfDay.now();
@@ -29,7 +27,7 @@ class _TimeWorkPlaceState extends State<TimeWorkPlace> {
   TimeRangeResult? _timeRange;
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
         child: Column(
@@ -52,110 +50,106 @@ class _TimeWorkPlaceState extends State<TimeWorkPlace> {
                   showDialog(
                       context: context,
                       builder: (context) {
-                        return
-                          Dialog(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
+                        return Dialog(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 16, left: leftPadding),
+                                child: Text(
+                                  'Select Timing',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6!
+                                      .copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: dark),
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              TimeRange(
+                                fromTitle: Column(
+                                  children: [
+                                    Divider(
+                                      color: Colors.black,
+                                    ),
+                                    Text(
+                                      'FROM',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: dark,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                toTitle: Column(
+                                  children: [
+                                    Divider(
+                                      color: Colors.black,
+                                    ),
+                                    Text(
+                                      'TO',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: dark,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                titlePadding: leftPadding,
+                                textStyle: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  color: dark,
+                                ),
+                                activeTextStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                                borderColor: Colors.transparent,
+                                activeBorderColor: Colors.transparent,
+                                backgroundColor: Colors.transparent,
+                                activeBackgroundColor: dark,
+                                firstTime: TimeOfDay(hour: 8, minute: 00),
+                                lastTime: TimeOfDay(hour: 20, minute: 00),
+                                initialRange: _timeRange,
+                                timeStep: 30,
+                                timeBlock: 30,
+                                onRangeCompleted: (range) =>
+                                    setState(() => _timeRange = range),
+                              ),
+                              SizedBox(height: 30),
+                              if (_timeRange != null)
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                      top: 16, left: leftPadding),
-                                  child: Text(
-                                    'Select Timing',
-                                    style: Theme
-                                        .of(context)
-                                        .textTheme
-                                        .headline6!
-                                        .copyWith(fontWeight: FontWeight.bold,
-                                        color: dark),
-                                  ),
-                                ),
-                                SizedBox(height: 20),
-                                TimeRange(
-                                  fromTitle:
-
-                                  Column(
-                                    children: [
-                                      Divider(color: Colors.black,),
-
+                                      top: 8.0, left: leftPadding),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
                                       Text(
-                                        'FROM',
+                                        'Selected Range: ${_timeRange!.start.format(context)} - ${_timeRange!.end.format(context)}',
                                         style: TextStyle(
-                                          fontSize: 14,
-                                          color: dark,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                            fontSize: 20, color: dark),
                                       ),
+                                      SizedBox(height: 20),
+                                      MaterialButton(
+                                        child: Text('Default'),
+                                        onPressed: () => setState(() =>
+                                            _timeRange = _defaultTimeRange),
+                                        color: orange,
+                                      )
                                     ],
                                   ),
-                                  toTitle: Column(
-                                    children: [
-                                      Divider(color: Colors.black,),
-
-                                      Text(
-                                        'TO',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: dark,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  titlePadding: leftPadding,
-                                  textStyle: TextStyle(
-                                    fontWeight: FontWeight.normal,
-                                    color: dark,
-                                  ),
-                                  activeTextStyle: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                  borderColor: Colors.transparent,
-                                  activeBorderColor: Colors.transparent,
-                                  backgroundColor: Colors.transparent,
-                                  activeBackgroundColor: dark,
-                                  firstTime: TimeOfDay(hour: 8, minute: 00),
-                                  lastTime: TimeOfDay(hour: 20, minute: 00),
-                                  initialRange: _timeRange,
-                                  timeStep: 30,
-                                  timeBlock: 30,
-                                  onRangeCompleted: (range) =>
-                                      setState(() => _timeRange = range),
                                 ),
-                                SizedBox(height: 30),
-                                if (_timeRange != null)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0,
-                                        left: leftPadding),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start,
-                                      children: <Widget>[
-                                        Text(
-                                          'Selected Range: ${_timeRange!.start
-                                              .format(context)} - ${_timeRange!
-                                              .end.format(context)}',
-                                          style: TextStyle(
-                                              fontSize: 20, color: dark),
-                                        ),
-                                        SizedBox(height: 20),
-                                        MaterialButton(
-                                          child: Text('Default'),
-                                          onPressed: () =>
-                                              setState(() =>
-                                              _timeRange = _defaultTimeRange),
-                                          color: orange,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          );
+                            ],
+                          ),
+                        );
                       });
                 });
-                  print("التاريخ هة ");
+                print("التاريخ هة ");
                 selectedDay = selectDay;
                 focusedDay = focusDay;
                 print(focusedDay);
@@ -164,7 +158,7 @@ class _TimeWorkPlaceState extends State<TimeWorkPlace> {
                 return isSameDay(selectedDay, date);
               },
 
-             // eventLoader: _getEventsfromDay,
+              // eventLoader: _getEventsfromDay,
 
               //To style the Calendar
               calendarStyle: CalendarStyle(
@@ -202,13 +196,11 @@ class _TimeWorkPlaceState extends State<TimeWorkPlace> {
                 ),
               ),
             ),
-
           ],
         ),
       ),
     );
   }
-
 
   List<TimeRegion> _getTimeRegions() {
     final List<TimeRegion> regions = <TimeRegion>[];
@@ -224,5 +216,3 @@ class _TimeWorkPlaceState extends State<TimeWorkPlace> {
     return regions;
   }
 }
-
-

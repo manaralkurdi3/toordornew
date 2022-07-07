@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:toordor/Controller/controller.dart';
+import 'package:toordor/View/Widget/TextForm.dart';
 import 'package:toordor/view/screen/bussnise_of_category_screen.dart';
+import 'package:toordor/view/screen/calender.dart';
+import 'package:toordor/view/screen/category_list.dart';
 
 class HomeBody extends StatefulWidget {
   @override
@@ -20,6 +23,8 @@ class _HomeBodyState extends State<HomeBody> {
   int selectedIndex = 0;
   late PageController pageController = new PageController();
   bool indicator = false;
+  int indexPage = 0;
+
   Future<SharedPreferences> preferences = SharedPreferences.getInstance();
   Future? cashing;
   late int lastPageItemLength;
@@ -36,9 +41,46 @@ class _HomeBodyState extends State<HomeBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          backgroundColor: Colors.blue,
+          leading: Container(
+            child: const SizedBox(width: 300),
+            height: 100,
+            width: 150,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.fitWidth,
+                image: AssetImage(
+                    'assets/1f3b82a8-489f-4051-9605-90fc99c2010a-removebg-preview.png'),
+              ),
+            ),
+          ),
+          actions: [
+            PopupMenuButton(
+                itemBuilder: (context) => Controller.listPage
+                    .map(
+                      (e) => PopupMenuItem(
+                        child: ListTile(trailing: Text(e.title)),
+                        onTap: () => setState(
+                          () => indexPage = Controller.listPage.indexOf(e),
+                        ),
+                      ),
+                    )
+                    .toList())
+          ],
+          title: TextForm(
+              hint: 'البحث',
+              onchange: (String? value) =>
+                  Controller.query(context, query: value),
+              widget: IconButton(
+                icon: const Icon(Icons.search, color: Colors.blue),
+                onPressed: () {},
+              ),
+              keyBoardType: TextInputType.text)),
       body: Column(
         children: [
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -48,10 +90,12 @@ class _HomeBodyState extends State<HomeBody> {
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return Container(
-                          padding: const EdgeInsets.only(top: 20),
+                          padding: const EdgeInsets.only(top: 20, right: 10),
                           child: Text(
                             "مرحبا ${snapshot.data!.getString('fullname')}",
-                            style: TextStyle(fontSize: 15.sp),
+                            style: TextStyle(
+                              fontSize: 15.sp,
+                            ),
                           ),
                         );
                       } else {
@@ -62,17 +106,31 @@ class _HomeBodyState extends State<HomeBody> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
+                padding: const EdgeInsets.only(bottom: 8.0, right: 8),
                 child: Row(
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(primary: Colors.blue),
+                      onPressed: () =>
+                          Controller.navigatorGo(context, Calender()),
                       child: Text(
                         "مواعيدي",
-                        style: TextStyle(fontSize: 12.sp),
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                        ),
                       ),
                     ),
                   ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 8, top: 12),
+                child: Text(
+                  'اختيار العنصر',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
@@ -87,7 +145,8 @@ class _HomeBodyState extends State<HomeBody> {
                   } else if (snapshot.hasData) {
                     return PageView.builder(
                         controller: pageController,
-                        itemCount: snapshot.data.length,
+                        itemCount: categorylist.length,
+                        //snapshot.data.length,
                         onPageChanged: (index) {
                           setState(() {
                             selectedIndex = index;
@@ -104,9 +163,12 @@ class _HomeBodyState extends State<HomeBody> {
                             mainAxisSpacing: 0,
                             crossAxisCount: 3,
                             children: List.generate(
+                                // (2 - 1) != pageIndex
+                                //     ? snapshot.data['data'].length
+                                //     : lastPageItemLength,
                                 (2 - 1) != pageIndex
-                                    ? snapshot.data['data'].length
-                                    : lastPageItemLength, (index) {
+                                    ? categorylist.length
+                                    : categorylist.length, (index) {
                               return Column(
                                 children: [
                                   GestureDetector(
@@ -121,18 +183,22 @@ class _HomeBodyState extends State<HomeBody> {
                                       width: 50,
                                       height: 50,
                                       decoration: const BoxDecoration(
-                                          image: DecorationImage(
-                                              image: AssetImage(
-                                                  'assets/folder.png'))),
-                                      margin: const EdgeInsets.all(5),
-                                      padding: const EdgeInsets.all(9),
-                                      alignment: Alignment.topCenter,
-                                      child: null,
+                                        color: Colors.blue,
+                                      ),
                                     ),
+                                    //   margin: const EdgeInsets.all(5),
+                                    //   padding: const EdgeInsets.all(9),
+                                    //   alignment: Alignment.topCenter,
+                                    //   child: null,
+                                    // ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
                                   ),
                                   Text(
-                                    snapshot.data['data'][index]['name']!
-                                        .toString(),
+                                    categorylist[index].text,
+                                    // snapshot.data['data'][index]['name']!
+                                    //     .toString(),
                                     style: const TextStyle(
                                         color: Colors.black, fontSize: 12),
                                     overflow: TextOverflow.visible,
@@ -177,6 +243,7 @@ class _HomeBodyState extends State<HomeBody> {
         ],
       ),
     );
+
     // return Scaffold(
     //   body: Column(
     //     children: [

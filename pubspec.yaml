@@ -50,7 +50,7 @@ dependencies:
   geolocator: ^9.0.0
   geocoding: ^2.0.4
   dio: ^4.0.6
-
+  dropdown_button2: ^1.6.3
 
 
   double_back_to_close_app: ^2.1.0
@@ -81,6 +81,7 @@ flutter:
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
+  generate: true
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:

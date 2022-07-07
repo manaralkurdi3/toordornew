@@ -9,7 +9,7 @@ import 'package:toordor/view/screen/calender.dart';
 import 'calender_event.dart';
 
 class HomeBody1 extends StatefulWidget {
-dynamic categoryId;
+  dynamic categoryId;
 
   HomeBody1(this.categoryId);
 
@@ -25,7 +25,7 @@ class _HomeBody1State extends State<HomeBody1> {
   Controller controller = Controller();
   late int pageCount;
   int selectedIndex = 0;
-  late PageController pageController=new PageController() ;
+  late PageController pageController = new PageController();
   bool indicator = false;
   Future<SharedPreferences> preferences = SharedPreferences.getInstance();
   Future? cashing;
@@ -61,8 +61,8 @@ class _HomeBody1State extends State<HomeBody1> {
             PopupMenuButton(
                 itemBuilder: (context) => Controller.listPage
                     .map((e) => PopupMenuItem(
-                    child: ListTile(trailing: Text(e.title)),
-                    onTap: () => setState(
+                        child: ListTile(trailing: Text(e.title)),
+                        onTap: () => setState(
                             () => indexPage = Controller.listPage.indexOf(e))))
                     .toList())
           ],
@@ -77,15 +77,72 @@ class _HomeBody1State extends State<HomeBody1> {
               keyBoardType: TextInputType.text)),
       body: Column(
         children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  FutureBuilder<SharedPreferences>(
+                    future: SharedPreferences.getInstance(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Container(
+                          padding: const EdgeInsets.only(top: 20, right: 10),
+                          child: Text(
+                            "مرحبا ${snapshot.data!.getString('fullname')}",
+                            style: TextStyle(
+                              fontSize: 15.sp,
+                            ),
+                          ),
+                        );
+                      } else {
+                        return const CupertinoActivityIndicator();
+                      }
+                    },
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0, right: 8),
+                child: Row(
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(primary: Colors.blue),
+                      onPressed: () =>
+                          Controller.navigatorGo(context, Calender()),
+                      child: Text(
+                        "مواعيدي",
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 8, top: 12),
+                child: Text(
+                  'اختيار العمل',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
           Expanded(
             child: FutureBuilder<dynamic>(
-                future: Controller.bussniseFetchAll(context,widget.categoryId.toString()),
+                future: Controller.bussniseFetchAll(
+                    context, widget.categoryId.toString()),
                 builder: (context, snapshot) {
                   print(widget.categoryId);
-                  if(snapshot.connectionState==ConnectionState.none){
-                    return const Center(child: Text('لا يتوافر اتصال بالانترنت'));
-                  }else
-                  if (snapshot.hasData) {
+                  if (snapshot.connectionState == ConnectionState.none) {
+                    return const Center(
+                        child: Text('لا يتوافر اتصال بالانترنت'));
+                  } else if (snapshot.hasData) {
                     return PageView.builder(
                         controller: pageController,
                         itemCount: snapshot.data.length,
@@ -112,16 +169,18 @@ class _HomeBody1State extends State<HomeBody1> {
                                 children: [
                                   GestureDetector(
                                     onTap: () => Controller.navigatorGo(
-                                        context,
-                                        //
-                                        CalendarEvent(snapshot.data?['data'][index]['id'] )),
+                                      context,
+                                      //
+                                      CalendarEvent(
+                                        snapshot.data?['data'][index]['id'],
+                                      ),
+                                    ),
                                     child: Container(
                                       width: 50,
                                       height: 50,
                                       decoration: const BoxDecoration(
-                                          image: DecorationImage(
-                                              image: AssetImage(
-                                                  'assets/folder.png'))),
+                                        color: Colors.blue,
+                                      ),
                                       margin: const EdgeInsets.all(5),
                                       padding: const EdgeInsets.all(9),
                                       alignment: Alignment.topCenter,
@@ -129,10 +188,12 @@ class _HomeBody1State extends State<HomeBody1> {
                                     ),
                                   ),
                                   Text(
-                                    snapshot.data?['data'][index]['business_name'] ?? '',
+                                    snapshot.data?['data'][index]
+                                            ['business_name'] ??
+                                        '',
                                     style: const TextStyle(
                                         color: Colors.black, fontSize: 12),
-                                    overflow: TextOverflow.visible,
+                                    overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.center,
                                   ),
                                 ],
@@ -140,7 +201,7 @@ class _HomeBody1State extends State<HomeBody1> {
                             }),
                           );
                         });
-                  }else {
+                  } else {
                     return const Center(child: CircularProgressIndicator());
                   }
                 }),
@@ -160,7 +221,7 @@ class _HomeBody1State extends State<HomeBody1> {
                     duration: const Duration(milliseconds: 100),
                     decoration: BoxDecoration(
                         borderRadius:
-                        const BorderRadius.all(Radius.circular(10)),
+                            const BorderRadius.all(Radius.circular(10)),
                         color: Colors.red
                             .withOpacity(selectedIndex == index ? 1 : 0.5)),
                     margin: const EdgeInsets.all(5),
