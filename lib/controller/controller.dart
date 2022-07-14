@@ -553,13 +553,13 @@ class Controller {
         }));
   }
 
-  static Future fetchTreatsTypes(BuildContext context) async {
+  static Future getServiceEmployee(BuildContext context) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
     String id = await SharedPreferences.getInstance()
         .then((value) => value.getString('id') ?? '');
-    http.Response response =
-        await http.get(Uri.parse(getUsrTreatsTypes + '?uID=$id'), headers: {
+    http.Response response = await http
+        .get(Uri.parse(ApiLinks.getServicesEmployees + '?uID=$id'), headers: {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token',
@@ -572,6 +572,25 @@ class Controller {
           .showSnackBar(const SnackBar(content: Text('حدث خطا ما')));
     }
   }
+  // static Future fetchTreatsTypes(BuildContext context) async {
+  //   String _token = await SharedPreferences.getInstance()
+  //       .then((value) => value.getString('token') ?? '');
+  //   String id = await SharedPreferences.getInstance()
+  //       .then((value) => value.getString('id') ?? '');
+  //   http.Response response =
+  //       await http.get(Uri.parse(getUsrTreatsTypes + '?uID=$id'), headers: {
+  //     "Content-Type": "application/json",
+  //     'Accept': 'application/json',
+  //     'Authorization': 'Bearer $_token',
+  //   });
+  //   if (response.statusCode == 200) {
+  //     var decodeData = json.decode(response.body);
+  //     return decodeData;
+  //   } else {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(const SnackBar(content: Text('حدث خطا ما')));
+  //   }
+  // }
 
   static Future queryTreatsTypes(BuildContext context,
       {required String query}) async {
@@ -624,29 +643,30 @@ class Controller {
         }));
   }
 
-  static Future insertUsrTreatsTypes(BuildContext context,
+  static Future createNewService(BuildContext context,
       {required String treatmentType,
-      required dynamic trtLenght,
+      required String trtLenght,
       required bID}) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
     String id = await SharedPreferences.getInstance()
         .then((value) => value.getString('id') ?? '');
-    http.Response response = await http.post(Uri.parse(addUsrTreatsTypes),
-        headers: {
-          "Content-Type": "application/json",
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $_token',
-        },
-        body: json.encode({
-          "bID": bID,
-          "uID": id,
-          "treatmentType": treatmentType,
-          "trtLenght": trtLenght,
-          "trtPrice": 0,
-          "msg4Users": "string",
-          "isActive1": true
-        }));
+    http.Response response =
+        await http.post(Uri.parse(ApiLinks.createNewServices),
+            headers: {
+              "Content-Type": "application/json",
+              'Accept': 'application/json',
+              'Authorization': 'Bearer $_token',
+            },
+            body: json.encode({
+              "bID": bID,
+              "uID": id,
+              "treatmentType": treatmentType,
+              "trtLenght": trtLenght,
+              "trtPrice": 0,
+              "msg4Users": "string",
+              "isActive1": true
+            }));
     if (response.statusCode == 200) {
       var decodeData = json.decode(response.body);
       return decodeData;
@@ -655,6 +675,37 @@ class Controller {
           content: Text('حدث خطا ما' + response.statusCode.toString())));
     }
   }
+  // static Future insertUsrTreatsTypes(BuildContext context,
+  //     {required String treatmentType,
+  //     required dynamic trtLenght,
+  //     required bID}) async {
+  //   String _token = await SharedPreferences.getInstance()
+  //       .then((value) => value.getString('token') ?? '');
+  //   String id = await SharedPreferences.getInstance()
+  //       .then((value) => value.getString('id') ?? '');
+  //   http.Response response = await http.post(Uri.parse(addUsrTreatsTypes),
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         'Accept': 'application/json',
+  //         'Authorization': 'Bearer $_token',
+  //       },
+  //       body: json.encode({
+  //         "bID": bID,
+  //         "uID": id,
+  //         "treatmentType": treatmentType,
+  //         "trtLenght": trtLenght,
+  //         "trtPrice": 0,
+  //         "msg4Users": "string",
+  //         "isActive1": true
+  //       }));
+  //   if (response.statusCode == 200) {
+  //     var decodeData = json.decode(response.body);
+  //     return decodeData;
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //         content: Text('حدث خطا ما' + response.statusCode.toString())));
+  //   }
+  // }
 
   Future updateUserWorkHours() async {
     String _token = await SharedPreferences.getInstance()
@@ -779,7 +830,10 @@ class Controller {
     if (response.statusCode == 200) {
       Map decodedData = json.decode(response.body);
       decodedData.forEach((key, value) => list.add(value));
+    } else {
+      print('api error');
     }
+    return list;
     // list=await decodedData;
   }
 

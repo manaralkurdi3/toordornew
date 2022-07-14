@@ -46,4 +46,8 @@ class ApiLinks {
   static const String userAppoinment = '${domain}user/appoinment';
   static const String userAppoinmentCancel = '${domain}user/appoinment/cancel';
 //some data not fond!
+//Add Services
+  static const String createNewServices = '${domain}service/create';
+  static const String serviceIndexById = '${domain}service-index/:id';
+  static const String getServicesEmployees = '${domain}service/:id';
 }

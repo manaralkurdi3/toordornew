@@ -76,4 +76,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     emit(GetLocationSuccessState());
   }
+
+  List<dynamic> search = [];
+  void getSearch(String value) {}
 }
