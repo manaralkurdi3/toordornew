@@ -211,22 +211,27 @@ class EditUserData extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
             backgroundColor: Colors.blue,
-            title: const Text('تعديل البينات',
+            title: const Text('تعديل البيانات',
                 style: TextStyle(color: Colors.white))),
-        body: Column(children: [
-          TextForm(hint: 'الاسم', controller: controller1),
-          TextForm(hint: 'رقم الهاتف', controller: controller2),
-          TextForm(hint: 'البريد الالكتروني', controller: controller3),
-          TextForm(hint: 'المدينه', controller: controller4),
-          TextForm(hint: 'الدوله', controller: controller5),
-          ElevatedButton(
+        body: SingleChildScrollView(
+          child: Column(children: [
+            TextForm(hint: 'الاسم', controller: controller1),
+            TextForm(hint: 'رقم الهاتف', controller: controller2),
+            TextForm(hint: 'البريد الالكتروني', controller: controller3),
+            TextForm(hint: 'المدينه', controller: controller4),
+            TextForm(hint: 'الدوله', controller: controller5),
+            ElevatedButton(
               child: Text("حفظ التعديلات "),
-              onPressed: () => Controller.userDataEdit(context,
-                  phone: controller2,
-                  city: controller4,
-                  country: controller5,
-                  name: controller3,
-                  fulname: controller1))
-        ]));
+              onPressed: () => Controller.userDataEdit(
+                context,
+                phone: controller2,
+                city: controller4,
+                country: controller5,
+                name: controller3,
+                fulname: controller1,
+              ),
+            ),
+          ]),
+        ));
   }
 }
