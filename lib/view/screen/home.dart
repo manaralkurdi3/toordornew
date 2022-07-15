@@ -38,7 +38,8 @@ class _HomeState extends State<Home> {
             PopupMenuButton(
                 itemBuilder: (context) => Controller.listPage
                     .map((e) => PopupMenuItem(
-                        child: ListTile(trailing: Text(e.title)),
+                        child: ListTile(
+                            trailing: Text(e.title), leading: Icon(e.icon)),
                         onTap: () => setState(
                             () => indexPage = Controller.listPage.indexOf(e))))
                     .toList())

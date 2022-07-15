@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:toordor/Model/login_model.dart';
 import 'package:toordor/View/Screen/add_project.dart';
+import 'package:toordor/View/Screen/home.dart';
 import 'package:toordor/View/Screen/my_business.dart';
 import 'package:toordor/View/Screen/my_employees.dart';
 import 'package:toordor/View/Screen/user_profile.dart';
@@ -278,8 +279,8 @@ class Controller {
     required setState,
     String? country,
     String? city,
-    required TimeOfDay from,
-    required TimeOfDay to,
+    required String fromt,
+    required String tot,
   }) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
@@ -290,22 +291,26 @@ class Controller {
       'Authorization': 'Bearer $_token',
     };
     Uri uri = Uri.parse(ApiLinks.busineesCreate);
-    uri.replace(queryParameters: {
-      "business_name": nameProject,
-      "phone": phoneNumber,
-      "email": email,
-      "specialization": specialization,
-      "weekends": "",
-      "from_date": from,
-      "to_date": to,
-      "country_id": country,
-      "city_id": 2
-    });
 
-    http.Response response = await http.get(uri, headers: header);
+    http.Response response = await http.post(uri,
+        headers: header,
+        body: json.encode({
+          "business_name": nameProject,
+          "phone": phoneNumber,
+          "email": email,
+          "specialization": specialization,
+          "weekends": "",
+          "from_date": fromt,
+          "to_date": tot,
+          "country_id": country,
+          "city_id": 2
+        }));
 
     if (response.statusCode == 200) {
-      setState(() => listPage[2]);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('تمت الاضافه بنجاح'),
+        backgroundColor: Colors.green,
+      ));
     } else {
       showDialog(
           context: context,
@@ -572,6 +577,7 @@ class Controller {
           .showSnackBar(const SnackBar(content: Text('حدث خطا ما')));
     }
   }
+
   // static Future fetchTreatsTypes(BuildContext context) async {
   //   String _token = await SharedPreferences.getInstance()
   //       .then((value) => value.getString('token') ?? '');
@@ -675,6 +681,7 @@ class Controller {
           content: Text('حدث خطا ما' + response.statusCode.toString())));
     }
   }
+
   // static Future insertUsrTreatsTypes(BuildContext context,
   //     {required String treatmentType,
   //     required dynamic trtLenght,
@@ -876,8 +883,8 @@ class Controller {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.clear();
         preferences.setString('token', loginResponse.data!.token ?? '');
-
-        navigatorOff(context, HomeBody());
+        preferences.setString('fullname', loginResponse.data!.fullname ?? '');
+        navigatorOff(context, Home());
       }
     } else {
       Navigator.pop(context);
