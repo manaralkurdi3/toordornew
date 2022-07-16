@@ -6,7 +6,7 @@ import '../../controller/controller.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
-
+ static int indexPage = 0;
 //String? token;
   @override
   State<Home> createState() => _HomeState();
@@ -15,10 +15,19 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   TextEditingController search = TextEditingController();
 
-  int indexPage = 0;
 
+@override
+  void initState() {
+    super.initState();
+    Controller.setPage=setPage;
+  }
+ void setPage(int index){
+    setState(()=> Home.indexPage=index);
+  }
   @override
+
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Colors.blue,
@@ -39,9 +48,9 @@ class _HomeState extends State<Home> {
                 itemBuilder: (context) => Controller.listPage
                     .map((e) => PopupMenuItem(
                         child: ListTile(
-                            trailing: Text(e.title), leading: Icon(e.icon)),
+                            trailing: Text(e.title)),
                         onTap: () => setState(
-                            () => indexPage = Controller.listPage.indexOf(e))))
+                            () =>Home. indexPage = Controller.listPage.indexOf(e))))
                     .toList())
           ],
           title: TextForm(
@@ -55,7 +64,7 @@ class _HomeState extends State<Home> {
               keyBoardType: TextInputType.text)),
       body: DoubleBackToCloseApp(
           snackBar: const SnackBar(content: Text('اضغط مره اخري للحروج')),
-          child: Controller.listPage[indexPage].page),
+          child: Controller.listPage[Home.indexPage].page),
     );
   }
 }
