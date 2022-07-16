@@ -31,8 +31,9 @@ class _AddProjectState extends State<AddProject> {
 
   Controller controller = Controller();
   TimeOfDay? form;
-
+  String fromText = '';
   TimeOfDay? to;
+  String toText = '';
 
   @override
   Widget build(BuildContext context) {
@@ -64,16 +65,20 @@ class _AddProjectState extends State<AddProject> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FloatingActionButton(
-                        child: const Text('من'),
-                        onPressed: () => showTimePicker(
-                            context: context,
-                            initialTime: form ?? TimeOfDay.now())),
+                        child: Text(fromText.isEmpty ? 'من' : fromText),
+                        onPressed: () async => await showTimePicker(
+                                context: context,
+                                initialTime: form ?? TimeOfDay.now())
+                            .then((value) => setState(() => fromText =
+                                '${value?.hour ?? ''} : ${value?.minute}'))),
                     SizedBox(width: MySize.width(context) / 3),
                     FloatingActionButton(
-                        child: const Text('الي'),
-                        onPressed: () => showTimePicker(
-                            context: context,
-                            initialTime: to ?? TimeOfDay.now())),
+                        child: Text(toText.isEmpty ? 'الي' : toText),
+                        onPressed: () async => await showTimePicker(
+                                context: context,
+                                initialTime: to ?? TimeOfDay.now())
+                            .then((value) => setState(() => toText =
+                                '${value?.hour ?? ''} : ${value?.minute} '))),
                   ],
                 ),
                 Row(
@@ -103,8 +108,8 @@ class _AddProjectState extends State<AddProject> {
                           nameProject: projectName.text,
                           phoneNumber: phoneNumber.text,
                           specialization: specialty.text,
-                          from: form ?? TimeOfDay.now(),
-                          to: to ?? TimeOfDay.now());
+                          fromt: fromText,
+                          tot: toText);
                     },
                     // Controller.navigatorGo(context, MyBusiness());
                     child: const Text("حفظ"))

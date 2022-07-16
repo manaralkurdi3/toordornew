@@ -3,17 +3,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-import 'package:toordor/view/cubit/home_cubit.dart';
+import 'package:toordor/view/block/bloc_observer.dart';
+import 'package:toordor/view/block/cubit/home_cubit.dart';
+import 'package:toordor/view/block/cubit/myWorkPlace_cubit.dart';
+import 'package:toordor/view/block/cubit/search_cubit.dart';
+import 'package:toordor/view/block/cubit/sendReuest_cubit.dart';
+import 'package:toordor/view/screen/home.dart';
 import 'package:toordor/view/screen/login_screen.dart';
 
-import 'View/Screen/home.dart';
+import 'View/Screen/my_employees.dart';
 import 'View/Screen/splash_screen.dart';
+//import 'View/block/cubit/search_cubit.dart';
+import 'network/remote/api_request.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  Bloc.observer = MyBlocObserver();
+  ApiRequest.init();
   SharedPreferences preferences = await SharedPreferences.getInstance();
   bool data = preferences.getString('token') == null;
+
   runApp(MyApp(route: data));
 }
 
@@ -24,10 +34,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Sizer(builder: (context, orientation, deviceType) {
-      return BlocProvider(
-        create: (context) => HomeCubit()..getLocation(),
-        child: MaterialApp(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => HomeCubit()..getLocation(),
+        ),
+        BlocProvider<MyWorkPlaceCubit>(
+          create: (context) => MyWorkPlaceCubit(),
+        ),
+        BlocProvider(
+          create: (context) => SendRequestCubit(),
+        ),
+        BlocProvider(create: (BuildContext context) => SearchCubit())
+      ],
+      child: Sizer(builder: (context, orientation, deviceType) {
+        return MaterialApp(
           title: 'ToorDor',
           debugShowCheckedModeBanner: false,
           localizationsDelegates: const [
@@ -41,8 +62,8 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.grey,
           ),
           home: SplashScreen(route: route ? const LoginPage() : Home()),
-        ),
-      );
-    });
+        );
+      }),
+    );
   }
 }

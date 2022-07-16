@@ -50,4 +50,8 @@ class ApiLinks {
   static const String createNewServices = '${domain}service/create';
   static const String serviceIndexById = '${domain}service-index/:id';
   static const String getServicesEmployees = '${domain}service/:id';
+
+  static const String sendRequest = '${domain}businees/request/send';
+  static const String acceptRequest = '${domain}employee/request/accept';
+  static const String cancelRequest = '${domain}employee/request/refuse';
 }

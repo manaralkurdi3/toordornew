@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toordor/Controller/controller.dart';
-import 'package:toordor/Model/users.dart';
-import 'package:toordor/View/Screen/home.dart';
+
 import 'package:toordor/View/Widget/TextForm.dart';
 import 'package:toordor/View/Widget/background.dart';
-import 'package:toordor/View/Widget/dialog.dart';
 
 class SignIN extends StatelessWidget {
   SignIN({Key? key}) : super(key: key);
@@ -46,19 +44,25 @@ class SignIN extends StatelessWidget {
                 //   },
                 // )),
                 const SizedBox(height: 15),
-                TextForm(hint: 'رقم الهاتف', controller: email,keyBoardType: TextInputType.phone),
-                TextForm(hint: 'كلمه المرور', controller: password,visibility: true),
+                TextForm(
+                    hint: 'رقم الهاتف',
+                    controller: email,
+                    keyBoardType: TextInputType.phone),
+                TextForm(
+                    hint: 'كلمه المرور',
+                    controller: password,
+                    visibility: true),
                 const SizedBox(height: 15),
                 ElevatedButton(
                     onPressed: () async {
-          //controller.fetchAllUsers(context, email.text),
-          },
-                       // controller.login(context, user: email.text, password: password.text),
+                      //controller.fetchAllUsers(context, email.text),
+                    },
+                    // controller.login(context, user: email.text, password: password.text),
                     child: const Text(
                       'تسجيل الدخول',
                       style: TextStyle(color: Colors.white),
                     )),
-               // ElevatedButton(child: Text('Send SMS'),onPressed: ()=>controller.sendSMS(),)
+                // ElevatedButton(child: Text('Send SMS'),onPressed: ()=>controller.sendSMS(),)
               ],
             );
           } else {
