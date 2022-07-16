@@ -295,6 +295,9 @@ class _CalendarEventState extends State<CalendarEvent> {
               calendarFormat: format,
               onFormatChanged: (CalendarFormat _format) {
                 setState(() {
+                  print("===");
+                  print(selectedDay);
+                  print(selectedDay.month);
                   format = _format;
                 });
               },
