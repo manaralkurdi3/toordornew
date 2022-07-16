@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:toordor/Controller/size.dart';
 import 'package:toordor/View/Widget/TextForm.dart';
+import 'package:toordor/view/block/cubit/home_cubit.dart';
+import 'package:toordor/view/block/state/home_state.dart';
+// import 'package:toordor/view/cubit/home_cubit.dart';
+// import 'package:toordor/view/cubit/home_state.dart';
 
 import '../../Controller/controller.dart';
-import '../block/cubit/home_cubit.dart';
-import '../block/state/home_state.dart';
 
 class UserProFile extends StatefulWidget {
   UserProFile({Key? key}) : super(key: key);
@@ -26,7 +28,9 @@ class _UserProFileState extends State<UserProFile> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        // TODO: implement listener
+      },
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
         return Scaffold(
