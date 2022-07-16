@@ -4,27 +4,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:toordor/Model/login_model.dart';
-import 'package:toordor/View/Screen/add_project.dart';
-import 'package:toordor/View/Screen/home.dart';
-import 'package:toordor/View/Screen/my_business.dart';
-import 'package:toordor/View/Screen/my_employees.dart';
-import 'package:toordor/View/Screen/user_profile.dart';
-import 'package:toordor/View/Screen/time_workplace.dart';
+import 'package:toordor/model/login_model.dart';
+import 'package:toordor/view/Screen/add_project.dart';
+import 'package:toordor/view/screen/home.dart';
+import 'package:toordor/view/screen/my_business.dart';
+import 'package:toordor/view/screen/my_employees.dart';
+import 'package:toordor/view/screen/user_profile.dart';
+import 'package:toordor/view/screen/time_workplace.dart';
 import 'package:toordor/const/color.dart';
 import 'package:http/http.dart' as http;
 import 'package:toordor/const/new_url_links.dart';
 import 'package:toordor/const/urlLinks.dart';
 import 'package:toordor/View/screen/home_body_category.dart';
-import 'package:toordor/model/appointment.dart';
-import 'package:toordor/view/screen/bussnise_of_category_screen.dart';
-import '../View/Screen/category_screen.dart';
-import '../View/Screen/logout_screen.dart';
+
+import '../view/screen/logout_screen.dart';
 import '../model/employee_services.dart';
 import '../model/services.dart';
 import '../view/screen/login_screen.dart';
 
 class Controller {
+ static dynamic setPage;
   static Future myBuisness(BuildContext context, {required int? id}) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String _token = preferences.getString('token') ?? '';
@@ -282,42 +281,45 @@ class Controller {
     required String fromt,
     required String tot,
   }) async {
-    String _token = await SharedPreferences.getInstance()
-        .then((value) => value.getString('token') ?? '');
-
-    Map<String, String> header = {
-      "Content-Type": "application/json",
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $_token',
-    };
-    Uri uri = Uri.parse(ApiLinks.busineesCreate);
-
-    http.Response response = await http.post(uri,
-        headers: header,
-        body: json.encode({
-          "business_name": nameProject,
-          "phone": phoneNumber,
-          "email": email,
-          "specialization": specialization,
-          "weekends": "",
-          "from_date": fromt,
-          "to_date": tot,
-          "country_id": country,
-          "city_id": 2
-        }));
-
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('تمت الاضافه بنجاح'),
-        backgroundColor: Colors.green,
-      ));
-    } else {
-      showDialog(
-          context: context,
-          builder: (context) => CupertinoAlertDialog(
-                content: Text('حدث خطا ما ${response.statusCode}'),
-              ));
-    }
+    setPage(2);
+    // String _token = await SharedPreferences.getInstance()
+    //     .then((value) => value.getString('token') ?? '');
+    //
+    // Map<String, String> header = {
+    //   "Content-Type": "application/json",
+    //   'Accept': 'application/json',
+    //   'Authorization': 'Bearer $_token',
+    // };
+    // Uri uri = Uri.parse(ApiLinks.busineesCreate);
+    //
+    // http.Response response = await http.post(uri,
+    //     headers: header,
+    //     body: json.encode({
+    //       "business_name": nameProject,
+    //       "phone": phoneNumber,
+    //       "email": email,
+    //       "specialization": specialization,
+    //       "weekends": "",
+    //       "from_date": fromt,
+    //       "to_date": tot,
+    //       "country_id": country,
+    //       "city_id": 2
+    //     }));
+    //
+    // if (response.statusCode == 200) {
+    //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+    //     content: Text('تمت الاضافه بنجاح'),
+    //     backgroundColor: Colors.green,
+    //   ));
+    //
+    //   setstate(()=>Home.indexPage=2);
+    // } else {
+    //   showDialog(
+    //       context: context,
+    //       builder: (context) => CupertinoAlertDialog(
+    //             content: Text('حدث خطا ما ${response.statusCode}'),
+    //           ));
+    // }
   }
 
   Future fetchBusiRequists() async {
