@@ -21,6 +21,7 @@ import 'package:toordor/view/screen/bussnise_of_category_screen.dart';
 import 'package:toordor/view/screen/my_work_place.dart';
 import '../View/Screen/category_screen.dart';
 import '../View/Screen/logout_screen.dart';
+import '../model/appointment_user.dart';
 import '../model/employee_services.dart';
 import '../model/services.dart';
 import '../view/screen/login_screen.dart';
@@ -72,14 +73,45 @@ class Controller {
     }
   }
 
+  static Future<List<AppointmentUser>> userAppointment(BuildContext context) async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    // String id = await SharedPreferences.getInstance()
+    //     .then((value) => value.getString('id') ?? '');
+    // String username = await SharedPreferences.getInstance()
+    //     .then((value) => value.getString('username') ?? '');
+    // print(username);
+
+    Map<String, String> header = {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+    List<AppointmentUser> list=[];
+    http.Response response =
+    await http.get(Uri.parse(ApiLinks.userAppoinment), headers: header);
+    if (response.statusCode == 200) {
+      var decodeData = json.decode(response.body);
+      for (var i in decodeData['message']){
+        list.add(AppointmentUser.fromJson(i));
+      }
+      return list;
+    } else {
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('حدث خطأ ما!')));
+      return list;
+    }
+  }
+
   static Future<List<Appointment>> getAppointments(
-    BuildContext context,
+  {required BuildContext context,
     dynamic businessId,
     employeeId,
     date,
     fromDate,
     toDate,
-    comment,
+    comment}
   ) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
@@ -109,12 +141,6 @@ class Controller {
       BuildContext context, dynamic bussniseId) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
-    // String id = await SharedPreferences.getInstance()
-    //     .then((value) => value.getString('id') ?? '');
-    // String username = await SharedPreferences.getInstance()
-    //     .then((value) => value.getString('username') ?? '');
-    // print(username);
-
     Map<String, String> header = {
       "Content-Type": "application/json",
       'Accept': 'application/json',
@@ -125,18 +151,16 @@ class Controller {
         .get(Uri.parse(ApiLinks.serviceIndex + bussniseId), headers: header);
 
     List<ServicesIndexOfbussnise> serviceindex = [];
+
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
-      var rest = data["data"] as List;
+      print(response.body);
+      List rest = data["data"];
+      for (var i in rest) {
+        serviceindex.add(ServicesIndexOfbussnise.fromJson(i));
+      }
       // var error = data['error'];
-      serviceindex = rest
-          .map<ServicesIndexOfbussnise>(
-              (json) => ServicesIndexOfbussnise.fromJson(json))
-          .toList();
-    } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('حدث خطأ ما!')));
-      return serviceindex;
+
     }
     return serviceindex;
 

@@ -1,14 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:toordor/View/Widget/TextForm.dart';
-import 'package:toordor/View/screen/home_body_category.dart';
+import 'package:toordor/const/new_url_links.dart';
+import 'package:toordor/view/widget/TextForm.dart';
+import 'package:toordor/view/screen/home_body_category.dart';
 import 'package:toordor/view/screen/calender_event.dart';
 
-import '../../Controller/controller.dart';
+import '../../controller/controller.dart';
+import '../../model/appointment_user.dart';
 
 class Calender extends StatefulWidget {
   @override
@@ -17,6 +22,7 @@ class Calender extends StatefulWidget {
 
 class _CalenderState extends State<Calender> with TickerProviderStateMixin {
   DateTime _focusedDay = DateTime.now();
+
   // late Map<DateTime, List> _events;
   //late List _selectedEvents;
   late AnimationController _animationController;
@@ -99,125 +105,160 @@ class _CalenderState extends State<Calender> with TickerProviderStateMixin {
             keyBoardType: TextInputType.text),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
-              Center(
-                child: Container(
-                  width: 220,
-                  height: 40,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.blue,
-                    ),
-                    onPressed: () =>
-                        Controller.navigatorGo(context, HomeBody()),
-                    child: Text(
-                      "حجز موعد",
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                      ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const SizedBox(height: 10),
+            Center(
+              child: SizedBox(
+                width: 220,
+                height: 40,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue,
+                  ),
+                  onPressed: () => Controller.navigatorGo(context, HomeBody()),
+                  child: Text(
+                    "حجز موعد",
+                    style: TextStyle(
+                      fontSize: 12.sp,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
-              SfCalendar(
-                headerHeight: 0,
-                view: CalendarView.month,
-                initialSelectedDate: DateTime.now(),
-                timeSlotViewSettings: const TimeSlotViewSettings(
-                    startHour: 9,
-                    endHour: 16,
-                    nonWorkingDays: <int>[DateTime.friday, DateTime.saturday]),
-                showCurrentTimeIndicator: true,
-                monthViewSettings: const MonthViewSettings(
-                  showAgenda: true,
-                  appointmentDisplayMode:
-                      MonthAppointmentDisplayMode.appointment,
-                  showTrailingAndLeadingDates: true,
-                ),
-              ),
-              ..._getEventsfromDay(selectedDay).map(
-                (Event event) => ListTile(
-                  title: Text(event.title),
-                ),
-              ),
+            ),
+            const SizedBox(height: 10),
+            FutureBuilder<List<AppointmentUser>>(
+                future: Controller.userAppointment(context),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Expanded(
+                      child: ListView.builder(
+                          itemCount: snapshot.data?.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: 90,
+                                width: 40,decoration: BoxDecoration(border: Border.all(),color: Colors.white),
+                                child: Column(
+                                  children: [
+                                    Text('${snapshot.data?[index].comments ?? ""}'),
+                                    Text('${snapshot.data?[index].dateDay ?? ""}'),
+                                    MaterialButton(
+                                      onPressed: () async {
+                                        String token =
+                                            await SharedPreferences.getInstance()
+                                                .then((value) =>
+                                                    value.getString('token') ?? '');
+                                        Map<String, String> header = {
+                                          "Content-Type": "application/json",
+                                          'Accept': 'application/json',
+                                          'Authorization': 'Bearer $token',
+                                        };
+                                     Response response=   await post(Uri.parse(ApiLinks.userAppoinmentCancel),
+                                            body: json.encode(
+                                                {'id': snapshot.data?[index].id}),
+                                            headers: header).whenComplete(() => setState((){}));
+                                      },
+                                      child: const Text("cancel"),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }),
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }),
+            // TableCalendar(
+            //   focusedDay: selectedDay,
+            //   firstDay: DateTime(1990),
+            //   lastDay: DateTime(2050),
+            //   // calendarFormat: format,
+            //   onFormatChanged: (CalendarFormat _format) {
+            //     setState(() {
+            //       print("===");
+            //       print(selectedDay);
+            //       print(selectedDay.month);
+            //     });
+            //   },
+            //   startingDayOfWeek: StartingDayOfWeek.sunday,
+            //   daysOfWeekVisible: true,
+            //
+            //   //Day Changed
+            //   onDaySelected: (DateTime selectDay, DateTime focusDay) async {
+            //     print(selectDay);
+            //   },
+            //   selectedDayPredicate: (DateTime date) {
+            //     return isSameDay(selectedDay, date);
+            //   },
+            //
+            //   eventLoader: _getEventsfromDay,
+            //
+            //   //To style the Calendar
+            //   calendarStyle: CalendarStyle(
+            //     isTodayHighlighted: true,
+            //     selectedDecoration: BoxDecoration(
+            //       color: Colors.blue,
+            //       shape: BoxShape.rectangle,
+            //       borderRadius: BorderRadius.circular(5.0),
+            //     ),
+            //     selectedTextStyle: TextStyle(color: Colors.white),
+            //     todayDecoration: BoxDecoration(
+            //       color: Colors.purpleAccent,
+            //       shape: BoxShape.rectangle,
+            //       borderRadius: BorderRadius.circular(5.0),
+            //     ),
+            //     defaultDecoration: BoxDecoration(
+            //       shape: BoxShape.rectangle,
+            //       borderRadius: BorderRadius.circular(5.0),
+            //     ),
+            //     weekendDecoration: BoxDecoration(
+            //       shape: BoxShape.rectangle,
+            //       borderRadius: BorderRadius.circular(5.0),
+            //     ),
+            //   ),
+            //   headerStyle: HeaderStyle(
+            //     formatButtonVisible: true,
+            //     titleCentered: true,
+            //     formatButtonShowsNext: false,
+            //     formatButtonDecoration: BoxDecoration(
+            //       color: Colors.blue,
+            //       borderRadius: BorderRadius.circular(5.0),
+            //     ),
+            //     formatButtonTextStyle: TextStyle(
+            //       color: Colors.white,
+            //     ),
+            //   ),
+            // ),
+            // ..._getEventsfromDay(selectedDay).map(
+            //   (Event event) => ListTile(
+            //     title: Text(
+            //       event.title,
+            //     ),
+            //   ),
+            // ),
 
-              // Padding(
-              //   padding: const EdgeInsets.all(6.0),
-              //   child: Column(
-              //     children: [
-              //       Container(
-              //         height: 70,
-              //         width: 330,
-              //         decoration: BoxDecoration(
-              //           color: Colors.grey[400],
-              //           borderRadius: BorderRadius.circular(8),
-              //         ),
-              //       ),
-              //       SizedBox(
-              //         height: 4,
-              //       ),
-              //       Container(
-              //         height: 70,
-              //         width: 330,
-              //         decoration: BoxDecoration(
-              //           color: Colors.grey[400],
-              //           borderRadius: BorderRadius.circular(8),
-              //         ),
-              //       ),
-              //       SizedBox(
-              //         height: 4,
-              //       ),
-              //       TextForm(
-              //         widget: Container(
-              //           height: 50,
-              //         ),
-              //         hint: '',
-              //         visibility: true,
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              // Expanded(
-              //   flex: 1,
-              //   child: Padding(
-              //     padding: EdgeInsets.all(8.0.sp),
-              //     child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.start,
-              //       children: [
-              //         ElevatedButton(
-              //           style: ButtonStyle(
-              //               backgroundColor: MaterialStateProperty.all(
-              //                   Theme.of(context).primaryColor)),
-              //           onPressed: () => Controller().selectTime(context),
-              //           child: Text("اختر وقت الخدمة "),
-              //         ),
-              //         Text(
-              //             "${Controller().selectedTime.hour}:${Controller().selectedTime.minute}"),
-              //       ],
-              //     ),
-              //   ),
-              // ),
-              // //   TableCalendar(
-              //     firstDay: DateTime.utc(2010, 10, 16),
-              //     lastDay: DateTime.utc(2030, 3, 14),
-              //     focusedDay: DateTime.now(),
-              //     onPageChanged: (focusedDay) {
-              //       state(()=>
-              //       _focusedDay = focusedDay
-              //       );}
-              // // ));
-              // Expanded(
-              //   flex: 4,
-              //   child: SfCalendar(),
-              // ),
-            ],
-          ),
+            // //   TableCalendar(
+            //     firstDay: DateTime.utc(2010, 10, 16),
+            //     lastDay: DateTime.utc(2030, 3, 14),
+            //     focusedDay: DateTime.now(),
+            //     onPageChanged: (focusedDay) {
+            //       state(()=>
+            //       _focusedDay = focusedDay
+            //       );}
+            // // ));
+            // Expanded(
+            //   flex: 4,
+            //   child: SfCalendar(),
+            // ),
+          ],
         ),
       ),
     );
