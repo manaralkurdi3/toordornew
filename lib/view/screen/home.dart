@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
 @override
   void initState() {
     super.initState();
-    Controller.setstate=setPage;
+    Controller.setPage=setPage;
   }
  void setPage(int index){
     setState(()=> Home.indexPage=index);

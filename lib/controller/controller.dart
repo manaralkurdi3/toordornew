@@ -281,7 +281,7 @@ class Controller {
     required String fromt,
     required String tot,
   }) async {
-    setPage(2);
+    setPage(0);
     // String _token = await SharedPreferences.getInstance()
     //     .then((value) => value.getString('token') ?? '');
     //
