@@ -45,7 +45,7 @@ class ApiRequest {
     dio!.options.headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': token,
+      'Authorization': "Bearer $token",
     };
     return await dio!.post(
       path,

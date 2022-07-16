@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:toordor/Controller/size.dart';
 import 'package:toordor/View/Widget/TextForm.dart';
-import 'package:toordor/view/cubit/home_cubit.dart';
-import 'package:toordor/view/cubit/home_state.dart';
+import 'package:toordor/view/block/cubit/home_cubit.dart';
+import 'package:toordor/view/block/state/home_state.dart';
+// import 'package:toordor/view/cubit/home_cubit.dart';
+// import 'package:toordor/view/cubit/home_state.dart';
 
 import '../../Controller/controller.dart';
 

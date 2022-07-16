@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:toordor/Controller/controller.dart';
-import 'package:toordor/view/cubit/home_cubit.dart';
-import 'package:toordor/view/cubit/home_state.dart';
+
+import '../block/cubit/home_cubit.dart';
+import '../block/state/home_state.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({Key? key}) : super(key: key);

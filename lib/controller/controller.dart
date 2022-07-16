@@ -18,6 +18,7 @@ import 'package:toordor/const/urlLinks.dart';
 import 'package:toordor/View/screen/home_body_category.dart';
 import 'package:toordor/model/appointment.dart';
 import 'package:toordor/view/screen/bussnise_of_category_screen.dart';
+import 'package:toordor/view/screen/my_work_place.dart';
 import '../View/Screen/category_screen.dart';
 import '../View/Screen/logout_screen.dart';
 import '../model/employee_services.dart';
@@ -999,6 +1000,7 @@ class Controller {
     Pages(title: 'انشئ مشروعك الخاص', icon: Icons.add, page: AddProject()),
     Pages(title: 'اوقات العمل ', icon: Icons.work, page: TimeWorkPlace()),
     Pages(title: 'عروض التوظيف', icon: Icons.work, page: MyEmployees()),
+    Pages(title: 'مكان العمل', icon: Icons.work, page: MyWorkPlace()),
     Pages(title: 'تسجيل الخروج', icon: Icons.work, page: Logout()),
   ];
 
