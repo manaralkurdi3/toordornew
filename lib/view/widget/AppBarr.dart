@@ -41,16 +41,16 @@ class _AppBarrState extends State<AppBarr> {
             ),
             onPressed: () {},
           ),
-          PopupMenuButton(
-              itemBuilder: (context) => Controller.listPage
-                  .map((e) => PopupMenuItem(
-                child: ListTile(trailing: Text(e.title)),
-                onTap: () {
-                  int i = Controller.listPage.indexOf(e);
-                  setState(() => indexPage = i);
-                },
-              ))
-                  .toList())
+          // PopupMenuButton(
+          //     itemBuilder: (context) => Controller.listPage
+          //         .map((e) => PopupMenuItem(
+          //       child: ListTile(trailing: Text(e.title)),
+          //       onTap: () {
+          //         int i = Controller.listPage.indexOf(e);
+          //         setState(() => indexPage = i);
+          //       },
+          //     ))
+          //         .toList())
         ],
         title: TextForm(
           hint: 'البحث',

@@ -1,6 +1,7 @@
 import 'package:csc_picker/csc_picker.dart';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import 'package:toordor/controller/controller.dart';
@@ -28,7 +29,12 @@ class _AddProjectState extends State<AddProject> {
   String country = "";
 
   String category = '';
-
+  Shared() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String _hasbussnise = await SharedPreferences.getInstance()
+        .then((value) => value.getString('has_bussinees') ?? '');
+    print(_hasbussnise);
+  }
   Controller controller = Controller();
   TimeOfDay? form;
   String fromText = '';
@@ -37,6 +43,7 @@ class _AddProjectState extends State<AddProject> {
 
   @override
   Widget build(BuildContext context) {
+    Shared();
     return Scaffold(
       body: Wrap(
         children: [
@@ -70,7 +77,7 @@ class _AddProjectState extends State<AddProject> {
                                 context: context,
                                 initialTime: form ?? TimeOfDay.now())
                             .then((value) => setState(() => fromText =
-                                '${value?.hour ?? ''} : ${value?.minute}'))),
+                                '${value?.hour ?? ''} : ${value?.minute}')),),
                     SizedBox(width: MySize.width(context) / 3),
                     FloatingActionButton(
                         child: Text(toText.isEmpty ? 'الي' : toText),

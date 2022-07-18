@@ -4,26 +4,30 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:toordor/model/login_model.dart';
-import 'package:toordor/view/Screen/add_project.dart';
-import 'package:toordor/view/screen/home.dart';
-import 'package:toordor/view/screen/my_business.dart';
-import 'package:toordor/view/screen/my_employees.dart';
-import 'package:toordor/view/screen/user_profile.dart';
-import 'package:toordor/view/screen/time_workplace.dart';
+import 'package:toordor/Model/login_model.dart';
+import 'package:toordor/View/Screen/add_project.dart';
+import 'package:toordor/View/Screen/home.dart';
+import 'package:toordor/View/Screen/my_business.dart';
+import 'package:toordor/View/Screen/my_employees.dart';
+import 'package:toordor/View/Screen/user_profile.dart';
+import 'package:toordor/View/Screen/time_workplace.dart';
 import 'package:toordor/const/color.dart';
 import 'package:http/http.dart' as http;
 import 'package:toordor/const/new_url_links.dart';
 import 'package:toordor/const/urlLinks.dart';
 import 'package:toordor/View/screen/home_body_category.dart';
-
-import '../view/screen/logout_screen.dart';
+import 'package:toordor/model/appointment.dart';
+import 'package:toordor/view/screen/bussnise_of_category_screen.dart';
+import '../View/Screen/category_screen.dart';
+import '../View/Screen/logout_screen.dart';
+import '../model/appointment_user.dart';
 import '../model/employee_services.dart';
 import '../model/services.dart';
 import '../view/screen/login_screen.dart';
 
 class Controller {
- static dynamic setPage;
+  static dynamic setPage;
+
   static Future myBuisness(BuildContext context, {required int? id}) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String _token = preferences.getString('token') ?? '';
@@ -44,10 +48,44 @@ class Controller {
     }
   }
 
-  static Future userData(BuildContext context) async {
+  static Future<List<AppointmentUser>> userAppointment(
+      BuildContext context) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
     // String id = await SharedPreferences.getInstance()
+    //     .then((value) => value.getString('id') ?? '');
+    // String username = await SharedPreferences.getInstance()
+    //     .then((value) => value.getString('username') ?? '');
+    // print(username);
+
+    Map<String, String> header = {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+    List<AppointmentUser> list = [];
+    http.Response response =
+        await http.get(Uri.parse(ApiLinks.userAppoinment), headers: header);
+    if (response.statusCode == 200) {
+      var decodeData = json.decode(response.body);
+      for (var i in decodeData['message']) {
+        list.add(AppointmentUser.fromJson(i));
+      }
+      return list;
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('حدث خطأ ما!')));
+      return list;
+    }
+  }
+
+  static Future userData(BuildContext context) async {
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    // String id = await SharedPreferences.getInstance()
+
     //     .then((value) => value.getString('id') ?? '');
     // String username = await SharedPreferences.getInstance()
     //     .then((value) => value.getString('username') ?? '');
@@ -63,6 +101,13 @@ class Controller {
         await http.get(Uri.parse(ApiLinks.user), headers: header);
     if (response.statusCode == 200) {
       var decodeData = json.decode(response.body);
+      preferences.setString('has_bussinees',
+          decodeData['message']['has_bussinees'].toString() ?? '');
+      String _hasbussnise = await SharedPreferences.getInstance()
+          .then((value) => value.getString('has_bussinees') ?? '');
+      String employee_id = await SharedPreferences.getInstance()
+          .then((value) => value.getString('employee_id') ?? '');
+      print(_hasbussnise);
       return decodeData;
     } else {
       ScaffoldMessenger.of(context)
@@ -281,45 +326,42 @@ class Controller {
     required String fromt,
     required String tot,
   }) async {
-    setPage(0);
-    // String _token = await SharedPreferences.getInstance()
-    //     .then((value) => value.getString('token') ?? '');
-    //
-    // Map<String, String> header = {
-    //   "Content-Type": "application/json",
-    //   'Accept': 'application/json',
-    //   'Authorization': 'Bearer $_token',
-    // };
-    // Uri uri = Uri.parse(ApiLinks.busineesCreate);
-    //
-    // http.Response response = await http.post(uri,
-    //     headers: header,
-    //     body: json.encode({
-    //       "business_name": nameProject,
-    //       "phone": phoneNumber,
-    //       "email": email,
-    //       "specialization": specialization,
-    //       "weekends": "",
-    //       "from_date": fromt,
-    //       "to_date": tot,
-    //       "country_id": country,
-    //       "city_id": 2
-    //     }));
-    //
-    // if (response.statusCode == 200) {
-    //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-    //     content: Text('تمت الاضافه بنجاح'),
-    //     backgroundColor: Colors.green,
-    //   ));
-    //
-    //   setstate(()=>Home.indexPage=2);
-    // } else {
-    //   showDialog(
-    //       context: context,
-    //       builder: (context) => CupertinoAlertDialog(
-    //             content: Text('حدث خطا ما ${response.statusCode}'),
-    //           ));
-    // }
+    String _token = await SharedPreferences.getInstance()
+        .then((value) => value.getString('token') ?? '');
+
+    Map<String, String> header = {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+    Uri uri = Uri.parse(ApiLinks.busineesCreate);
+
+    http.Response response = await http.post(uri,
+        headers: header,
+        body: json.encode({
+          "business_name": nameProject,
+          "phone": phoneNumber,
+          "email": email,
+          "specialization": specialization,
+          "weekends": "",
+          "from_date": fromt,
+          "to_date": tot,
+          "country_id": country,
+          "city_id": 2
+        }));
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('تمت الاضافه بنجاح'),
+        backgroundColor: Colors.green,
+      ));
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+                content: Text('حدث خطا ما ${response.statusCode}'),
+              ));
+    }
   }
 
   Future fetchBusiRequists() async {
@@ -993,16 +1035,23 @@ class Controller {
   //   twilio.sendSMS(toNumber: phoneNumber, messageBody: code);
   // }
 
-  static List<Pages> listPage = [
-    Pages(title: 'الرئيسيه', icon: Icons.home_filled, page: HomeBody()),
-    //Pages(title: 'بزنس', icon: Icons.home_filled, page: HomeBody1("")),
-    Pages(title: 'حسابي', icon: Icons.person, page: UserProFile()),
-    Pages(title: 'اعمالي', icon: Icons.monetization_on, page: MyBusiness()),
-    Pages(title: 'انشئ مشروعك الخاص', icon: Icons.add, page: AddProject()),
-    Pages(title: 'اوقات العمل ', icon: Icons.work, page: TimeWorkPlace()),
-    Pages(title: 'عروض التوظيف', icon: Icons.work, page: MyEmployees()),
-    Pages(title: 'تسجيل الخروج', icon: Icons.work, page: Logout()),
-  ];
+  static List<Pages> listPage(String data) {
+    print("------------");
+    print(data);
+    return [
+      Pages(title: 'الرئيسيه', icon: Icons.home_filled, page: HomeBody()),
+      //Pages(title: 'بزنس', icon: Icons.home_filled, page: HomeBody1("")),
+      Pages(title: 'حسابي', icon: Icons.person, page: UserProFile()),
+      Pages(title: 'اعمالي', icon: Icons.monetization_on, page: MyBusiness()),
+      data == false
+          ? Pages(
+              title: 'انشئ مشروعك الخاص', icon: Icons.add, page: AddProject())
+          : Pages(title: '', icon: Icons.question_mark, page: SizedBox()),
+      Pages(title: 'اوقات العمل ', icon: Icons.work, page: TimeWorkPlace()),
+      Pages(title: 'عروض التوظيف', icon: Icons.work, page: MyEmployees()),
+      Pages(title: 'تسجيل الخروج', icon: Icons.work, page: Logout()),
+    ];
+  }
 
   static MaterialColor myColor = const MaterialColor(0xff808080, <int, Color>{
     50: Color(0xff808080),
