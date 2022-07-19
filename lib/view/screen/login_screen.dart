@@ -36,10 +36,8 @@ class _LoginPageState extends State<LoginPage> {
               child: HeaderWidget(
                 _headerHeight,
                 true,
-                Container(
-                  child: Image.asset(
-                      'assets/1f3b82a8-489f-4051-9605-90fc99c2010a-removebg-preview.png'),
-                ),
+                Image.asset(
+                    'assets/1f3b82a8-489f-4051-9605-90fc99c2010a-removebg-preview.png'),
               ),
             ),
             SafeArea(
@@ -52,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       Column(
                         children: [
-                          Text(
+                        const  Text(
                             'تسجيل الدخول',
                             style: TextStyle(
                               fontSize: 30,
@@ -148,9 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ])),
                           ),
-                          Container(
-                            child: const SocialMedia(),
-                          ),
+                          const SocialMedia(),
                         ],
                       ),
                     ],

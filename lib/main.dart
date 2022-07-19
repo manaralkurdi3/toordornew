@@ -22,6 +22,7 @@ void main() async {
   Bloc.observer = MyBlocObserver();
   ApiRequest.init();
   SharedPreferences preferences = await SharedPreferences.getInstance();
+  print('Token ===   ${preferences.getString("token")}');
   bool data = preferences.getString('token') == null;
 
   runApp(MyApp(route: data));

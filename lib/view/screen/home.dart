@@ -7,7 +7,8 @@ import '../../controller/controller.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
-  static int indexPage = 0;
+  static  int indexPage = 0;
+
 
 //String? token;
   @override
@@ -16,17 +17,15 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   TextEditingController search = TextEditingController();
-  late String _hasBussnise = "";
 
   @override
   void initState() {
+
     super.initState();
-    Controller.setPage = setPage;
+    Controller.setPage (index: 0,setState: setState);
   }
 
-  void setPage(int index) {
-    setState(() => Home.indexPage = index);
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +33,8 @@ class _HomeState extends State<Home> {
         future: Controller.userData(context),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            print(
+                "Has Busiesess  == ${snapshot.data?['message']['isBussinees']}");
             return Scaffold(
               appBar: AppBar(
                   backgroundColor: Colors.blue,
@@ -51,14 +52,12 @@ class _HomeState extends State<Home> {
                   ),
                   actions: [
                     PopupMenuButton(
-                        itemBuilder: (context) =>
-                            Controller.listPage(snapshot.data?['message']['has_bussinees'].toString()??"")
-                                .map((e) => PopupMenuItem(
-                                    child: ListTile(trailing: Text(e.title)),
-                                    onTap: () => setState(() => Home.indexPage =
-                                        Controller.listPage(snapshot.data?['message']['has_bussinees'].toString()??"")
-                                            .indexOf(e))))
-                                .toList())
+                        itemBuilder: (context) => Controller.list
+                            .map((e) => PopupMenuItem(
+                                child: ListTile(trailing: Text(e.title)),
+                                onTap: () => setState(() => Home.indexPage =
+                                    Controller.list.indexOf(e))))
+                            .toList())
                   ],
                   title: TextForm(
                       hint: 'البحث',
@@ -72,8 +71,7 @@ class _HomeState extends State<Home> {
               body: DoubleBackToCloseApp(
                   snackBar:
                       const SnackBar(content: Text('اضغط مره اخري للحروج')),
-                  child:
-                      Controller.listPage(snapshot.data?['message']['has_bussinees'].toString()??"")[Home.indexPage].page),
+                  child: Controller.list[Home.indexPage].page),
             );
           } else {
             return const Center(child: CircularProgressIndicator());

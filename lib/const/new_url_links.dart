@@ -4,6 +4,7 @@ class ApiLinks {
 
   ///auth
   static const String register = '${domain}register'; //POST
+  static const String sendOTP = '${domain}send-otp'; //POST
   static const String login = '${domain}login'; //POST
   ///index
   static const String index = '${domain}index';

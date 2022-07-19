@@ -72,7 +72,7 @@ class _CalendarEventState extends State<CalendarEvent> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text("Calender Event"),
+        title: const Text("Calender Event"),
         centerTitle: true,
       ),
       body: Column(
@@ -95,12 +95,12 @@ class _CalendarEventState extends State<CalendarEvent> {
                             isExpanded: true,
                             hint: Row(
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.list,
                                   size: 16,
                                   color: Colors.white,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 4,
                                 ),
                                 Expanded(
@@ -108,7 +108,7 @@ class _CalendarEventState extends State<CalendarEvent> {
                                     services.isEmpty
                                         ? "اختر الخدمة "
                                         : services,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
@@ -124,7 +124,7 @@ class _CalendarEventState extends State<CalendarEvent> {
                                 value: value.serviceName,
                                 child: Text(
                                   value.serviceName ?? '',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
@@ -201,12 +201,12 @@ class _CalendarEventState extends State<CalendarEvent> {
                               isExpanded: true,
                               hint: Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.list,
                                     size: 16,
                                     color: Colors.white,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 4,
                                   ),
                                   Expanded(
@@ -214,7 +214,7 @@ class _CalendarEventState extends State<CalendarEvent> {
                                       servicesEmployee.isEmpty
                                           ? "اختر الموظف "
                                           : servicesEmployee,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white,
@@ -336,7 +336,7 @@ class _CalendarEventState extends State<CalendarEvent> {
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-                selectedTextStyle: TextStyle(color: Colors.white),
+                selectedTextStyle: const TextStyle(color: Colors.white),
                 todayDecoration: BoxDecoration(
                   color: Colors.purpleAccent,
                   shape: BoxShape.rectangle,
@@ -359,7 +359,7 @@ class _CalendarEventState extends State<CalendarEvent> {
                   color: Colors.blue,
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-                formatButtonTextStyle: TextStyle(
+                formatButtonTextStyle: const TextStyle(
                   color: Colors.white,
                 ),
               ),

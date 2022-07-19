@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toordor/View/Widget/TextForm.dart';
 import 'package:toordor/const/components.dart';
+import 'package:toordor/controller/size.dart';
 
 class ForgetPassword extends StatelessWidget {
   ForgetPassword({Key? key}) : super(key: key);
@@ -11,11 +12,12 @@ class ForgetPassword extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(35, 5, 20, 10),
+      body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+
+
           children: [
+            SizedBox(height: MySize.height(context)/3),
             defualtTextFormField(
               controller: email,
               type: TextInputType.emailAddress,

@@ -1,10 +1,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:toordor/View/Widget/background.dart';
-import 'package:toordor/View/Widget/headerbacground.dart';
+import 'package:toordor/view/widget/background.dart';
+import 'package:toordor/view/widget/headerbacground.dart';
 import 'package:toordor/const/components.dart';
-import '../../Controller/controller.dart';
-import '../Widget/TextForm.dart';
+import 'package:toordor/controller/size.dart';
+import '../../controller/controller.dart';
+import '../widget/TextForm.dart';
 
 import 'home.dart';
 
@@ -19,10 +20,9 @@ class SignUP extends StatelessWidget {
   double _headerHeight = 250;
   Controller controller = Controller();
   Key _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    double h = MediaQuery.of(context).size.height;
-    double w = MediaQuery.of(context).size.width;
     return Scaffold(
         extendBodyBehindAppBar: true,
         floatingActionButton: IconButton(
@@ -50,6 +50,7 @@ class SignUP extends StatelessWidget {
               //   controller: name,
               //   keyBoardType: TextInputType.name,
               // ),
+              SizedBox(height: MySize.height(context) / 12),
               defualtTextFormField(
                   width: double.infinity,
                   controller: name,
@@ -86,17 +87,21 @@ class SignUP extends StatelessWidget {
           ),
           */
               const SizedBox(height: 15),
-              defualtTextFormField(
-                  width: double.infinity,
-                  controller: phoneNumber,
-                  type: TextInputType.phone,
-                  prefix: Icons.phone,
-                  label: 'رقم الهاتف',
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'يجب ادخال رقم الهاتف';
-                    }
-                  }),
+              Directionality(
+                textDirection: TextDirection.ltr,
+                child: defualtTextFormField(
+                    width: double.infinity,
+                    controller: phoneNumber,
+                    type: TextInputType.phone,
+                    suffix: Icons.phone,
+
+                    label: 'رقم الهاتف',
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'يجب ادخال رقم الهاتف';
+                      }
+                    }),
+              ),
 
               // TextForm(
               //   hint: 'رقم الهاتف',
@@ -108,30 +113,26 @@ class SignUP extends StatelessWidget {
               const SizedBox(height: 15),
               defualtTextFormField(
                   controller: password,
+                   password: true,
                   type: TextInputType.visiblePassword,
-                  prefix: Icons.phone,
+                  prefix: Icons.lock,
                   label: 'كلمه المرور',
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'يجب ادخال كلمة المرور ';
                     }
                   }),
-              SizedBox(height: h * 0.01),
-              SizedBox(height: h * 0.01),
+              SizedBox(height: MySize.height(context) * 0.02),
               DefaultButton(
                   controll: () async {
-                    controller.register(context,
-                        phone: phoneNumber.text,
-                        password: password.text,
-                        fullName: name.text,
-                        userName: Fullname.text);
-                    //     SharedPreferences prefs = await SharedPreferences.getInstance();
-                    // registerapi(name.text.toString(), password.text,Fullname.text.toString(), phoneNumber.text.toString(),
-                    //     "780979842");
-                    Controller.navigatorGo(
-                      context,
-                      OTPScreen(phone: phoneNumber.text),
-                    );
+                    await Controller.sendOTP(context, phone: phoneNumber.text)
+                        .whenComplete(() => Controller.navigatorOff(
+                            context,
+                            OTPScreen(
+                                phone: phoneNumber.text,
+                                name: name.text,
+                                password: password.text,
+                                username: userName.text)));
                   },
                   text: 'تسجيل الحساب'),
               // ElevatedButton(
@@ -165,8 +166,15 @@ class SignUP extends StatelessWidget {
 }
 
 class OTPScreen extends StatefulWidget {
-  OTPScreen({Key? key, required this.phone}) : super(key: key);
-  String phone;
+  const OTPScreen(
+      {Key? key,
+      required this.phone,
+      required this.name,
+      required this.username,
+      required this.password})
+      : super(key: key);
+  final String phone, name, username, password;
+
   @override
   State<OTPScreen> createState() => _OTPScreenState();
 }
@@ -174,7 +182,7 @@ class OTPScreen extends StatefulWidget {
 class _OTPScreenState extends State<OTPScreen> {
   TextEditingController otp = TextEditingController();
   late String code;
-  String number = '+201090039634';
+
   @override
   void initState() {
     // TODO: implement initState
@@ -196,14 +204,12 @@ class _OTPScreenState extends State<OTPScreen> {
         items: [
           const SizedBox(height: 60),
           TextForm(
-              hint: 'كود الحساب',
+              hint: 'كود التاكيد',
               controller: otp,
               keyBoardType: TextInputType.phone),
           const SizedBox(height: 20),
           ElevatedButton(
-              onPressed: () => otp.text == code
-                  ? Controller.navigatorOff(context, Home())
-                  : null,
+              onPressed: () {},
               child: const Text(
                 'تأكيد',
                 style: TextStyle(color: Colors.white),

@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-import 'package:toordor/Controller/controller.dart';
-import 'package:toordor/View/Widget/TextForm.dart';
+import 'package:toordor/controller/controller.dart';
+import 'package:toordor/view/widget/TextForm.dart';
 import 'package:toordor/view/screen/calender.dart';
 import 'calender_event.dart';
 
@@ -59,13 +59,13 @@ class _HomeBody1State extends State<HomeBody1> {
             ),
           ),
           actions: [
+            IconButton(onPressed: ()=>Navigator.pop(context), icon:const Icon(Icons.arrow_forward_ios_rounded))
             // PopupMenuButton(
-            //     itemBuilder: (context) => Controller.listPage
+            //     itemBuilder: (context) => Controller.list
             //         .map((e) => PopupMenuItem(
             //             child: ListTile(trailing: Text(e.title)),
-            //             onTap: () => setState(
-            //                 () => indexPage = Controller.listPage.indexOf(e))))
-            //         .toList())
+            //             onTap: () => Controller.setPage(index:Controller.list.indexOf(e))))
+                 //   .toList())
           ],
           title: TextForm(
               hint: 'البحث',

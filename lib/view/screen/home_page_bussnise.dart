@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:toordor/controller/size.dart';
 
 import '../../const/color.dart';
 
@@ -16,8 +17,7 @@ class _HomepagebussniseState extends State<Homepagebussnise> {
 
   @override
   Widget build(BuildContext context) {
-    double h = MediaQuery.of(context).size.height;
-    double w = MediaQuery.of(context).size.width;
+
     Widget employ({required int index}) {
       return Container(
         decoration: BoxDecoration(
@@ -37,7 +37,7 @@ class _HomepagebussniseState extends State<Homepagebussnise> {
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(height: h / 30),
+            SizedBox(height: MySize.height(context) / 30),
             Row(
               children: const [
                 FlutterLogo(size: 30),
@@ -47,7 +47,7 @@ class _HomepagebussniseState extends State<Homepagebussnise> {
                         TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
               ],
             ),
-            SizedBox(height: h / 50),
+            SizedBox(height: MySize.height(context) / 50),
             Expanded(
               flex: 1,
               child: ListView.builder(

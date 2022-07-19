@@ -34,10 +34,7 @@ class _UserProFileState extends State<UserProFile> {
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
         return Scaffold(
-          floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.refresh),
-            onPressed: () => setState(() {}),
-          ),
+
           body: RefreshIndicator(
             onRefresh: () async {
               await Controller.userData(context);
@@ -199,7 +196,7 @@ class EditUserData extends StatelessWidget {
   TextEditingController controller4 = TextEditingController();
   TextEditingController controller5 = TextEditingController();
 
-  addData() {
+ void addData() {
     controller1.text = fullName ?? '';
     controller2.text = phone ?? '';
     controller3.text = email ?? '';

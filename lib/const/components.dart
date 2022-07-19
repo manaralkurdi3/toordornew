@@ -19,7 +19,7 @@ Widget DefaultButton({
       child: MaterialButton(
           onPressed: controll,
           child: Text(
-            '$text'.toUpperCase(),
+            text.toUpperCase(),
             style: TextStyle(color: text_color, fontWeight: text_font_weight),
           )),
     );
@@ -40,7 +40,7 @@ Widget defualtTextFormField(
         {required TextEditingController controller,
         required TextInputType type,
         FormFieldValidator<String>? validator,
-        required IconData prefix,
+         IconData? prefix,
         IconData? suffix,
         double radius = 8.5,
         double width = 280,
