@@ -1,7 +1,6 @@
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:toordor/View/Widget/TextForm.dart';
+import 'package:toordor/view/widget/TextForm.dart';
 
 import '../../controller/controller.dart';
 

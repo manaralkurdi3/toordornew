@@ -2,42 +2,37 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-import 'package:toordor/Controller/controller.dart';
-import 'package:toordor/View/Widget/TextForm.dart';
+import 'package:toordor/controller/controller.dart';
+import 'package:toordor/model/category_model.dart';
 import 'package:toordor/view/screen/bussnise_of_category_screen.dart';
 import 'package:toordor/view/screen/calender.dart';
-import 'package:toordor/view/screen/category_list.dart';
+
 
 class HomeBody extends StatefulWidget {
+   HomeBody({Key? key}) : super(key: key);
+
   @override
   State<HomeBody> createState() => _HomeBodyState();
+
 }
 
-extension NumExtensions on num {
-  bool get isInt => (this % 1) == 0;
-}
+
 
 class _HomeBodyState extends State<HomeBody> {
   Controller controller = Controller();
   late int pageCount;
   int selectedIndex = 0;
-  late PageController pageController =  PageController();
+   PageController pageController =  PageController();
   bool indicator = false;
   int indexPage = 0;
-
+  int perPageItem = 9;
   Future<SharedPreferences> preferences = SharedPreferences.getInstance();
   Future? cashing;
   late int lastPageItemLength;
- Future category(BuildContext context)=>Controller.categoryy(context);
-  @override
-  void initState() {
 
-    // TODO: implement initState
-    super.initState();
-    // if(pageCount!=null){
-    //   setState(() =>indicator==true);
-    // }
-  }
+
+ Future<List<CategoryModel>> category(BuildContext context)=>Controller.categoryy(context);
+
 
   @override
   Widget build(BuildContext context) {
@@ -105,16 +100,23 @@ class _HomeBodyState extends State<HomeBody> {
             child: Column(
               children: [
                 Expanded(
-                  child: FutureBuilder<dynamic>(
+                  child: FutureBuilder<List<CategoryModel>>(
                       future: category(context),
                       builder: (context, snapshot) {
+
+                        var num = (snapshot.data?.length??0 / perPageItem);
+                        pageCount = num.isInt ? num.toInt() : num.toInt() + 1;
+
+                        late int? reminder = snapshot.data!.length.remainder(perPageItem);
+                        lastPageItemLength = reminder == 0 ? perPageItem : reminder;
+
                         if (snapshot.connectionState == ConnectionState.none) {
                           return const Center(
                               child: Text('لا يتوافر اتصال بالانترنت'));
                         } else if (snapshot.hasData) {
                           return PageView.builder(
                               controller: pageController,
-                              itemCount: categorylist.length,
+                              itemCount: pageCount,
                               //snapshot.data.length,
                               onPageChanged: (index) {
                                 setState(() {
@@ -135,9 +137,9 @@ class _HomeBodyState extends State<HomeBody> {
                                       // (2 - 1) != pageIndex
                                       //     ? snapshot.data['data'].length
                                       //     : lastPageItemLength,
-                                      (2 - 1) != pageIndex
-                                          ? categorylist.length
-                                          : categorylist.length, (index) {
+                                      (pageCount - 1) != pageIndex
+                                          ? perPageItem
+                                          : lastPageItemLength, (index) {
                                     return Column(
                                       children: [
                                         GestureDetector(
@@ -145,9 +147,8 @@ class _HomeBodyState extends State<HomeBody> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) => HomeBody1(
-                                                      snapshot.data['data'][index]
-                                                              ['id']
-                                                          .toString()))),
+                                                      '${snapshot.data?[index + (pageIndex * perPageItem)].id}'
+                                                          ))),
                                           child: Container(
                                             width: 50,
                                             height: 50,
@@ -161,11 +162,11 @@ class _HomeBodyState extends State<HomeBody> {
                                           //   child: null,
                                           // ),
                                         ),
-                                        SizedBox(
+                                       const SizedBox(
                                           height: 5,
                                         ),
                                         Text(
-                                          categorylist[index].text,
+                                          '${snapshot.data?[index + (pageIndex * perPageItem)].name}',
                                           // snapshot.data['data'][index]['name']!
                                           //     .toString(),
                                           style: const TextStyle(
@@ -188,7 +189,7 @@ class _HomeBodyState extends State<HomeBody> {
                   child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
-                    itemCount: 3,
+                    itemCount: 4,
                     itemBuilder: (_, index) {
                       return GestureDetector(
                         onTap: () => pageController.animateToPage(index,

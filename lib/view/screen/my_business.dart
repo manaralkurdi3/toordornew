@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:toordor/controller/controller.dart';
 import 'package:toordor/controller/size.dart';
-import 'package:toordor/view/Screen/home_page_bussnise.dart';
-import 'package:toordor/view/Widget/TextForm.dart';
+import 'package:toordor/view/screen/home_page_bussnise.dart';
+import 'package:toordor/view/widget/TextForm.dart';
 
 class MyBusiness extends StatefulWidget {
   MyBusiness({Key? key}) : super(key: key);

@@ -50,35 +50,27 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       Column(
                         children: [
-                        const  Text(
+                          const Text(
                             'تسجيل الدخول',
                             style: TextStyle(
                               fontSize: 30,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          defualtTextFormField(
+                          TextForm(
                             controller: email,
-                            type: TextInputType.phone,
-                            prefix: Icons.phone,
-                            label: 'رقم الهاتف',
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'phone Must Not Empty';
-                              }
-                            },
+                            keyBoardType: TextInputType.phone,
+                            widget: const Icon(Icons.phone),
+                            hint: 'رقم الهاتف',
                           ),
                           const SizedBox(height: 15),
-                          defualtTextFormField(
+                          TextForm(
                             controller: password,
-                            type: TextInputType.visiblePassword,
-                            prefix: Icons.lock_outline,
-                            label: 'كلمة المرور',
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Password Must Not Empty';
-                              }
-                            },
+                            visibility: true,
+                            keyBoardType: TextInputType.visiblePassword,
+                            widget:const Icon(Icons.lock_outline),
+                            hint: 'كلمة المرور',
+
                           ),
                           // TextForm(
                           //     hint: 'كلمه المرور',
