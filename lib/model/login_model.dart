@@ -54,7 +54,7 @@
 class LoginResponse {
   bool? success;
   LoginApiData? data;
-  String? message;
+  dynamic? message;
 
   LoginResponse({this.success, this.data, this.message});
 
@@ -84,6 +84,8 @@ class LoginApiData {
   String? country;
   String? city;
   String? phone;
+  bool ?is_employee;
+  bool ? has_bussinees;
 
   LoginApiData(
       {this.token,
@@ -92,7 +94,7 @@ class LoginApiData {
       this.username,
       this.country,
       this.city,
-      this.phone});
+      this.phone,this.has_bussinees,this.is_employee});
 
   LoginApiData.fromJson(Map<String, dynamic> json) {
     token = json['token'];
@@ -102,6 +104,8 @@ class LoginApiData {
     country = json['country'];
     city = json['city'];
     phone = json['phone'];
+    has_bussinees = json['has_bussinees'];
+    is_employee = json['is_employee'];
   }
 
   Map<String, dynamic> toJson() {
@@ -113,6 +117,8 @@ class LoginApiData {
     data['country'] = this.country;
     data['city'] = this.city;
     data['phone'] = this.phone;
+    data['has_bussinees'] = this.has_bussinees;
+    data['is_employee'] = this.is_employee;
     return data;
   }
 }

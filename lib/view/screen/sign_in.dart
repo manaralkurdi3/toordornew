@@ -1,15 +1,68 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:toordor/Controller/controller.dart';
 
 import 'package:toordor/View/Widget/TextForm.dart';
 import 'package:toordor/View/Widget/background.dart';
 
-class SignIN extends StatelessWidget {
+class SignIN extends StatefulWidget {
   SignIN({Key? key}) : super(key: key);
+
+  @override
+  State<SignIN> createState() => _SignINState();
+}
+
+class _SignINState extends State<SignIN> {
   TextEditingController email = TextEditingController();
+
   TextEditingController password = TextEditingController();
+
   Controller controller = Controller();
+
+  final Connectivity _connectivity = Connectivity();
+
+  bool isLoading = false;
+
+  TextEditingController message = new TextEditingController();
+
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print("Error Occurred: ${e.toString()} ");
+      return;
+    }
+    if (!mounted) {
+      return Future.value(null);
+    }
+    return _UpdateConnectionState(result);
+  }
+
+  void showStatus(ConnectivityResult result, bool status) {
+    final snackBar = SnackBar(
+        content:
+        Text("${status ? 'ONLINE\n' : 'OFFLINE\n'}${result.toString()} "),
+        backgroundColor: status ? Colors.green : Colors.red);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  Future<void> _UpdateConnectionState(ConnectivityResult result) async {
+    if (result == ConnectivityResult.mobile ||
+        result == ConnectivityResult.wifi) {
+      setState(() {
+        isLoading = false;
+        //     showStatus(result, true);
+      });
+    } else {
+      setState(() {
+        //  showStatus(result, false);
+        isLoading = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +96,7 @@ class SignIN extends StatelessWidget {
                 //       }
                 //   },
                 // )),
-                const SizedBox(height: 15),
+                const SizedBox(height: 10),
                 TextForm(
                     hint: 'رقم الهاتف',
                     controller: email,

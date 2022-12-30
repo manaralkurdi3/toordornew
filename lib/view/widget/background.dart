@@ -71,7 +71,7 @@ class Background extends StatelessWidget {
               Column(
                 children: [
                   SizedBox(height: h / 1.6),
-                  SocialMedia(),
+                  //SocialMedia(),
                 ],
               )
             ],

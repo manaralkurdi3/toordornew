@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toordor/controller/controller.dart';
-import 'package:toordor/view/screen/appointement.dart';
 import 'package:toordor/view/screen/calender_event.dart';
 import 'package:toordor/view/widget/utilites.dart';
 

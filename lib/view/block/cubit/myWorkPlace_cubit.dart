@@ -1,5 +1,7 @@
 // MyWorkPlace
 
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,7 +15,7 @@ class MyWorkPlaceCubit extends Cubit<MyWorkPlaceState> {
   static MyWorkPlaceCubit get(context) => BlocProvider.of(context);
 
   Future<void> acceptRequest({
-    String? requestId,
+    int? requestId,
   }) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
@@ -26,12 +28,13 @@ class MyWorkPlaceCubit extends Cubit<MyWorkPlaceState> {
         emit(MyWorkPlaceAcceptRequestSuccess());
       }
     }).catchError((Error) {
+      print("faild");
       emit(MyWorkPlaceAcceptRequestError("الرجاء التحقق من البيانات"));
     });
   }
 
   Future<void> cancelRequest({
-    String? requestId,
+    int? requestId,
   }) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');

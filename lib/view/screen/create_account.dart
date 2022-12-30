@@ -1,5 +1,11 @@
 import 'dart:math';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toordor/view/screen/login_screen.dart';
+import 'package:toordor/view/screen/pdf.dart';
 import 'package:toordor/view/widget/background.dart';
 import 'package:toordor/view/widget/headerbacground.dart';
 import 'package:toordor/const/components.dart';
@@ -7,173 +13,254 @@ import 'package:toordor/controller/size.dart';
 import '../../controller/controller.dart';
 import '../widget/TextForm.dart';
 
-import 'home.dart';
-
-class SignUP extends StatelessWidget {
+class SignUP extends StatefulWidget {
   SignUP({Key? key}) : super(key: key);
+
+  @override
+  State<SignUP> createState() => _SignUPState();
+}
+
+class _SignUPState extends State<SignUP> {
   Controller c = Controller();
+
   TextEditingController name = TextEditingController();
-  TextEditingController userName = TextEditingController();
+
+
   TextEditingController phoneNumber = TextEditingController();
+
   TextEditingController password = TextEditingController();
+
   TextEditingController Fullname = TextEditingController();
+
   double _headerHeight = 250;
+
   Controller controller = Controller();
-  Key _formKey = GlobalKey<FormState>();
+      bool _passwordVisible = false;
+ bool value = true;
+   bool _obscureText = true;
+ late SharedPreferences prefs;
+  save() async {
+    prefs = await SharedPreferences.getInstance();
+    prefs.setString('name', name.text.toString());
+    prefs.setString('phoneNumber', phoneNumber.text.toString());
+    prefs.setString('password', password.text.toString());
+    prefs.setString('Fullname', Fullname.text.toString());
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  Scaffold(
         extendBodyBehindAppBar: true,
         floatingActionButton: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.pop(context),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-        body: Wrap(children: [
-          Column(
-            children: [
-              Container(
-                height: _headerHeight,
-                child: HeaderWidget(
-                  _headerHeight,
-                  true,
-                  Container(
-                    child: Image.asset(
-                        'assets/1f3b82a8-489f-4051-9605-90fc99c2010a-removebg-preview.png'),
+        body: SingleChildScrollView(
+          child: Wrap(children: [
+            Column(
+              children: [
+                Container(
+                  height: _headerHeight,
+                  child: HeaderWidget(
+                    _headerHeight,
+                    true,
+                    Container(
+                      child: Image.asset(
+                          'assets/1f3b82a8-489f-4051-9605-90fc99c2010a-removebg-preview.png'),
+                    ),
                   ),
                 ),
-              ),
 
-              // TextForm(
-              //   hint: 'الاسم بالكامل',
-              //   controller: name,
-              //   keyBoardType: TextInputType.name,
-              // ),
-              SizedBox(height: MySize.height(context) / 12),
-              defualtTextFormField(
-                  width: double.infinity,
+                // TextForm(
+                //   hint: 'الاسم بالكامل',
+                //   controller: name,
+                //   keyBoardType: TextInputType.name,
+                // ),
+                SizedBox(height: MySize.height(context) / 12),
+                TextForm(
                   controller: name,
-                  type: TextInputType.name,
-                  prefix: Icons.edit_outlined,
-                  label: 'الاسم بالكامل',
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'يجب ادخال الاسم بالكامل';
-                    }
-                  }),
-              const SizedBox(height: 15),
-              defualtTextFormField(
-                  width: double.infinity,
+                  keyBoardType: TextInputType.name,
+                  hint: 'الاسم بالكامل'.tr(),
+                ),
+
+                TextForm(
                   controller: Fullname,
-                  type: TextInputType.name,
-                  prefix: Icons.edit_outlined,
-                  label: 'اسم المستخدم',
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'يجب ادخال اسم المستخدم';
-                    }
-                  }),
+                  keyBoardType: TextInputType.name,
+                  hint: 'اسم المستخدم:'.tr(),
+                ),
 
-              // TextForm(
-              //   hint: 'اسم المستخدم  ',
-              //   controller: Fullname,
-              //   keyBoardType: TextInputType.name,
-              // ),
-              /*TextForm(
-            hint: 'البريد الالكتروني',
-            controller: userName,
-            keyBoardType: TextInputType.emailAddress,
-          ),
-          */
-              const SizedBox(height: 15),
-              Directionality(
-                textDirection: TextDirection.ltr,
-                child: defualtTextFormField(
-                    width: double.infinity,
-                    controller: phoneNumber,
-                    type: TextInputType.phone,
-                    suffix: Icons.phone,
+                // TextForm(
+                //   hint: 'اسم المستخدم  ',
+                //   controller: Fullname,
+                //   keyBoardType: TextInputType.name,
+                // ),
+                /*TextForm(
+              hint: 'البريد الالكتروني',
+              controller: userName,
+              keyBoardType: TextInputType.emailAddress,
+            ),
+            */
 
-                    label: 'رقم الهاتف',
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'يجب ادخال رقم الهاتف';
-                      }
-                    }),
-              ),
+                TextForm(
+                  controller: phoneNumber,
+                  keyBoardType: TextInputType.phone,
+                  hint: 'رقم الهاتف'.tr(),
+                ),
 
-              // TextForm(
-              //   hint: 'رقم الهاتف',
-              //   controller: phoneNumber,
-              //   keyBoardType: TextInputType.phone,
-              // ),
-              // TextForm(
-              //     hint: 'كلمه المرور', controller: password, visibility: true),
-              const SizedBox(height: 15),
-              defualtTextFormField(
+                // TextForm(
+                //   hint: 'رقم الهاتف',
+                //   controller: phoneNumber,
+                //   keyBoardType: TextInputType.phone,
+                // ),
+                // TextForm(
+                //     hint: 'كلمه المرور', controller: password, visibility: true),
+
+                TextForm(
                   controller: password,
-                   password: true,
-                  type: TextInputType.visiblePassword,
-                  prefix: Icons.lock,
-                  label: 'كلمه المرور',
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'يجب ادخال كلمة المرور ';
-                    }
-                  }),
-              SizedBox(height: MySize.height(context) * 0.02),
-              DefaultButton(
-                  controll: () async {
-                    await Controller.sendOTP(context, phone: phoneNumber.text)
-                        .whenComplete(() => Controller.navigatorOff(
-                            context,
-                            OTPScreen(
-                                phone: phoneNumber.text,
-                                name: name.text,
-                                password: password.text,
-                                username: userName.text)));
-                  },
-                  text: 'تسجيل الحساب'),
-              // ElevatedButton(
-              //     style: ButtonStyle(
-              //         //    backgroundColor: MaterialStateProperty.all(Colors.grey.shade400)
-              //         ),
-              //     child: SizedBox(
-              //         width: w / 1.8,
-              //         height: h / 20,
-              //         child: const Center(
-              //             child: Text(
-              //           'تسجيل الحساب',
-              //           style: TextStyle(color: Colors.white),
-              //         ))),
-              //     onPressed: () async {
-              // controller.register(context,
-              //     phone: phoneNumber.text,
-              //     password: password.text,
-              //     fullName: name.text,
-              //     userName: Fullname.text);
-              //       // SharedPreferences prefs = await SharedPreferences.getInstance();
-              //       // registerapi(name.text.toString(), password.text,Fullname.text.toString(), phoneNumber.text.toString(),
-              //       //     "780979842");
+                  visibility: _obscureText,
+                  keyBoardType: TextInputType.visiblePassword,
+                  hint: 'كلمة المرور'.tr(),
+                  widget:IconButton(
+                icon: Icon(
+                // Based on passwordVisible state choose the icon
+                _passwordVisible
+                ? Icons.visibility
+                  : Icons.visibility_off,
+                  color: Theme.of(context).primaryColorDark,
+                ),
+          onPressed: () {
+            // Update the state i.e. toogle the state of passwordVisible variable
+            setState(() {
+              _passwordVisible = !_passwordVisible;
+              _obscureText=!_obscureText;
+            });
+          },
+        ),
 
-              //       //   Controller.navigatorGo(context, OTPScreen(phone: phoneNumber.text));
-              //     }),
-            ],
-          ),
-        ]));
+                ),
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        child: Checkbox(
+                          value: this.value,
+                          onChanged: ( value) {
+                            setState(() {
+                              this.value = value!;
+                              print(value);
+                            });
+                          },
+                        ),
+                      ),
+                      Container(
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text(""
+                                    "من خلال انضمامك ، فإنك توافق على".tr()
+                                  ,style: TextStyle(fontSize: 10,),),
+                                InkWell(
+                                  onTap: (){
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=> const pdf()));
+                                  },
+                                  child: Text(
+                                    "شروط الخدمة".tr()
+                                    ,style: TextStyle(fontSize: 10,color: Colors.blue),),
+                                ),
+
+
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                InkWell(
+                                  onTap: (){
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=> const pdf()));
+
+                                  },
+                                  child: Text("وسياسة الخصوصية".tr()
+                                    ,style: TextStyle(fontSize: 10,color: Colors.blue),),
+                                ),
+                                Text("بما في ذلك استخدام".tr(),style: TextStyle(fontSize: 10)),
+                                InkWell(
+                                  onTap:(){
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=> const pdf()));
+
+                                  } ,
+                                    child: Text("ملفات تعريف الارتباط.".tr(),style: TextStyle(fontSize: 10,color: Colors.blue)))
+                              ],
+                            ),
+
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: MySize.height(context) * 0.02),
+                DefaultButton(
+                    controll: () async {
+                      if (phoneNumber.text.isEmpty||password.text.isEmpty){
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('يرجى كتابة كافة المعلومات'.tr())));
+                      }
+                      else {
+                        save();
+                        print(phoneNumber.text.toString());
+                        value == true?
+                        Controller.sendOTP(context,
+                            phone: phoneNumber.text.toString(),
+                          // password: password.text.toString(),
+                          // fullname: name.text.toString(),
+                          // userName: userName.text.toString()
+                        )
+                            :
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('يرجى الموافقة على سياسة الخصوصية'.tr())));
+                      }
+
+                 //     await Controller.sendOTP(context, phone: phoneNumber.text);
+
+                    },
+                    text: 'تسجيل الحساب'.tr()),
+                // ElevatedButton(
+                //     style: ButtonStyle(
+                //         //    backgroundColor: MaterialStateProperty.all(Colors.grey.shade400)
+                //         ),
+                //     child: SizedBox(
+                //         width: w / 1.8,
+                //         height: h / 20,
+                //         child: const Center(
+                //             child: Text(
+                //           'تسجيل الحساب',
+                //           style: TextStyle(color: Colors.white),
+                //         ))),
+                //     onPressed: () async {
+                // controller.register(context,
+                //     phone: phoneNumber.text,
+                //     password: password.text,
+                //     fullName: name.text,
+                //     userName: Fullname.text);
+                //       // SharedPreferences prefs = await SharedPreferences.getInstance();
+                //       // registerapi(name.text.toString(), password.text,Fullname.text.toString(), phoneNumber.text.toString(),
+                //       //     "780979842");
+
+                //       //   Controller.navigatorGo(context, OTPScreen(phone: phoneNumber.text));
+                //     }),
+              ],
+            ),
+          ]),
+        ));
+
   }
 }
 
 class OTPScreen extends StatefulWidget {
-  const OTPScreen(
-      {Key? key,
-      required this.phone,
-      required this.name,
-      required this.username,
-      required this.password})
-      : super(key: key);
-  final String phone, name, username, password;
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -181,7 +268,84 @@ class OTPScreen extends StatefulWidget {
 
 class _OTPScreenState extends State<OTPScreen> {
   TextEditingController otp = TextEditingController();
-  late String code;
+
+  String name ="";
+
+
+  String phoneNumber = "";
+
+  String password = "";
+
+  String Fullname ="";
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //Random random =Random();
+    // code=random.nextInt(100000).toString();
+    //controller.sendSMS(code: code,phoneNumber: number);
+  }
+  late SharedPreferences prefs;
+  fetch() async {
+    prefs = await SharedPreferences.getInstance();
+    name = (prefs.getString('name') ?? "") ;
+    phoneNumber = (prefs.getString('phoneNumber') ?? "") ;
+    password = (prefs.getString('password') ?? "") ;
+    Fullname = (prefs.getString('Fullname') ?? "");
+print(phoneNumber.toString());
+  }
+  @override
+  Widget build(BuildContext context) {
+    fetch();
+    return Scaffold(
+      floatingActionButton: IconButton(
+        icon: const Icon(Icons.arrow_back_ios),
+        onPressed: () => Navigator.push(context, MaterialPageRoute(builder:(context)=>
+            LoginPage())),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+      body: Background(
+        items: [
+          const SizedBox(height: 60),
+          TextForm(
+              hint: 'كود التاكيد'.tr(),
+              controller: otp,
+              keyBoardType: TextInputType.phone),
+          const SizedBox(height: 20),
+          ElevatedButton(
+              onPressed: () {
+                Controller.verifyOTP(
+                    context, code: otp.text,
+                    userName: name.toString(),
+                    fullname: Fullname.toString(),
+                    password: password.toString(),
+                    phoneNumber: phoneNumber.toString(),
+    );
+                print(name.toString());
+                print(phoneNumber.toString(),);
+                },
+              child:  Text(
+                'تأكيد'.tr(),
+                style: TextStyle(color: Colors.white),
+              ))
+        ],
+      ),
+    );
+  }
+}
+class OTPScreenpassword extends StatefulWidget {
+  const OTPScreenpassword(
+      {Key? key})
+      : super(key: key);
+
+
+  @override
+  State<OTPScreenpassword> createState() => _OTPScreenpasswordState();
+}
+
+class _OTPScreenpasswordState extends State<OTPScreenpassword> {
+  TextEditingController otp = TextEditingController();
+
 
   @override
   void initState() {
@@ -197,21 +361,22 @@ class _OTPScreenState extends State<OTPScreen> {
     return Scaffold(
       floatingActionButton: IconButton(
         icon: const Icon(Icons.arrow_back_ios),
-        onPressed: () => Navigator.pop(context),
+        onPressed: () => Navigator.push(context, MaterialPageRoute(builder:(context)=>
+        LoginPage()))
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       body: Background(
         items: [
           const SizedBox(height: 60),
           TextForm(
-              hint: 'كود التاكيد',
+              hint: 'كود التاكيد'.tr(),
               controller: otp,
               keyBoardType: TextInputType.phone),
           const SizedBox(height: 20),
           ElevatedButton(
-              onPressed: () {},
-              child: const Text(
-                'تأكيد',
+              onPressed: () =>Controller.verifyOTPpassword(context, code: otp.text),
+              child:  Text(
+                'تأكيد'.tr(),
                 style: TextStyle(color: Colors.white),
               ))
         ],

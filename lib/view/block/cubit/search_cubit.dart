@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../const/new_url_links.dart';
@@ -21,13 +22,17 @@ class SearchCubit extends Cubit<SearchState> {
       "phone": mobileNumber,
     }, path: ApiLinks.search, token: _token)
         .then((value) {
-      if (value.statusCode == 200) {
+          print(value.data.toString());
+      if (value.data['success'] == true) {
+        print(value);
         SearchModel search = SearchModel.fromJson(value.data);
-
         emit(SearchSuccess(search));
       }
+      else{
+        emit(SearchError("الرجاء ادخال رقم الهاتف للبحث ".tr()));
+      }
     }).catchError((Error) {
-      emit(SearchError("الرجاء التحقق من البيانات"));
+      emit(SearchError("الرجاء التحقق من البيانات".tr()));
     });
   }
 }

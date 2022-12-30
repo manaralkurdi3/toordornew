@@ -20,6 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
+    Controller.userData(context);
     super.initState();
     Future.delayed(const Duration(seconds: 3)).whenComplete(() => getData());
   }
@@ -28,11 +29,12 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: whiteColor,
+        color: Colors.grey,
         child: Image.asset(
-            'assets/4104e2aa-4c5b-417a-9507-ca86bc3a639b-removebg-preview.png',
+            'assets/1f3b82a8-489f-4051-9605-90fc99c2010a-removebg-preview.png',
             height: 70,
-            width: 70),
+            width: 70,
+        ),
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
       ),

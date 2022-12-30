@@ -23,7 +23,7 @@ class ApiRequest {
   static Future<Response> getData({
     required String path,
     Map<String, dynamic>? query,
-    String? token,
+    String? token, required String url,
   }) async {
     dio!.options.headers = {
       'Content-Type': 'application/json',

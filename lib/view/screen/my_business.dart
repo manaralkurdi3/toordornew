@@ -1,10 +1,14 @@
 import 'dart:async';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
 import 'package:toordor/controller/controller.dart';
 import 'package:toordor/controller/size.dart';
-import 'package:toordor/view/screen/home_page_bussnise.dart';
+import 'package:toordor/view/screen/home_page.dart';
+import 'package:toordor/view/screen/show_employee.dart';
 import 'package:toordor/view/widget/TextForm.dart';
 
 class MyBusiness extends StatefulWidget {
@@ -18,81 +22,73 @@ class _MyBusinessState extends State<MyBusiness> {
   TextEditingController business = TextEditingController();
   TextEditingController timer = TextEditingController();
 
-  String? tryMentType, lengthTryType;
-  Future? userService;
+  // String? tryMentType, lengthTryType;
+  // Future? userService;
+  final Connectivity _connectivity = Connectivity();
+  bool isLoading = false;
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print("Error Occurred: ${e.toString()} ");
+      return;
+    }
+    if (!mounted) {
+      return Future.value(null);
+    }
+    return _UpdateConnectionState(result);
+  }
 
+  void showStatus(ConnectivityResult result, bool status) {
+    final snackBar = SnackBar(
+        content:
+        Text("${status ? 'ONLINE\n' : 'OFFLINE\n'}${result.toString()} "),
+        backgroundColor: status ? Colors.green : Colors.red);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  Future<void> _UpdateConnectionState(ConnectivityResult result) async {
+    if (result == ConnectivityResult.mobile ||
+        result == ConnectivityResult.wifi) {
+      setState(() {
+        isLoading = false;
+        //     showStatus(result, true);
+      });
+    } else {
+      setState(() {
+        //  showStatus(result, false);
+        isLoading = true;
+      });
+    }
+  }
   @override
   void initState() {
-    userService = Controller.getServiceEmployee(context);
+ //userService = Controller.getServiceEmployee(context);
     // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    Controller.getServiceEmployee(context);
+  //  Controller.getServiceEmployee(context);
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
-
-    return Scaffold(
-      body: FutureBuilder<dynamic>(
-        future: Controller.myBuisness(context, id: 1),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            //   List data = snapshot.data!['data'];
-
-            // return ListView.builder(
-            //   itemCount: data.length,
-            //   itemBuilder: (context, index) {
-            return SingleChildScrollView(
+   return Scaffold(
+        appBar:AppBar2(context:context),
+      body:
+             SingleChildScrollView(
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 13.0.sp),
-                          child: CircleAvatar(
-                            backgroundColor: Colors.blue,
-                            child: Text(
-                              'A',
-                              style: const TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.w600),
-                            ),
-                            radius: 30.sp,
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              'wppoo',
-                              style: const TextStyle(
-                                  fontSize: 19, fontWeight: FontWeight.w600),
-                            ),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            Text(
-                              'ID: ${snapshot.data['bID']}',
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      vertical: 20,
+                      vertical: 10,
                     ),
-                    margin: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                         border: Border.all(width: 1),
                         borderRadius: BorderRadius.circular(12)),
-                    height: MySize.height(context) / 2.5,
+                    height: MySize.height(context) / 2,
                     child: Wrap(
                       children: [
                         Container(
@@ -100,67 +96,65 @@ class _MyBusinessState extends State<MyBusiness> {
                           height: h,
                           width: w,
                           child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.all(2.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(height: 10.sp),
                                 TextForm(
-                                    hint: "نوع  الخدمة ", controller: business),
+                                //   icon: Container(),
+                                    hint: "نوع الخدمة".tr(), controller: business),
                                 TextForm(
-                                  hint: 'وقت الخدمه المتوقغ "دقائق"',
+                               //   icon: Container(),
+                                  hint: 'وقت الخدمة المقدر "دقائق'.tr(),
                                   controller: timer,
                                 ),
-
-                                Expanded(
+                                Padding(
+                                  padding: const EdgeInsets.all(20.0),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
                                       ElevatedButton(
                                         onPressed: () {
-                                          setState(() {
-                                            Controller.createNewService(context,
-                                                treatmentType: business.text,
-                                                trtLenght: timer.text,
-                                                bID: snapshot.data['bID']
-                                                    .toString());
-                                            // Controller.getServiceEmployee(
-                                            //     context);
-                                            // Controller.navigatorGo(context,
-                                            //     const Homepagebussnise());
-                                          });
+                                          print(business.text);
+                                          Controller.createNewService(context,
+                                            sevicename: business.text,
+                                            duration: timer.text,);
+                                        //  Navigator.pop(context);
+                                          // Controller.getServiceEmployee(
+                                          //     context);
+                                          Controller.navigatorGo(context,
+                                              const ShowEmployee());
+
                                         },
-                                        child: const Text('حفظ'),
+                                        child:  Text('متابعة وحفظ'.tr()),
                                         style: ButtonStyle(
                                             backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    Colors.blue)),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {},
-                                        child: const Text('تعديل'),
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    Colors.blue)),
+                                            MaterialStateProperty.all(
+                                                Colors.blue)),
                                       ),
                                       ElevatedButton(
                                         onPressed: () {
-                                          setState(() {
-                                            Navigator.pop(context);
-                                          });
+                                          Controller.createNewService(context,
+                                            sevicename: business.text,
+                                            duration: timer.text,);
+                                          business.clear();
+                                          timer.clear();
+                                          // Navigator.pop(context);
                                         },
-                                        child: const Text('الغاء'),
+                                        child:  Text('حفظ'.tr()),
                                         style: ButtonStyle(
                                             backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    Colors.blue)),
+                                            MaterialStateProperty.all(
+                                                Colors.blue)),
                                       ),
                                     ],
                                   ),
                                 ),
+
+
+
 
                                 // Expanded(
                                 //   child: FutureBuilder<dynamic>(
@@ -249,14 +243,8 @@ class _MyBusinessState extends State<MyBusiness> {
                   // const SizedBox(height: 11),
                 ],
               ),
-            );
+            ));
             //   },
             // );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
-    );
   }
 }

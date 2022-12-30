@@ -1,13 +1,18 @@
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:toordor/View/Screen/home.dart';
 import 'package:toordor/const/new_url_links.dart';
+import 'package:toordor/view/screen/home_page.dart';
 import 'package:toordor/view/widget/TextForm.dart';
 import 'package:toordor/view/screen/home_body_category.dart';
 import 'package:toordor/view/screen/calender_event.dart';
@@ -46,8 +51,43 @@ class _CalenderState extends State<Calender> with TickerProviderStateMixin {
     }
   }
 
-  List<Event> _getEventsfromDay(DateTime date) {
-    return selectedEvents![date] ?? [];
+  final Connectivity _connectivity = Connectivity();
+  bool isLoading = false;
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print("Error Occurred: ${e.toString()} ");
+      return;
+    }
+    if (!mounted) {
+      return Future.value(null);
+    }
+    return _UpdateConnectionState(result);
+  }
+
+  void showStatus(ConnectivityResult result, bool status) {
+    final snackBar = SnackBar(
+        content:
+        Text("${status ? 'ONLINE\n' : 'OFFLINE\n'}${result.toString()} "),
+        backgroundColor: status ? Colors.green : Colors.red);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  Future<void> _UpdateConnectionState(ConnectivityResult result) async {
+    if (result == ConnectivityResult.mobile ||
+        result == ConnectivityResult.wifi) {
+      setState(() {
+        isLoading = false;
+        //     showStatus(result, true);
+      });
+    } else {
+      setState(() {
+        //  showStatus(result, false);
+        isLoading = true;
+      });
+    }
   }
 
   @override
@@ -70,40 +110,8 @@ class _CalenderState extends State<Calender> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        leading: Container(
-          child: const SizedBox(width: 300),
-          height: 100,
-          width: 150,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.fitWidth,
-              image: AssetImage(
-                  'assets/1f3b82a8-489f-4051-9605-90fc99c2010a-removebg-preview.png'),
-            ),
-          ),
-        ),
-        actions: [
-          // PopupMenuButton(
-          //     itemBuilder: (context) => Controller.listPage
-          //         .map((e) => PopupMenuItem(
-          //             child: ListTile(trailing: Text(e.title)),
-          //             onTap: () => setState(
-          //                 () => indexPage = Controller.listPage.indexOf(e))))
-          //         .toList())
-        ],
-        title: TextForm(
-            hint: 'البحث',
-            onchange: (String? value) =>
-                Controller.query(context, query: value),
-            widget: IconButton(
-              icon: const Icon(Icons.search, color: Colors.blue),
-              onPressed: () {},
-            ),
-            keyBoardType: TextInputType.text),
-      ),
+   return Scaffold(
+      appBar:AppBar2(context:context),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,9 +126,11 @@ class _CalenderState extends State<Calender> with TickerProviderStateMixin {
                   style: ElevatedButton.styleFrom(
                     primary: Colors.blue,
                   ),
-                  onPressed: () => Controller.navigatorGo(context, HomeBody()),
+                  onPressed: () =>
+                      Controller.navigatorOff(context, HomeBodyCategory()),
+                     // Controller.navigatorGo(context, HomeBodyCategory()),
                   child: Text(
-                    "حجز موعد",
+                    "حجز موعد".tr(),
                     style: TextStyle(
                       fontSize: 12.sp,
                     ),
@@ -132,47 +142,122 @@ class _CalenderState extends State<Calender> with TickerProviderStateMixin {
             FutureBuilder<List<AppointmentUser>>(
                 future: Controller.userAppointment(context),
                 builder: (context, snapshot) {
-                  if (snapshot.hasData) {
+                  if (snapshot.hasData&&snapshot.data!=[]) {
                     return Expanded(
                       child: ListView.builder(
                           itemCount: snapshot.data?.length,
                           itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                height: 90,
-                                width: 40,decoration: BoxDecoration(border: Border.all(),color: Colors.white),
-                                child: Column(
-                                  children: [
-                                    Text('${snapshot.data?[index].comments ?? ""}'),
-                                    Text('${snapshot.data?[index].dateDay ?? ""}'),
-                                    MaterialButton(
-                                      onPressed: () async {
-                                        String token =
-                                            await SharedPreferences.getInstance()
-                                                .then((value) =>
-                                                    value.getString('token') ?? '');
-                                        Map<String, String> header = {
-                                          "Content-Type": "application/json",
-                                          'Accept': 'application/json',
-                                          'Authorization': 'Bearer $token',
-                                        };
-                                     Response response=   await post(Uri.parse(ApiLinks.userAppoinmentCancel),
-                                            body: json.encode(
-                                                {'id': snapshot.data?[index].id}),
-                                            headers: header).whenComplete(() => setState((){}));
-                                      },
-                                      child: const Text("cancel"),
-                                    ),
-                                  ],
+                            if(snapshot.data!=null){
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  height: 250,
+                                  width: 40,
+                                  decoration: BoxDecoration(border: Border.all(),
+                                      color: Colors.white),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 8.0),
+                                            child: Text("من:".tr()),
+                                          ),
+                                          Text('${snapshot.data?[index].fromDate ?? ""}'),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 8.0),
+                                            child: Text("الى:".tr()),
+                                          ),
+                                          Text('${snapshot.data?[index].toDate ?? ""}'),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 8.0),
+                                            child: Text("اسم الخدمة:".tr()),
+                                          ),
+                                          Text('${snapshot.data?[index].service?.serviceName??""}'),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 8.0),
+                                            child: Text("اسم العمل:".tr()),
+                                          ),
+                                          Text('${snapshot.data?[index].bussnise?.BussniseName??""}'),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 8.0),
+                                            child: Text("ملاحظات:".tr()),
+                                          ),
+                                          Text('${snapshot.data?[index].comments ??""}'),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 8.0),
+                                            child: Text("التاريخ:".tr()),
+                                          ),
+                                          Text('${snapshot.data?[index].dateDay ?? ""}'),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          MaterialButton(
+                                            onPressed: () async {
+                                              setState((){
+                                                showAlertDialog(context,snapshot.data?[index].id);
+                                              });
+                                            },
+                                            child:  Container(
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+
+                                                  ),
+                                                    color: Colors.grey
+                                                ),
+                                                child: Center(child: Text("الغاء الموعد".tr()))),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
+                              );
+                            }
+                            else{
+                              return Container(child: Text("لايوجد اي مواعيد".tr()),);
+                            }
+
                           }),
                     );
                   } else {
-                    return const Center(
-                      child: CircularProgressIndicator(),
+                    return  Center(
+                      child: Text("لايوجد اي مواعيد".tr()),
                     );
                   }
                 }),
@@ -269,4 +354,58 @@ class AppointmentDataSource extends CalendarDataSource {
   MeetingDataSource(List<Appointment> source) {
     appointments = source;
   }
+}
+showAlertDialog(BuildContext context,request_id) {
+
+  // set up the buttons
+  Widget remindButton = TextButton(
+    child: Text("تاكيد".tr()),
+    onPressed:  () async {
+      String token =
+          await SharedPreferences.getInstance()
+          .then((value) =>
+      value.getString('token') ?? '');
+      Map<String, String> header = {
+        "Content-Type": "application/json",
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+      Response response=   await post(Uri.parse(ApiLinks.userAppoinmentCancel),
+          body: json.encode(
+              {'id': request_id}),
+          headers: header).whenComplete(() => print(""));
+      Navigator.pop(context);
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  Calender()));
+      Controller.userAppointment(context);
+
+    },
+  );
+  Widget cancelButton = TextButton(
+    child: Text("الغاء"),
+    onPressed:  () {
+        Navigator.pop(context);
+
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    content: Text("هل انت متأكد من الغاء الطلب".tr()),
+    actions: [
+      remindButton,
+      cancelButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }
