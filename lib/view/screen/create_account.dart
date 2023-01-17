@@ -2,14 +2,17 @@ import 'dart:math';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toordor/view/screen/login_screen.dart';
 import 'package:toordor/view/screen/pdf.dart';
 import 'package:toordor/view/widget/background.dart';
+import 'package:toordor/view/widget/constant.dart';
 import 'package:toordor/view/widget/headerbacground.dart';
 import 'package:toordor/const/components.dart';
 import 'package:toordor/controller/size.dart';
+import 'package:toordor/view/widget/text_field.dart';
 import '../../controller/controller.dart';
 import '../widget/TextForm.dart';
 
@@ -271,7 +274,6 @@ class _OTPScreenState extends State<OTPScreen> {
 
   String name ="";
 
-
   String phoneNumber = "";
 
   String password = "";
@@ -297,40 +299,127 @@ print(phoneNumber.toString());
   @override
   Widget build(BuildContext context) {
     fetch();
-    return Scaffold(
-      floatingActionButton: IconButton(
-        icon: const Icon(Icons.arrow_back_ios),
-        onPressed: () => Navigator.push(context, MaterialPageRoute(builder:(context)=>
-            LoginPage())),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      body: Background(
-        items: [
-          const SizedBox(height: 60),
-          TextForm(
-              hint: 'كود التاكيد'.tr(),
-              controller: otp,
-              keyBoardType: TextInputType.phone),
-          const SizedBox(height: 20),
-          ElevatedButton(
-              onPressed: () {
-                Controller.verifyOTP(
-                    context, code: otp.text,
-                    userName: name.toString(),
-                    fullname: Fullname.toString(),
-                    password: password.toString(),
-                    phoneNumber: phoneNumber.toString(),
-    );
-                print(name.toString());
-                print(phoneNumber.toString(),);
-                },
-              child:  Text(
-                'تأكيد'.tr(),
-                style: TextStyle(color: Colors.white),
-              ))
-        ],
-      ),
-    );
+    return
+      Scaffold(
+          floatingActionButton: IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder:(context)=>
+                  LoginPage()))
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+          body:
+          Background(
+              items: [
+                const SizedBox(height: 60),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0,right: 10,left: 12),
+                  child:  Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 90,
+                          child: OtpTextField(
+                              numberOfFields: 6,
+                              fieldWidth: 40,
+
+                              borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                              borderColor: ColorCustome.colorblue,
+                              enabledBorderColor:ColorCustome.colorblue,
+                              focusedBorderColor:ColorCustome.colorblue ,
+                              //set to true to show as box or false to show as dash
+                              showFieldAsBox: true,
+                              //    disabledBorderColor: Colors.black,
+                              //runs when a code is typed in
+                              onCodeChanged: (String code) {
+                                //handle validation or checks here
+                              },
+                              onSubmit: (String verificationCode){
+                                Controller.verifyOTPpassword(context, code: verificationCode);
+                                // showDialog(
+                                // context: context,
+                                // builder: (context){
+                                // return AlertDialog(
+                                // title: Text("Verification Code"),
+                                // content: Text('Code entered is $verificationCode'),
+                                // );
+                                // }
+                                // // TextFormCustome(
+                                // //     controller: otp,
+                                // //     hint: "الكود".tr(),
+                                // //     labelText: "يرجى ادخال الكود".tr()),
+                                // );
+
+                              }),
+                        ),
+                        InkWell(
+                          onTap: (){
+                            setState(() {
+                              Controller.sendOTPpassword(context,
+                                  phone: phoneNumber.toString());
+                            });
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  child: Text(
+                                    "اعادة ارسال",style: TextStyle(color: ColorCustome.coloryellow,decoration: TextDecoration.underline),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                        // ElevatedButton(
+                        //     onPressed: () =>Controller.verifyOTPpassword(context, code: otp.text),
+                        //     child:  Text(
+                        //       'تأكيد'.tr(),
+                        //       style: TextStyle(color: Colors.white),
+                        //     ))
+                      ],
+                    ),
+                  ),
+                ),
+              ]));
+    //   Scaffold(
+    //   floatingActionButton: IconButton(
+    //     icon: const Icon(Icons.arrow_back_ios),
+    //     onPressed: () => Navigator.push(context, MaterialPageRoute(builder:(context)=>
+    //         LoginPage())),
+    //   ),
+    //   floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+    //   body:
+    // //   Background(
+    // //     items: [
+    // //       const SizedBox(height: 60),
+    // //       TextForm(
+    // //           hint: 'كود التاكيد'.tr(),
+    // //           controller: otp,
+    // //           keyBoardType: TextInputType.phone),
+    // //       const SizedBox(height: 20),
+    // //       ElevatedButton(
+    // //           onPressed: () {
+    // //             Controller.verifyOTP(
+    // //                 context, code: otp.text,
+    // //                 userName: name.toString(),
+    // //                 fullname: Fullname.toString(),
+    // //                 password: password.toString(),
+    // //                 phoneNumber: phoneNumber.toString(),
+    // // );
+    // //             print(name.toString());
+    // //             print(phoneNumber.toString(),);
+    // //             },
+    // //           child:  Text(
+    // //             'تأكيد'.tr(),
+    // //             style: TextStyle(color: Colors.white),
+    // //           ))
+    // //     ],
+    // //   ),
+    // );
   }
 }
 class OTPScreenpassword extends StatefulWidget {
@@ -344,11 +433,19 @@ class OTPScreenpassword extends StatefulWidget {
 }
 
 class _OTPScreenpasswordState extends State<OTPScreenpassword> {
+  late SharedPreferences prefs;
+  String phone="";
+  fetch() async {
+    prefs = await SharedPreferences.getInstance();
+     phone = prefs.getString('phone') ?? "";
+    print(phone);
+  }
   TextEditingController otp = TextEditingController();
 
 
   @override
   void initState() {
+    fetch();
     // TODO: implement initState
     super.initState();
     //Random random =Random();
@@ -365,22 +462,83 @@ class _OTPScreenpasswordState extends State<OTPScreenpassword> {
         LoginPage()))
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      body: Background(
+      body:
+      Background(
         items: [
           const SizedBox(height: 60),
-          TextForm(
-              hint: 'كود التاكيد'.tr(),
-              controller: otp,
-              keyBoardType: TextInputType.phone),
-          const SizedBox(height: 20),
-          ElevatedButton(
-              onPressed: () =>Controller.verifyOTPpassword(context, code: otp.text),
-              child:  Text(
-                'تأكيد'.tr(),
-                style: TextStyle(color: Colors.white),
-              ))
-        ],
-      ),
-    );
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0,right: 10,left: 12),
+            child:  Directionality(
+              textDirection: TextDirection.ltr,
+              child: Column(
+                children: [
+                  Container(
+                    height: 90,
+                    child: OtpTextField(
+                      numberOfFields: 6,
+fieldWidth: 40,
+
+borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                      borderColor: ColorCustome.colorblue,
+                        enabledBorderColor:ColorCustome.colorblue,
+                      focusedBorderColor:ColorCustome.colorblue ,
+                      //set to true to show as box or false to show as dash
+                      showFieldAsBox: true,
+                //    disabledBorderColor: Colors.black,
+                      //runs when a code is typed in
+                      onCodeChanged: (String code) {
+                        //handle validation or checks here
+                      },
+    onSubmit: (String verificationCode){
+      Controller.verifyOTPpassword(context, code: verificationCode);
+    // showDialog(
+    // context: context,
+    // builder: (context){
+    // return AlertDialog(
+    // title: Text("Verification Code"),
+    // content: Text('Code entered is $verificationCode'),
+    // );
+    // }
+    // // TextFormCustome(
+    // //     controller: otp,
+    // //     hint: "الكود".tr(),
+    // //     labelText: "يرجى ادخال الكود".tr()),
+    // );
+
+    }),
+                  ),
+                  InkWell(
+                    onTap: (){
+                      setState(() {
+                        Controller.sendOTPpassword(context,
+                            phone: phone.toString());
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                             child: Text(
+                               "اعادة ارسال",style: TextStyle(color: ColorCustome.coloryellow,decoration: TextDecoration.underline),
+                             ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                  // ElevatedButton(
+                  //     onPressed: () =>Controller.verifyOTPpassword(context, code: otp.text),
+                  //     child:  Text(
+                  //       'تأكيد'.tr(),
+                  //       style: TextStyle(color: Colors.white),
+                  //     ))
+                ],
+              ),
+            ),
+          ),
+            ]));
   }
 }

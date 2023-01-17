@@ -255,7 +255,8 @@ class _CalenderState extends State<Calender> with TickerProviderStateMixin {
 
                           }),
                     );
-                  } else {
+                  }
+                  else {
                     return  Center(
                       child: Text("لايوجد اي مواعيد".tr()),
                     );
@@ -385,7 +386,7 @@ showAlertDialog(BuildContext context,request_id) {
     },
   );
   Widget cancelButton = TextButton(
-    child: Text("الغاء"),
+    child: Text("الغاء".tr()),
     onPressed:  () {
         Navigator.pop(context);
 

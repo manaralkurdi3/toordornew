@@ -74,7 +74,7 @@ class _TimeWorkPlaceState extends State<TimeWorkPlace> {
   String fromdatebreak = "";
   List<String> weekdays = [
     "Friday".tr(),
-    "Satarday".tr(),
+    "Saturday".tr(),
     "Sunday".tr(),
     "Monday".tr(),
     "Thursday".tr(),

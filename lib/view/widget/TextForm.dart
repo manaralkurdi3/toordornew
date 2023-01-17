@@ -14,7 +14,7 @@ class TextForm extends StatelessWidget {
     this.widget,
     this.visibility,
     this.keyBoardType,
-     this.controller,
+    this.controller,
     this.onchange,
     this.icon,
   }) : super(key: key);
@@ -22,7 +22,7 @@ class TextForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       Container(
-    height: 40,
+        height: 60,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             border: Border.all(width: 0),
@@ -33,14 +33,15 @@ class TextForm extends StatelessWidget {
         child: TextFormField(
           keyboardType:keyBoardType ,
           obscureText: visibility ?? false,
+
           controller: controller??TextEditingController(),
           decoration: InputDecoration(
             suffixIcon: widget,
             contentPadding: EdgeInsets.only(right: 8,bottom: 10),
-              hintText: hint,
-              hintStyle: const TextStyle(fontSize: 12),
-              border: InputBorder.none,
-              ),
+            hintText: hint,
+            hintStyle: const TextStyle(fontSize: 12),
+            border: InputBorder.none,
+          ),
 
         ),
       );

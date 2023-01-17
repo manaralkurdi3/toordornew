@@ -178,6 +178,9 @@ TextEditingController userInput=  TextEditingController();
                                   setState(() {
                                     services = val.toString();
                                     showServiceEmployee = true;
+                                    print(idServices);
+                                    print("____________________");
+                                    print(widget.bussniseId);
                                   });
                                 }))),
                   );
@@ -236,7 +239,8 @@ TextEditingController userInput=  TextEditingController();
     onChanged: (val) {
             setState(() {
               servicesEmployee = val.toString();
-            //  print(val);
+              print("ppppppppppppppppp");
+             print(idServicesemployee);
             });
             },
 
@@ -360,6 +364,13 @@ TextEditingController userInput=  TextEditingController();
                 //   print('/////// timepick: $timePicked');
                 // }
                 setState(() {
+                  print(selectedDay);
+                  String date = DateFormat("yyyy-MM-dd")
+                      .format(DateTime.parse(selectedDay.toString()));
+                  var dateTime = DateTime.parse(selectedDay.toString());
+                  var formate2 = "${dateTime.year}-${dateTime.month}-${dateTime.day}";
+                  print(formate2);
+                  print(date);
                   showDialog(
                       context: context,
                       builder: (context) {
@@ -430,8 +441,8 @@ TextEditingController userInput=  TextEditingController();
                                         activeBorderColor: Colors.transparent,
                                         backgroundColor: Colors.transparent,
                                         activeBackgroundColor: dark,
-                                        firstTime: TimeOfDay(hour: 8, minute: 00),
-                                        lastTime: TimeOfDay(hour: 20, minute: 00),
+                                        firstTime: TimeOfDay(hour: 5, minute: 00),
+                                        lastTime: TimeOfDay(hour: 24, minute: 00),
                                         initialRange: _timeRangeday,
                                         timeStep: 15,
                                         timeBlock: 15,
@@ -446,18 +457,20 @@ TextEditingController userInput=  TextEditingController();
                                       height:40,
                                      // decoration:Box()
                                       child: TextFormField(
+                                        textAlign: TextAlign.start,
+                                      //  textDirection: TextDirection.RTL,
                                       controller: userInput,
+
                                       style: TextStyle(
                                       fontSize: 18,
                                       color: Colors.black,
                                       ),
                                       decoration: InputDecoration(
+
                                       hintText: "اكتب الخدمة".tr()
                                       ),
+
                                       onChanged: (value) {
-                                      setState(() {
-                                      userInput.text = value.toString();
-                                      });
                                       }),
                                     ),
                                   ),

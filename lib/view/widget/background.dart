@@ -27,24 +27,22 @@ class Background extends StatelessWidget {
       body: Wrap(
         children: [
           Stack(
-            alignment: const Alignment(0, .1),
+            alignment: const Alignment(0, .5),
             children: [
               Column(
                 children: [
-                  Container(
-                    alignment: const Alignment(0, -0.4),
-                    child: Image.asset(
-                        'assets/1f3b82a8-489f-4051-9605-90fc99c2010a-removebg-preview.png',
-                        height: 150,
-                        fit: BoxFit.fill,
-                        width: 300),
-                    width: w,
-                    height: h / 2,
-                    decoration:  BoxDecoration(
-                        color: Colors.grey.withOpacity(0.5),
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(25),
-                            bottomRight: Radius.circular(25))),
+                  Column(
+                    children: [
+                      Center(
+                        child: Container(
+                          child: Image.asset(
+                            'assets/1f3b82a8-489f-4051-9605-90fc99c2010a-removebg-preview.png',
+                            height: 300,
+                            width: MediaQuery.of(context).size.width,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   Container(
                     decoration: const BoxDecoration(
@@ -60,7 +58,7 @@ class Background extends StatelessWidget {
                 elevation: 22,
                 color: Colors.pink.withOpacity(0),
                 child: Container(
-                  width: w / 1.2,
+                  width: w / 1.1,
                   height: h / 2.8,
                   child: Column(children: items),
                   decoration: BoxDecoration(

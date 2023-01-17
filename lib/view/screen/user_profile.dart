@@ -121,7 +121,7 @@ class _UserProFileState extends State<UserProFile> {
                   child:  FutureBuilder<dynamic>(
                       future: Controller.userData(context),
                       builder: (context, snapshot) {
-                        context.read<HomeCubit>().getLocation();
+                       // context.read<HomeCubit>().getLocation();
                           return SingleChildScrollView(
                             child: Material(
                               child: Wrap(
@@ -167,7 +167,7 @@ class _UserProFileState extends State<UserProFile> {
                                         UserDataForm(
                                             title: 'اسم المستخدم:'.tr(),
                                             userData: snapshot.data?['message']
-                                            ['username']),
+                                            ['email']),
                                         // UserDataForm(
                                         //   title: 'المدينة'.tr(),
                                         //   userData: cubit.address ?? "",
@@ -198,8 +198,9 @@ class _UserProFileState extends State<UserProFile> {
                         ['phone'],
                         email: snapshot
                                 .data?['message']['username'],
-                       // country: snapshot.data?['message']['country_id'],
-                        //city: snapshot.data?['message']['city_id'],
+                        country: snapshot.data?['message']['country_id'],
+                        city: snapshot.data?['message']
+                        ['city_id'],
                         )),);
                         },
 
@@ -432,7 +433,7 @@ class EditUserData extends StatelessWidget {
             child: Column(children: [
               TextForm(hint: 'الاسم'.tr(), controller: controller1),
               TextForm(hint: 'رقم الهاتف'.tr(), controller: controller2),
-              TextForm(hint: 'البريد الالكتروني'.tr(), controller: controller3),
+              TextForm(hint: 'اسم المستخدم'.tr(), controller: controller3),
           //    TextForm(hint: 'المدينة'.tr(), controller: controller4),
             //  TextForm(hint: 'الدولة'.tr(), controller: controller5),
               ElevatedButton(

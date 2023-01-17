@@ -130,14 +130,7 @@ class _ShowBussniseAppointmentState extends State<ShowBussniseAppointment> {
                                     ),
                                     child: Column(
                                       children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Text("ملاحظات:".tr(),style: TextStyle(fontWeight: FontWeight.bold),),
-                                            Text(snapshot.data?['data'][index]['comments'] ?? ''),
 
-                                          ],
-                                        ),
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
@@ -165,10 +158,19 @@ class _ShowBussniseAppointmentState extends State<ShowBussniseAppointment> {
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            Text("الاسم:".tr(),style: TextStyle(fontWeight: FontWeight.bold),),
+                                            Text("اسم الخدمة:".tr(),style: TextStyle(fontWeight: FontWeight.bold),),
                                             Text(
-                                                snapshot.data?['data']!=null|| snapshot.data?['data'][index]['user']==null?""
-                                           : snapshot.data['data'][index]['user']['name']),
+                                                snapshot.data?['data']==null|| snapshot.data?['data'][index]['service']['name']==null?""
+                                           : snapshot.data['data'][index]['service']['name']),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text("اسم المستخدم:".tr(),style: TextStyle(fontWeight: FontWeight.bold),),
+                                            Text(
+                                                snapshot.data?['data']==null|| snapshot.data?['data'][index]['user']['name']==null?""
+                                                    : snapshot.data['data'][index]['user']['name']),
                                           ],
                                         ),
                                         Row(
@@ -195,6 +197,14 @@ class _ShowBussniseAppointmentState extends State<ShowBussniseAppointment> {
                                             Text("هاتف العامل:".tr(),style: TextStyle(fontWeight: FontWeight.bold),),
 
                                             Text(snapshot.data?['data'][index]['employee']['phone']?? ""),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text("ملاحظات:".tr(),style: TextStyle(fontWeight: FontWeight.bold),),
+                                            Text(snapshot.data?['data'][index]['comments'] ?? ''),
+
                                           ],
                                         ),
                                         InkWell(
