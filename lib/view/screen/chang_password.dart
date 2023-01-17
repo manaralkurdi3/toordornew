@@ -80,8 +80,8 @@ void initState() {
           child: Column(
             children: [
               SizedBox(height: MySize.height(context)/3),
-              TextForm(hint: 'كلمه المرور'.tr(),controller: password,),
-              TextForm(hint: "تاكيد كلمه المرور".tr(),controller: rePassword,),
+              TextForm(hint: 'كلمة المرور'.tr(),controller: password,),
+              TextForm(hint: "تاكيد كلمة المرور".tr(),controller: rePassword,),
               SizedBox(height: MySize.height(context)/10),
               ElevatedButton(onPressed: (){
 
@@ -90,7 +90,7 @@ void initState() {
                   confiremPassword: rePassword.text,
                       password: password.text,phone:phone );
                   },
-    child:const Text('تغيير كلمه المرور'))
+    child: Text('تغيير كلمه المرور'.tr()))
             ],
           ),
         ),

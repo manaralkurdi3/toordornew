@@ -61,9 +61,6 @@ class Controller {
     Pages(title: 'اعدادات '.tr(), page: SettingPage()),
     Pages(title: 'تسجيل الخروج'.tr(), page: Logout()),
   ];
-  static void setPage({required int index, dynamic setState}) {
-    setState(() => Home.indexPage = index);
-  }
   //
   // static Future<void> sendOTP(BuildContext context,
   //     {
@@ -279,7 +276,7 @@ class Controller {
       // navigatorOff(context, );
     } else {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(data['message'])));
+          .showSnackBar(SnackBar(content: Text(data['message']['password'][0])));
       // ScaffoldMessenger.of(context)
       //  .showSnackBar(const SnackBar(content: Text('حدث خطأ ما!')));
 
@@ -485,7 +482,36 @@ class Controller {
     }
   }
 
-  static Future<void> AccseptrequestfromBussnise(BuildContext context,
+ static Future<void> bookAvilableMonth(BuildContext context,
+     {required dynamic service_id, required int bussniseID,required String employee_id}) async {
+   String _token = await SharedPreferences.getInstance()
+       .then((value) => value.getString('token') ?? '');
+   Map<String, String> header = {
+     "Content-Type": "application/json",
+     'Accept': 'application/json',
+     'Authorization': 'Bearer $_token',
+   };
+   http.Response response = await http.post(
+       Uri.parse(ApiLinks.bookMonth),
+       headers: header,
+       body: jsonEncode({"service_id": service_id,
+         "businees_id": bussniseID,"employee_id":employee_id}));
+   if (response.statusCode == 200) {
+     ScaffoldMessenger.of(context)
+         .showSnackBar(SnackBar(content: Text('تم اضافتك كموظف'.tr())));
+     Navigator.push(
+       context,
+       MaterialPageRoute(builder: (context) => TimeWorkPlace()),
+     );
+   } else {
+     print(response.body);
+     ScaffoldMessenger.of(context)
+         .showSnackBar(SnackBar(content: Text("تم اضافتك كموظف".tr())));
+   }
+ }
+
+
+ static Future<void> AccseptrequestfromBussnise(BuildContext context,
       {required dynamic requestid, required int bussniseID}) async {
     String _token = await SharedPreferences.getInstance()
         .then((value) => value.getString('token') ?? '');
@@ -500,7 +526,7 @@ class Controller {
         body: jsonEncode({"request_id": requestid, "businees_id": bussniseID}));
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('تم اضافتك ك موظف'.tr())));
+          .showSnackBar(SnackBar(content: Text('تم اضافتك كموظف'.tr())));
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => TimeWorkPlace()),
@@ -511,6 +537,39 @@ class Controller {
           .showSnackBar(SnackBar(content: Text("تم اضافتك كموظف".tr())));
     }
   }
+
+ static Future<void> avilableBook(BuildContext context,
+     {required dynamic service_id, required int bussniseID,required int employeeId,required String date}) async {
+   String _token = await SharedPreferences.getInstance()
+       .then((value) => value.getString('token') ?? '');
+   Map<String, String> header = {
+     "Content-Type": "application/json",
+     'Accept': 'application/json',
+     'Authorization': 'Bearer $_token',
+   };
+   http.Response response = await http.post(
+       Uri.parse(ApiLinks.bookAvilableAndNot),
+       headers: header,
+       body: jsonEncode({
+         "service_id": service_id,
+         "businees_id": bussniseID,
+         "date": date,
+         "employee_id": employeeId
+
+       }));
+   if (response.statusCode == 200) {
+     ScaffoldMessenger.of(context)
+         .showSnackBar(SnackBar(content: Text('تم اضافتك كموظف'.tr())));
+     Navigator.push(
+       context,
+       MaterialPageRoute(builder: (context) => TimeWorkPlace()),
+     );
+   } else {
+     print(response.body);
+     ScaffoldMessenger.of(context)
+         .showSnackBar(SnackBar(content: Text("تم اضافتك كموظف".tr())));
+   }
+ }
 
   static Future<void> cancelRequestBussnise(
     BuildContext context, {
@@ -542,6 +601,7 @@ class Controller {
       //     .showSnackBar(SnackBar(content: Text(response.body)));
     }
   }
+
 
   static Future<List<ServicesIndexOfbussnise>> servicesIndex(
       BuildContext context, String bussniseId) async {
@@ -586,6 +646,8 @@ class Controller {
     // return serviceindex;
   }
 
+
+
   static Future<List<ServicesEmployee>> servicesEmployee(
       BuildContext context, String employeeId) async {
     String _token = await SharedPreferences.getInstance()
@@ -613,6 +675,7 @@ class Controller {
       serviceEmployee = rest
           .map<ServicesEmployee>((json) => ServicesEmployee.fromJson(json))
           .toList();
+      print(data);
     } else {
       return serviceEmployee;
     }
@@ -864,6 +927,8 @@ class Controller {
           "category_id": id
         }));
     print(response.body);
+    print(fromt);
+    print(fromt);
     var data = json.decode(response.body);
     if (data["error"] == true) {
       final snackBar = SnackBar(

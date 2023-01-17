@@ -80,10 +80,6 @@
 //   }
 // }
 
-
-
-
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -105,12 +101,12 @@ class ShowEmployee extends StatefulWidget {
 }
 
 class _ShowEmployeeState extends State<ShowEmployee> {
-  bool showAppointment=false;
-  bool showEmployee=false;
-  String service="";
-  String employee="";
+  bool showAppointment = false;
+  bool showEmployee = false;
+  String service = "";
+  String employee = "";
   int idServices = 0;
-  int idemployee= -1;
+  int idemployee = -1;
 
   final Connectivity _connectivity = Connectivity();
   bool isLoading = false;
@@ -132,7 +128,7 @@ class _ShowEmployeeState extends State<ShowEmployee> {
   void showStatus(ConnectivityResult result, bool status) {
     final snackBar = SnackBar(
         content:
-        Text("${status ? 'ONLINE\n' : 'OFFLINE\n'}${result.toString()} "),
+            Text("${status ? 'ONLINE\n' : 'OFFLINE\n'}${result.toString()} "),
         backgroundColor: status ? Colors.green : Colors.red);
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
@@ -151,137 +147,140 @@ class _ShowEmployeeState extends State<ShowEmployee> {
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
-    return
-      Scaffold(
-        appBar:AppBar2(context:context),
-        body: Column(
-          children: [
-        FutureBuilder<dynamic>(
-        future: Controller.userData(context),
-    builder: (context,userData) {
-        if (userData.hasData) {
-          return FutureBuilder<List<ServicesBussnise>>(
-              future: Controller.ServicesBussnises(
-                  context,
-                  bussniseid: userData.data['message']['bussinees_id'] ?? -1),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                        height: 50,
-                        width: 200,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(3),
-                            color: Colors.grey[300]),
-                        child: DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                                hint: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                      service.isEmpty ? "اختر الخدمة" .tr(): service),
-                                ),
-                                items: snapshot.data!.map((value) {
-                                  return DropdownMenuItem(
-                                    enabled: true,
-                                    onTap: () => idServices = value.id ?? 1,
-                                    value: value.serviceName,
-                                    child: Text(
-                                      value.serviceName ?? '',
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (val) {
-                                  setState(() {
-                                    service = val.toString();
-                                    showEmployee = true;
-                                  });
-                                }))),
-                  );
+    return Scaffold(
+      appBar: AppBar2(context: context),
+      body: Column(
+        children: [
+          FutureBuilder<dynamic>(
+              future: Controller.userData(context),
+              builder: (context, userData) {
+                if (userData.hasData) {
+                  return FutureBuilder<List<ServicesBussnise>>(
+                      future: Controller.ServicesBussnises(context,
+                          bussniseid:
+                              userData.data['message']['bussinees_id'] ?? -1),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                                height: 50,
+                                width: 200,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(3),
+                                    color: Colors.grey[300]),
+                                child: DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                        hint: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(service.isEmpty
+                                              ? "اختر الخدمة".tr()
+                                              : service),
+                                        ),
+                                        items: snapshot.data!.map((value) {
+                                          return DropdownMenuItem(
+                                            enabled: true,
+                                            onTap: () =>
+                                                idServices = value.id ?? 1,
+                                            value: value.serviceName,
+                                            child: Text(
+                                              value.serviceName ?? '',
+                                            ),
+                                          );
+                                        }).toList(),
+                                        onChanged: (val) {
+                                          setState(() {
+                                            service = val.toString();
+                                            showEmployee = true;
+                                          });
+                                        }))),
+                          );
+                        } else {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                      });
                 } else {
-                  print(snapshot.error);
                   return const Center(child: CircularProgressIndicator());
                 }
-              });
-        } else {
-          print("jjjjj");
-          return const Center(child: CircularProgressIndicator());
-        }
-    }
+              }),
+          Visibility(
+            visible: showEmployee,
+            child: FutureBuilder<List<ServicesEmployee>>(
+                future:
+                    Controller.servicesEmployee(context, idServices.toString()),
+                builder: (context, snapshot) {
+                  print("=============");
+                  print(idServices.toString());
 
-            ),
-            Visibility(
-              visible: showEmployee,
-              child: FutureBuilder<List<ServicesEmployee>>(
-                  future: Controller.servicesEmployee(context, idServices.toString()),
-                  builder: (context, snapshot) {
-                    print("=============");
-                    print(idServices.toString());
-                    if (snapshot.hasData) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                            height: 50,
-                            width:200,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(3),
-                                color: Colors.grey[300]),
-                            child: DropdownButtonHideUnderline(
-                                child: DropdownButton(
-                                    hint: Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                  if (snapshot.hasData) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                          height: 50,
+                          width: 200,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(3),
+                              color: Colors.grey[300]),
+                          child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                  hint: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(employee.isEmpty
+                                        ? "اختر موظف".tr()
+                                        : employee),
+                                  ),
+                                  items: snapshot.data?.map((value) {
+                                    return DropdownMenuItem(
+                                      enabled: true,
+                                      onTap: () {
+                                        idemployee = value.id ?? 1;
+                                        print('idServices == $idemployee');
+                                      },
+                                      value: value.name,
                                       child: Text(
-                                          employee.isEmpty ? "اختر موظف" .tr(): employee),
-                                    ),
-                                    items: snapshot.data?.map((value) {
-                                      return DropdownMenuItem(
-                                        enabled: true,
-                                        onTap: () {
-                                          idemployee = value.id ?? 1;
-                                          print('idServices == $idemployee');
-                                        },
-                                        value:value.name,
-                                        child: Text(
-                                          value.name ?? '',
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (val) {
-                                      setState(() {
-                                        employee = val.toString();
-                                        showAppointment = true;
-                                      });
-                                    }))),
-                      );
-                    } else {
-                      print(snapshot.error);
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  }),
-            ),
-
-            Visibility(
+                                        value.name ?? '',
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (val) {
+                                    setState(() {
+                                      employee = val.toString();
+                                      showAppointment = true;
+                                    });
+                                  }))),
+                    );
+                  } else {
+                    print(snapshot.error);
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                }),
+          ),
+          Visibility(
               visible: true,
               child: FutureBuilder<dynamic>(
-                  future: Controller.employeeApointement(context,employeeid:idemployee),
-                  builder: (BuildContext context,snapshot){
+                  future: Controller.employeeApointement(context,
+                      employeeid: idemployee),
+                  builder: (BuildContext context, snapshot) {
                     print(idemployee);
                     print(snapshot.data);
-                    if(snapshot.hasData&&snapshot.data["message"]!="هذا المستخدم ليس لديه عمل "){
+                    if (snapshot.hasData &&
+                        snapshot.data["message"] !=
+                            "هذا المستخدم ليس لديه عمل ") {
                       return Expanded(
                         flex: 4,
                         child: ListView.builder(
-                            itemCount: snapshot.data['data']?.length??-1,
-                            itemBuilder: (context,index) {
+                            itemCount: snapshot.data['data']?.length ?? -1,
+                            itemBuilder: (context, index) {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(
-                                  height: 200,
-                                  decoration: BoxDecoration(
-                                      border: Border.all()
-                                  ),
+                                  height: 250,
+                                  decoration:
+                                      BoxDecoration(border: Border.all()),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(
@@ -289,57 +288,69 @@ class _ShowEmployeeState extends State<ShowEmployee> {
                                         Row(
                                           children: [
                                             Text("ملاحظات:".tr()),
-                                            Text(snapshot.data?['data'][index]['comments'] ?? ''),
+                                            Text(snapshot.data?['data'][index]
+                                                    ['comments'] ??
+                                                ''),
                                           ],
                                         ),
-                                        // Text(
-                                        //     snapshot.data['data'][index]['user']!=null?
-                                        //     snapshot.data['data'][index]['user']['name']:""
-                                        // ),
-                                        // Row(
-                                        //   children: [
-                                        //     Text("اسم العامل".tr()),
-                                        //     Text(snapshot.data?['data'][index]['user']['name'] ?? ''),
-                                        //   ],
-                                        // ),
-                                        snapshot.data['data'][index]['user']!=null?
                                         Row(
                                           children: [
-                                            Text("هاتف العامل:".tr()),
-                                            Text(snapshot.data?['data'][index]['user']['phone'] ?? ''),
+                                            Text("اسم المستخدم".tr()),
+                                            Text(snapshot.data?['data'][index]
+                                                    ['user']['name'] ??
+                                                ''),
                                           ],
-                                        )
-                                            :Text(""),
+                                        ),
+                                        snapshot.data['data'][index]['user'] !=
+                                                null
+                                            ? Row(
+                                                children: [
+                                                  Text("هاتف المستخدم:".tr()),
+                                                  Text(snapshot.data?['data']
+                                                              [index]['user']
+                                                          ['phone'] ??
+                                                      ''),
+                                                ],
+                                              )
+                                            : Text(""),
                                         Row(
                                           children: [
                                             Text("اسم العمل:".tr()),
-                                            Text(snapshot.data?['data'][index]['businees'] ['name']?? ''),
+                                            Text(snapshot.data?['data'][index]
+                                                    ['businees']['name'] ??
+                                                ''),
                                           ],
                                         ),
-
                                         Row(
                                           children: [
                                             Text("اسم الخدمة:".tr()),
-                                            Text(snapshot.data?['data'][index]['service'] ['name']?? ''),
+                                            Text(snapshot.data?['data'][index]
+                                                    ['service']['name'] ??
+                                                ''),
                                           ],
                                         ),
                                         Row(
-
                                           children: [
                                             Text("من".tr()),
-                                            Text(snapshot.data?['data'][index]['from_date'] ?? ''),
+                                            Text(snapshot.data?['data'][index]
+                                                    ['from_date'] ??
+                                                ''),
                                           ],
                                         ),
                                         Row(
                                           children: [
                                             Text("الى".tr()),
-                                            Text(snapshot.data?['data'][index]['to_date']?? ""),
+                                            Text(snapshot.data?['data'][index]
+                                                    ['to_date'] ??
+                                                ""),
                                           ],
                                         ),
                                         Row(
                                           children: [
                                             Text("التاريخ:".tr()),
-                                            Text(snapshot.data?['data'][index]['date_day']?? ""),
+                                            Text(snapshot.data?['data'][index]
+                                                    ['date_day'] ??
+                                                ""),
                                           ],
                                         ),
                                       ],
@@ -349,21 +360,20 @@ class _ShowEmployeeState extends State<ShowEmployee> {
                               );
                             }),
                       );
-                    }
-                    else{
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else {
                       // print("failed");
                       // Text("gggg");
-                      print("=======================");
-                      return  Center(child: Container(
-                          height: 100,
-                          child: Text("لايوجد اي مواعيد".tr())),);
+                      return Center(
+                        child: Container(
+                            height: 100, child: Text("لايوجد اي مواعيد".tr())),
+                      );
                     }
-                  }
-              )
-            )
-          ],
-        ),
-      );
-
+                  }))
+        ],
+      ),
+    );
   }
 }

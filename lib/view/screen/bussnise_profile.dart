@@ -174,7 +174,7 @@ String   fromtodate = "";
                 pm="PM";
                 concat=fromtodate+pm;
                 print(concat);
-                var df =  DateFormat("h:mma");
+                var df =  DateFormat("h:mm");
                 var dt = df.parse(concat);
                 concat = DateFormat('HH:mm').format(dt);
                 print(DateFormat('HH:mm').format(dt));

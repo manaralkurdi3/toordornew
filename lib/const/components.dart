@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:toordor/const/color.dart';
+import 'package:toordor/view/widget/constant.dart';
 
 Widget DefaultButton({
   double width = 280,
-  Color color = Colors.grey,
+  Color color = ColorCustome.colorblue,
   Color text_color = Colors.white,
   FontWeight text_font_weight = FontWeight.bold,
   required VoidCallback controll,
   required String text,
   double radius = 7.5,
 }) =>
-    Container(
-      width: width,
-      height: 40,
-      decoration: BoxDecoration(
-          color: color, borderRadius: BorderRadius.circular(radius)),
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      child: MaterialButton(
-          onPressed: controll,
-          child: Text(
-            text.toUpperCase(),
-            style: TextStyle(color: text_color, fontWeight: text_font_weight),
-          )),
+    Column(
+      children: [
+        Container(
+          width: width,
+          height: 40,
+          decoration: BoxDecoration(
+              color: color, borderRadius: BorderRadius.circular(radius)),
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          child: MaterialButton(
+              onPressed: controll,
+              child: Text(
+                text.toUpperCase(),
+                style: TextStyle(color: text_color, fontWeight: text_font_weight),
+              )),
+        ),
+      ],
     );
 Widget defaultTextButton({
   required Function function,

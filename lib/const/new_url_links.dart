@@ -8,10 +8,10 @@ class ApiLinks {
   static const String sendOTPRegister = '${domain}register/send-otp'; //POST
   static const String login = '${domain}login'; //POST
   ///index
-  static const String index = '${domain}index';
+  static const String index = '${domain}categories';
   static const String busineesIndex = '${domain}businees-index/'; //add id
   static const String serviceIndex = '${domain}service-index/'; //add id
-  static const String serviceEmploy = '${domain}service/'; //add id
+  static const String serviceEmploy = '${domain}services/'; //add id
   ///busineesCreate
   static const String busineesCreate = '${domain}businees/create';
   static const String busineesGet = '${domain}businees/get';
@@ -48,7 +48,8 @@ class ApiLinks {
   ///App
   static const String dayDetails = '${domain}day/details';
   static const String book = '${domain}book';
-
+  static const String bookAvilableAndNot = '${domain}user/available-reservations';
+static const String bookMonth= '${domain}user/months-reservation' ;
   ///Users
   static const String user = '${domain}user';
   static const String editUser = '${domain}user/edit';
@@ -60,7 +61,7 @@ class ApiLinks {
 
 //some data not fond!
 //Add Services
-  static const String createNewServices = '${domain}service/create';
+  static const String createNewServices = '${domain}services/create';
   static const String serviceIndexById = '${domain}service-index/:id';
   static const String getServicesEmployees = '${domain}service/:id';
 static const String getListFromAccseptEmployee= '${domain}employee/services/list';

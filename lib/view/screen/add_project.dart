@@ -124,8 +124,7 @@ class _AddProjectState extends State<AddProject> {
     "قاعات الافراح والمناسبات".tr(),
     "طبيب عيون".tr(),
     "طبيب  امراض البشرة".tr(),
-    "كوافير نسائي",
-    "كوافير نسائي",
+    "كوافير نسائي".tr(),
   ];
   String formatTimeOfDay(TimeOfDay tod) {
     final dt = DateTime( tod.hour, tod.minute);
@@ -136,7 +135,7 @@ class _AddProjectState extends State<AddProject> {
   }
   List<String> weekdays = [
     "Friday".tr(),
-    "Satarday".tr(),
+    "Saturday".tr(),
     "Sunday".tr(),
     "Monday".tr(),
     "Thursday".tr(),
@@ -164,16 +163,17 @@ class _AddProjectState extends State<AddProject> {
     DateTime tempDate = DateFormat("h:m").parse(
         _selectedTime!.hour.toString() +
             ":" + _selectedTime!.minute.toString());
-    var dateFormat = DateFormat("h:m"); // you can change the format here
+    var dateFormat = DateFormat("hh:mm"); // you can change the format here
     print(dateFormat.format(tempDate));
     fromText=dateFormat.format(tempDate);
-    print(_selectedTime);
-    print(tempDate);
+    print(fromText);
+   // print(tempDate);
 
   }
   @override
   Widget build(BuildContext context) {
     Shared();
+    print("fromText");
 print(fromText);
     return  Scaffold(
       appBar: AppBar2(context:context),
@@ -262,7 +262,7 @@ print(fromText);
               ),
             ),
 
-            Text("اختيار ايام  العمل".tr(),style: TextStyle(fontSize: 14),),
+            Text("اختيار ايام العطلة".tr(),style: TextStyle(fontSize: 14),),
             Container(
               height: 100,
               child: ListView.builder(
@@ -315,15 +315,18 @@ print(fromText);
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                FloatingActionButton(
-                  heroTag: "hero1",
-                    child: Center(child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(fromText.isEmpty ? 'من'.tr() : fromText),
-                    )),
-                    onPressed: () async {
-                      _selectTime(context);
-                    }),
+                Container(
+                  width: 70,
+                  child: FloatingActionButton(
+                    heroTag: "hero1",
+                      child: Center(child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(fromText.isEmpty ? 'من'.tr() : fromText),
+                      )),
+                      onPressed: () async {
+                        _selectTime(context);
+                      }),
+                ),
                 SizedBox(width: MySize.width(context) / 3),
                 FloatingActionButton(
                     heroTag: "hero2",
