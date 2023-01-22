@@ -67,6 +67,7 @@ dependencies:
   connectivity_plus: ^3.0.2
   internet_connection_checker_plus: ^1.0.1
   image_picker: ^0.8.6
+  flutter_time_picker_spinner: ^2.0.0
   flutter_cache_manager: ^3.3.0
   pdfx: ^2.2.0
   carousel_slider: ^4.2.1
