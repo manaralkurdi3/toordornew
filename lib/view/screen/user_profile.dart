@@ -1,20 +1,19 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_cache_manager/file.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:toordor/Controller/size.dart';
-import 'package:toordor/View/Screen/home.dart';
 import 'package:toordor/View/Widget/TextForm.dart';
 import 'package:toordor/view/block/cubit/home_cubit.dart';
 import 'package:toordor/view/block/state/home_state.dart';
 import 'package:toordor/view/screen/home_body_category.dart';
 import 'package:toordor/view/screen/home_page.dart';
-// import 'package:toordor/view/cubit/home_cubit.dart';
-// import 'package:toordor/view/cubit/home_state.dart';
+import 'dart:io';
 
 import '../../Controller/controller.dart';
 
@@ -28,6 +27,19 @@ class UserProFile extends StatefulWidget {
 class _UserProFileState extends State<UserProFile> {
   bool  isLoading =false;
   final Connectivity _connectivity = Connectivity();
+  bool isUploadImage = false;
+  var selectedImage;
+
+  uploadProfileImage () async{
+    var picker = ImagePicker();
+    var image = await picker.pickImage(source: ImageSource.gallery);
+    if(image != null) {
+      setState(() {
+        selectedImage = image.path;
+      });
+    }
+    if (!mounted) return;
+  }
   TextEditingController message = new TextEditingController();
   Future<void> initConnectivity() async {
     late ConnectivityResult result;
@@ -113,7 +125,7 @@ class _UserProFileState extends State<UserProFile> {
             // TODO: implement listener
           },
           builder: (context, state) {
-            var cubit = HomeCubit.get(context);
+           // var cubit = HomeCubit.get(context);
             return RefreshIndicator(
                   onRefresh: () async {
                     await Controller.userData(context);
@@ -123,118 +135,164 @@ class _UserProFileState extends State<UserProFile> {
                       builder: (context, snapshot) {
                        // context.read<HomeCubit>().getLocation();
                           return SingleChildScrollView(
-                            child: Material(
-                              child: Wrap(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0, vertical: 20),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Row(
+                            child: Column(
+                              children: [
+                                Positioned(
+                                top: 140,
+                                right: 0,
+                                left: 0,
+                                child: SizedBox(
+                                  height: 100,
+                                  width: 100,
+                                  child: Stack(
+                                    clipBehavior: Clip.none,
+                                    fit: StackFit.expand,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(100),
+                                        child: Image.asset(
+                                          'assets/images/tutorial_1_bg.png',
+                                          height: 200.0,
+                                          width: 200.0,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                      Positioned(
+                                          bottom: -5,
+                                          left: 0,
+                                          right: -50,
+                                          child: RawMaterialButton(
+                                            onPressed: () {
+                                              uploadProfileImage();
+                                              setState(() {
+                                                isUploadImage = true;
+                                              });
+                                            },
+                                            elevation: 2.0,
+                                            fillColor: const Color(0xFFF5F6F9),
+                                            padding: const EdgeInsets.all(5.0),
+                                            shape: const CircleBorder(),
+                                            child: const Icon(Icons.camera_alt_outlined, color: Colors.blue,),
+                                          )
+                                      ),
+                                    ],
+                                  ),
+                                )
+                            ),
+                                Material(
+                                  child: Wrap(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0, vertical: 20),
+                                        child: Column(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
-                                            // Padding(
-                                            //   padding: EdgeInsets.only(left: 13.0.sp),
-                                            //   child: CircleAvatar(
-                                            //     backgroundColor: Colors.grey,
-                                            //     child: const Text(""),
-                                            //     radius: 30.sp,
-                                            //   ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                // Padding(
+                                                //   padding: EdgeInsets.only(left: 13.0.sp),
+                                                //   child: CircleAvatar(
+                                                //     backgroundColor: Colors.grey,
+                                                //     child: const Text(""),
+                                                //     radius: 30.sp,
+                                                //   ),
+                                                // ),
+                                                Text(
+                                                  snapshot.data?['message']['fullname'] ??
+                                                      "",
+                                                  style: const TextStyle(
+                                                      fontSize: 15,
+                                                      color: Colors.black,
+                                                      fontWeight: FontWeight.w700),
+                                                )
+                                              ],
+                                            ),
+                                            SizedBox(height: MySize.height(context) / 20),
+                                            UserDataForm(
+                                              title: 'الاسم بالكامل'.tr(),
+                                              userData:
+                                              snapshot.data?['message']['fullname'] ?? "",
+                                            ),
+                                            UserDataForm(
+                                              title: 'رقم الهاتف'.tr(),
+                                              userData:
+                                              snapshot.data?['message']['phone'] ?? "",
+                                            ),
+                                            UserDataForm(
+                                                title: 'اسم المستخدم:'.tr(),
+                                                userData: snapshot.data?['message']
+                                                ['email']),
+                                            // UserDataForm(
+                                            //   title: 'المدينة'.tr(),
+                                            //   userData: cubit.address ?? "",
                                             // ),
-                                            Text(
-                                              snapshot.data?['message']['fullname'] ??
-                                                  "",
-                                              style: const TextStyle(
-                                                  fontSize: 15,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w700),
-                                            )
-                                          ],
-                                        ),
-                                        SizedBox(height: MySize.height(context) / 20),
-                                        UserDataForm(
-                                          title: 'الاسم بالكامل'.tr(),
-                                          userData:
-                                          snapshot.data?['message']['fullname'] ?? "",
-                                        ),
-                                        UserDataForm(
-                                          title: 'رقم الهاتف'.tr(),
-                                          userData:
-                                          snapshot.data?['message']['phone'] ?? "",
-                                        ),
-                                        UserDataForm(
-                                            title: 'اسم المستخدم:'.tr(),
-                                            userData: snapshot.data?['message']
-                                            ['email']),
-                                        // UserDataForm(
-                                        //   title: 'المدينة'.tr(),
-                                        //   userData: cubit.address ?? "",
-                                        // ),
-                                        // UserDataForm(
-                                        //   title: 'الدولة'.tr(),
-                                        //   userData: cubit.address2 ?? "",
-                                        // ),
-                                        SizedBox(height: MySize.height(context) / 20),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                            children: [
-                                              // ElevatedButton(
-                                              //     onPressed: () {},
-                                              //     child:  Text('حفظ'.tr())),
-                                              ElevatedButton(
-                                                  onPressed: () {
-                              print("--------------------------");
+                                            // UserDataForm(
+                                            //   title: 'الدولة'.tr(),
+                                            //   userData: cubit.address2 ?? "",
+                                            // ),
+                                            SizedBox(height: MySize.height(context) / 20),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                                children: [
+                                                  // ElevatedButton(
+                                                  //     onPressed: () {},
+                                                  //     child:  Text('حفظ'.tr())),
+                                                  ElevatedButton(
+                                                      onPressed: () {
+                                  print("--------------------------");
                         Navigator.push(context,
                         MaterialPageRoute(builder: (context) => EditUserData(
                         fullName: snapshot
-                                .data?['message']['fullname'],
+                                    .data?['message']['fullname'],
                         phone: snapshot
-                                .data?['message']
+                                    .data?['message']
                         ['phone'],
                         email: snapshot
-                                .data?['message']['username'],
+                                    .data?['message']['username'],
                         country: snapshot.data?['message']['country_id'],
                         city: snapshot.data?['message']
                         ['city_id'],
                         )),);
                         },
 
-                                                  child: Text('تعديل'.tr())),
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  Controller.navigatorOff(
-                                                      context, HomeBodyCategory());
-                                                },
-                                                child: Text('الغاء'.tr()),
+                                                      child: Text('تعديل'.tr())),
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      Controller.navigatorOff(
+                                                          context, HomeBodyCategory());
+                                                    },
+                                                    child: Text('الغاء'.tr()),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap: (){
-                                            showAlertDialog(context);
-                                          },
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                    decoration:BoxDecoration(
-                                                        border: Border.all(
+                                            ),
+                                            InkWell(
+                                              onTap: (){
+                                                showAlertDialog(context);
+                                              },
+                                                child: Row(
+                                                  children: [
+                                                    Container(
+                                                        decoration:BoxDecoration(
+                                                            border: Border.all(
+                                                            ),
+                                                            color: Colors.grey
                                                         ),
-                                                        color: Colors.grey
-                                                    ),
-                                                    child: Text("حذف الحساب".tr())),
-                                              ],
-                                            ))
-                                      ],
-                                    ),
+                                                        child: Text("حذف الحساب".tr())),
+                                                  ],
+                                                ))
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           );
                         }

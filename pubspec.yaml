@@ -66,6 +66,7 @@ dependencies:
   url_launcher : ^6.1.5
   connectivity_plus: ^3.0.2
   internet_connection_checker_plus: ^1.0.1
+  image_picker: ^0.8.6
   flutter_cache_manager: ^3.3.0
   pdfx: ^2.2.0
   carousel_slider: ^4.2.1

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toordor/view/widget/constant.dart';
 
 class TextForm extends StatelessWidget {
   String hint;
@@ -22,18 +23,15 @@ class TextForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       Container(
-        height: 60,
+        height: 50,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
-            border: Border.all(width: 0),
-            borderRadius: BorderRadius.circular(12),
-            color: Colors.grey.shade100),
+            color: Colors.white),
         margin: const EdgeInsets.symmetric(vertical:12,horizontal: 20),
         padding: const EdgeInsets.symmetric( vertical:3,),
         child: TextFormField(
           keyboardType:keyBoardType ,
           obscureText: visibility ?? false,
-
           controller: controller??TextEditingController(),
           decoration: InputDecoration(
             suffixIcon: widget,
@@ -41,6 +39,12 @@ class TextForm extends StatelessWidget {
             hintText: hint,
             hintStyle: const TextStyle(fontSize: 12),
             border: InputBorder.none,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: ColorCustome.colorblue, width: 2.0),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color:ColorCustome.colorblue, width: 2.0),
+            ),
           ),
 
         ),
