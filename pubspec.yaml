@@ -52,8 +52,10 @@ dependencies:
   geocoding: ^2.0.4
   dio: ^4.0.6
   flutter_otp_text_field: ^1.1.0+2
-  flutter_facebook_auth: ^5.0.7
+  flutter_facebook_auth: ^3.4.1
   google_sign_in: ^5.4.3
+  permission_handler: ^10.2.0
+
   intl: ^0.17.0
   intl_utils: ^2.7.0
   dots_indicator: ^2.1.0
@@ -67,7 +69,10 @@ dependencies:
   connectivity_plus: ^3.0.2
   internet_connection_checker_plus: ^1.0.1
   image_picker: ^0.8.6
+  firebase_auth: ^1.2.0
+  firebase_core: ^1.2.0
   flutter_time_picker_spinner: ^2.0.0
+  flutter_login_facebook: ^1.7.0
   flutter_cache_manager: ^3.3.0
   pdfx: ^2.2.0
   carousel_slider: ^4.2.1

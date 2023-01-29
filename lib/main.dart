@@ -1,5 +1,6 @@
 
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
@@ -20,6 +21,7 @@ import 'view/block/cubit/search_cubit.dart';
 import 'view/block/cubit_local/locale_cubit.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await translator.init(
     localeType: LocalizationDefaultType.asDefined,
     languagesList: <String>['he', 'ar'],

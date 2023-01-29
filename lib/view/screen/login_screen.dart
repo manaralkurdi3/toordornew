@@ -1,11 +1,14 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:pdfx/pdfx.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toordor/Controller/Controller.dart';
 import 'package:toordor/View/Widget/TextForm.dart';
@@ -14,6 +17,7 @@ import 'package:toordor/const/color.dart';
 import 'package:toordor/const/components.dart';
 import 'package:toordor/view/block/cubit_local/locale_cubit.dart';
 import 'package:toordor/view/screen/chang_password.dart';
+import 'package:toordor/view/screen/facebook.dart';
 
 import 'package:toordor/view/screen/pdf.dart';
 import 'package:toordor/view/widget/TextForm.dart';
@@ -436,8 +440,16 @@ class _LoginPageState extends State<LoginPage> {
                               child: Image.asset("assets/gmail.png",height: 40,),
                             ),
                           ),
-                          Container(
-                            child: Image.asset("assets/facebook.png",height: 40,),
+                          InkWell(
+                            onTap: (){
+                              _requestPermission();
+                              signInWithFacebook();
+                              // Navigator.pushReplacement(context,
+                              //     MaterialPageRoute(builder: (context) => FacebookApp()));
+                            },
+                            child: Container(
+                              child: Image.asset("assets/facebook.png",height: 40,),
+                            ),
                           )
                         ],
                       ),
@@ -451,19 +463,82 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-  Future<Widget> _launchURL() async {
-    final pdfController = PdfController(
-      document: PdfDocument.openAsset('assets/page.pdf'),
+  void _requestPermission() async {
+    final status = await Permission.storage.request();
+    print(status);
+  }
+  String userEmail = "";
+  Future<UserCredential> signInWithFacebook() async {
+    // Trigger the sign-in flow
+    final LoginResult loginResult = await FacebookAuth.instance.login(
+        permissions: ['email', 'public_profile']
     );
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Center(
-            child: PdfView(
-          controller: pdfController,
-        )));
+
+    // Create a credential from the access token
+    final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken!.token);
+
+    final userData = await FacebookAuth.instance.getUserData();
+
+    userEmail = userData['email'];
+
+    // Once signed in, return the UserCredential
+    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
 
+  Map<String, dynamic>? _userData;
+  AccessToken? _accessToken;
+  bool _checking = true;
+  Future<void> _checkIfIsLogged() async {
+    final accessToken = await FacebookAuth.instance.accessToken;
+    setState(() {
+      _checking = false;
+    });
+    if (accessToken != null) {
+      print("is Logged:::: ${(accessToken.toJson())}");
+      // now you can call to  FacebookAuth.instance.getUserData();
+      final userData = await FacebookAuth.instance.getUserData();
+      // final userData = await FacebookAuth.instance.getUserData(fields: "email,birthday,friends,gender,link");
+      _accessToken = accessToken;
+      setState(() {
+        _userData = userData;
+      });
+    }
+  }
+
+  Future<void> _login() async {
+    final LoginResult result = await FacebookAuth.instance.login(); // by default we request the email and the public profile
+
+    // loginBehavior is only supported for Android devices, for ios it will be ignored
+    // final result = await FacebookAuth.instance.login(
+    //   permissions: ['email', 'public_profile', 'user_birthday', 'user_friends', 'user_gender', 'user_link'],
+    //   loginBehavior: LoginBehavior
+    //       .DIALOG_ONLY, // (only android) show an authentication dialog instead of redirecting to facebook app
+    // );
+
+    if (result.status == LoginStatus.success) {
+      _accessToken = result.accessToken;
+      _printCredentials();
+      // get the user data
+      // by default we get the userId, email,name and picture
+      final userData = await FacebookAuth.instance.getUserData();
+      // final userData = await FacebookAuth.instance.getUserData(fields: "email,birthday,friends,gender,link");
+      _userData = userData;
+    } else {
+      print(result.status);
+      print(result.message);
+    }
+
+    setState(() {
+      _checking = false;
+    });
+  }
+
+
+  void _printCredentials() {
+    print(
+      _accessToken!.toJson(),
+    );
+  }
   @override
   void initState() {
     initConnectivity();
@@ -495,7 +570,11 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SingleChildScrollView(
+                !_checking
+                    ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+                    :    SingleChildScrollView(
                     child: BlocBuilder<LocaleCubit, ChangeLanguageState>(
   builder: (context, state) {
     return Column(
